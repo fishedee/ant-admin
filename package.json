@@ -1,0 +1,44 @@
+{
+  "name": "ant-admin",
+  "version": "1.0.0",
+  "description": "ant admin template",
+  "main": "index.js",
+  "scripts": {
+    "prod": "webpack --mode production",
+    "dev": "webpack-dev-server --mode development --hot",
+    "watch": "webpack --mode development --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fishedee/ant-admin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fishedee/ant-admin/issues"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-import": "^1.8.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "css-loader": "^0.28.11",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.10.2",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "dependencies": {
+    "antd": "^3.6.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "redva": "^1.1.1"
+  },
+  "homepage": "https://github.com/fishedee/ant-admin#readme"
+}
