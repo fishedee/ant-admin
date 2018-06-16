@@ -23,6 +23,19 @@ module.exports = {
 			},
 			{
 				test:/\.css$/,
+				include:[
+					path.resolve(__dirname,"src")
+				],
+				use:[
+					{loader:'style-loader'},
+					{loader:'css-loader',options:{modules:true}}
+				]
+			},
+			{
+				test:/\.css$/,
+				include:[
+					path.resolve(__dirname,"node_modules")
+				],
 				use:[
 					{loader:'style-loader'},
 					{loader:'css-loader'}
