@@ -6,7 +6,7 @@ module.exports = {
 
 	output:{
 		filename:'[name]-[hash].js',
-		chunkFilename: '[name]-[hash].js',
+		chunkFilename: '[name]-[contenthash].js',
 		path:path.resolve(__dirname,'dist')
 	},
 
@@ -52,11 +52,34 @@ module.exports = {
 		}),
 	],
 
+	optimization:{
+		splitChunks: {
+			chunks: 'all',
+			minSize: 1,
+		    minChunks: 1,
+		    maxAsyncRequests: 5,
+		    maxInitialRequests: 3,
+		    automaticNameDelimiter: '-',
+		    name: true,
+		    cacheGroups: {
+		        vendors: {
+		        	name:'vendors',
+		            test: /[\\/]node_modules[\\/]/,
+		            priority: -10
+		        }
+		    }
+		},
+		runtimeChunk:{
+			name:'webpack'
+		}
+	},
+	
+
 	devServer:{
 		compress: true,
 		proxy:{
 			"/": {
-				target:"https://www.baidu.com",
+				target:"http://localhost:8585",
 				changeOrigin: true
 			}
 		}

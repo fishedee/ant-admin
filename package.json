@@ -6,7 +6,7 @@
   "scripts": {
     "prod": "webpack --mode production",
     "dev": "webpack-dev-server --mode development --hot",
-    "watch": "webpack --mode development --watch",
+    "mock": "node-dev mock/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,8 +27,13 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "body-parser": "^1.18.3",
     "css-loader": "^0.28.11",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
     "html-webpack-plugin": "^3.2.0",
+    "morgan": "^1.9.0",
+    "node-dev": "^3.1.3",
     "style-loader": "^0.21.0",
     "webpack": "^4.10.2",
     "webpack-cli": "^2.1.4",
@@ -36,6 +41,7 @@
   },
   "dependencies": {
     "antd": "^3.6.2",
+    "qs": "^6.5.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "redva": "^1.1.1",
