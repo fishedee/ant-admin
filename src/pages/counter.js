@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button } from 'antd';
 import {connect} from 'redva';
-import styles from './app.css';
+import styles from './counter.css';
 
-class App extends React.PureComponent{
+class Counter extends React.PureComponent{
 	onClick = ()=>{
 		this.props.dispatch({
 	      type: 'counter/inc',
@@ -20,8 +20,8 @@ class App extends React.PureComponent{
 	}
 }
 
-export default connect(state => {
+export default connect(({counter}) => {
   return { 
-    counter: state.counter 
+    counter: counter 
   }
-})(App);
+})(Counter);
