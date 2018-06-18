@@ -5,7 +5,7 @@ import React from 'react';
 let router = [
 	{
 		path:"/login",
-		component:'login',
+		component:'Login/Login',
 	},
 	{
 		path:"/",
@@ -53,11 +53,11 @@ function analyseComponent(app,router){
       		router.models = [];
       	}
   		return router.models.map(model => {
-          return import(`../models/${model}`);
+          return import(`../models/`+model);
         });
       },
       component: async () => {
-        let raw = await import(`../pages/${router.component}`);
+        let raw = await import(`../pages/`+router.component);
         const Component = raw.default || raw;
         let ChildrenComponent;
         if( router.children && router.children.length != 0 ){

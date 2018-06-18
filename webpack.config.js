@@ -10,6 +10,12 @@ module.exports = {
 		path:path.resolve(__dirname,'dist')
 	},
 
+	resolve:{
+		alias: {
+	      '@': path.resolve(__dirname,'src')
+	    }
+	},
+
 	module:{
 		rules:[
 			{
@@ -18,24 +24,23 @@ module.exports = {
 				loader:'babel-loader',
 				options:{
 					presets:['env','react','stage-0'],
-					plugins:['transform-runtime',["import", { "libraryName": "antd", "style": "css" }]]
+					plugins:[
+						'transform-decorators-legacy',
+						'transform-runtime',
+						["import", { "libraryName": "antd", "style": "css" }]
+					]
 				}
 			},
 			{
-				test:/\.css$/,
-				include:[
-					path.resolve(__dirname,"src")
-				],
+				test:/\.less$/,
 				use:[
 					{loader:'style-loader'},
-					{loader:'css-loader',options:{modules:true}}
+					{loader:'css-loader',options: { importLoaders: 1 ,modules:true}},
+					{loader:'less-loader'},
 				]
 			},
 			{
 				test:/\.css$/,
-				include:[
-					path.resolve(__dirname,"node_modules")
-				],
 				use:[
 					{loader:'style-loader'},
 					{loader:'css-loader'}
