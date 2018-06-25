@@ -11,7 +11,7 @@ export default class LoginPage extends React.PureComponent{
 	}
 	render(){
 		return (
-		<div className={style.root} type="flex">
+		<div className={style.root}>
 			<CheckIn 
 				className={style.content}
 				logo="https://image.fishedee.com/FulTCoakq411USQX_3HiZ79_fH0i"

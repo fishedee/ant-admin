@@ -9,7 +9,7 @@ let router = [
 	},
 	{
 		path:"/",
-		component:'home',
+		component:'Layout/Home',
 		children:[
 			{
 				path:"/timeline",
