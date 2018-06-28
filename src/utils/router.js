@@ -13,7 +13,7 @@ let router = [
 		children:[
 			{
 				path:"/timeline",
-				component:'timeline',
+				component:'List/Table',
 			},
 			{
 				path:"/friend",

@@ -35,8 +35,8 @@ export default [
 				name:"管理4",
 				icon:"laptop",
 				children:[
-					{name:"计数器",path:"/counter2"},
-					{name:"列表",path:"/list2"}
+					{name:"找不到页面",path:"/404"},
+					{name:"列表",path:"/list/user/123"}
 				]
 			}
 		]
