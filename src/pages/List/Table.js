@@ -2,6 +2,7 @@ import React,{Fragment} from 'react';
 import { Button , Input ,Select,InputNumber,DatePicker,Badge,Divider} from 'antd';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
+import FormModal from '@/pages/Form/FormModal'
 import PageHeader from '@/components/PageHeader';
 import moment from 'moment';
 
@@ -11,6 +12,8 @@ const status = ['关闭', '运行中', '已上线', '异常'];
 
 export default class Table extends React.PureComponent{
 	state = {
+		modalVisible:false,
+		filter:{},
 		selectedRow: [],
 		paginaction:{
 			pageIndex:0,
@@ -23,7 +26,10 @@ export default class Table extends React.PureComponent{
 			{no:10003,description:'123',callNo:1,status:1,updatedAt:new Date()},
 		]
 	};
-
+	onQueryChange = (filter)=>{
+		console.log(filter);
+		this.setState({filter:filter});
+	}
 	onQuerySubmit = (data)=>{
 		console.log("query data",data);
 	}
@@ -41,6 +47,12 @@ export default class Table extends React.PureComponent{
 		this.setState({
 			paginaction:paginaction
 		});
+	}
+	openModal = ()=>{
+		this.setState({modalVisible:true});
+	}
+	closeModal = ()=>{
+		this.setState({modalVisible:false});
 	}
 	render = ()=>{
 		let queryColumns = [
@@ -119,18 +131,25 @@ export default class Table extends React.PureComponent{
 	    ];
 		return (
 			<PageHeader title="查询表格">
-				<StandardQuery columns={queryColumns} onSubmit={this.onQuerySubmit}/>
-				<div><Button type="primary">新建</Button></div>
+				<StandardQuery 
+					columns={queryColumns} 
+					data={this.state.filter}
+					onChange={this.onQueryChange}
+					onSubmit={this.onQuerySubmit}/>
+				<div><Button type="primary" onClick={this.openModal}>新建</Button></div>
 				<StandardTable 
 					rowKey={'no'}
 					loading={false}
 					columns={columns}
 					data={this.state.list}
 					onChange={this.onChange}
-					selectedRow={this.state.selectedRow}
-					onSelectedRowChange={this.onSelectedRowChange}
+					selectedRows={this.state.selectedRow}
+					onSelectedRowsChange={this.onSelectedRowChange}
 					paginaction={this.state.paginaction}
 					onPaginactionChange={this.onPaginactionChange}/>
+				{this.state.modalVisible?<FormModal
+					onOk={this.closeModal}
+					onCancel={this.closeModal}/>:null}
 			</PageHeader>
 		);
 	}

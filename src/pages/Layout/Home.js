@@ -14,7 +14,6 @@ export default class Home extends React.PureComponent{
 		alert(data);
 	}
 	render(){
-		console.log(this.props);
 		const login = {
 			name:"fishedee",
 			dropdown:[

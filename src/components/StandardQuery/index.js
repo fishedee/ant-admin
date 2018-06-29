@@ -1,10 +1,11 @@
 import React from 'react';
 import { Form ,Row , Col,Button ,Icon} from 'antd';
 import styles from './index.less';
+import DefaultForm from '@/components/DefaultForm';
 
 const FormItem = Form.Item;
 
-@Form.create()
+@DefaultForm
 export default class StandardQuery extends React.PureComponent{
 
 	handleSearch = (e)=>{
@@ -14,13 +15,7 @@ export default class StandardQuery extends React.PureComponent{
       		if (err) {
       			return;
       		}
-      		let value = {};
-      		for( let i in fieldsValue ){
-      			if( fieldsValue[i] !== undefined ){
-      				value[i] = fieldsValue[i];
-      			}
-      		}
-      		this.props.onSubmit(value);
+      		this.props.onSubmit(fieldsValue);
       	})
 	}
 

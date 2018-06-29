@@ -4,11 +4,11 @@ import styles from './index.less';
 
 export default class StandardTable extends PureComponent {
   handleSelectedRowChange = (selectedRowKeys)=>{
-    this.props.onSelectedRowChange(selectedRowKeys);
+    this.props.onSelectedRowsChange(selectedRowKeys);
   }
 
   cleanSelectedKeys = () => {
-    this.props.onSelectedRowChange([]);
+    this.props.onSelectedRowsChange([]);
   };
 
   handleTableChange = (pagination) => {
@@ -34,7 +34,7 @@ export default class StandardTable extends PureComponent {
   }
 
   render() {
-    const { data, paginaction , loading, columns, rowKey ,selectedRow, onSelectedRowChange } = this.props;
+    const { data, paginaction , loading, columns, rowKey ,selectedRows } = this.props;
 
     let paginationProps = false;
     if( paginaction ){
@@ -51,9 +51,9 @@ export default class StandardTable extends PureComponent {
     }
     
     let rowSelection = null;
-    if( selectedRow ){
+    if( selectedRows ){
       rowSelection = {
-        selectedRowKeys:selectedRow,
+        selectedRowKeys:selectedRows,
         onChange: this.handleSelectedRowChange,
       };
     }
@@ -87,8 +87,8 @@ export default class StandardTable extends PureComponent {
           <Alert
             message={
               <Fragment>
-                已选择 <a style={{ fontWeight: 600 }}>{selectedRow.length}</a> 项&nbsp;&nbsp;
-                <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }}>
+                已选择 <a style={{ fontWeight: 600 }}>{selectedRows.length}</a> 项
+                <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 12 }}>
                   清空
                 </a>
               </Fragment>
