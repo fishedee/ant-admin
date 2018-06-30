@@ -1,8 +1,14 @@
 const path = require('path');
+const args = require('minimist')(process.argv.slice(2));
 const htmlWebpackPlugin = require('html-webpack-plugin');
 
+const isDevelopment = (args.mode == 'development');
+
 module.exports = {
-	entry:'./src/index.js',
+	entry:[
+		'./src/index.js',
+		'./public/favicon.ico'
+	],
 
 	output:{
 		filename:'[name]-[hash].js',
@@ -10,6 +16,8 @@ module.exports = {
 		path:path.resolve(__dirname,'dist')
 	},
 
+	devtool: isDevelopment?'cheap-module-eval-source-map':'',
+	
 	resolve:{
 		alias: {
 	      '@': path.resolve(__dirname,'src')
@@ -45,6 +53,13 @@ module.exports = {
 					{loader:'style-loader'},
 					{loader:'css-loader'}
 				]
+			},
+			{
+				test:/public\/.*$/,
+				loader:'file-loader',
+				options:{
+					name:"[name].[ext]"
+				}
 			}
 		]
 	},

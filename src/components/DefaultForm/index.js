@@ -45,7 +45,11 @@ export default function DefaultForm(component){
 	  	return null;
 	  }
 	  validateFields = (validator)=>{
-	  	this.formRef.validateFields(validator)
+	  	return new Promise((resolve,reject)=>{
+	  		this.formRef.validateFields((err,data)=>{
+	  			resolve({err,data});
+	  		});
+	  	})
 	  }
 	  onChange = (changedFields)=>{
 	  	this.state.data = {

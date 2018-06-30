@@ -85,7 +85,7 @@ export default class Navigator extends React.PureComponent{
 	}
 	onOpenMainMenu = (openKeys)=>{
 		const latestOpenKey = openKeys.find(key => this.state.mainMenuOpenKeys.indexOf(key) === -1);
-		if( latestOpenKey.length != 0 ){
+		if( latestOpenKey && latestOpenKey.length != 0 ){
 			this.setState({mainMenuOpenKeys:[latestOpenKey]});
 		}
 	}

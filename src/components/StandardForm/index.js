@@ -6,15 +6,19 @@ const FormItem = Form.Item;
 
 @DefaultForm
 export default class StandardForm extends React.PureComponent{
-	handleSubmit = (e)=>{
+	state = {
+		submitLoading:false,
+	}
+	handleSubmit = async (e)=>{
 		const { form } = this.props;
 		e.preventDefault();
-		form.validateFields((err, fieldsValue) => {
-      		if (err) {
-      			return;
-      		}
-      		this.props.onSubmit(fieldsValue);
-      	})
+		try{
+			this.setState({submitLoading:true});
+			await this.props.onSubmit();
+			this.setState({submitLoading:false});
+		}catch(e){
+			this.setState({submitLoading:false});
+		}	
 	}
 
 	renderFormItem = ()=>{
@@ -38,7 +42,7 @@ export default class StandardForm extends React.PureComponent{
 		    },
 		    sm: {
 		      span: 16,
-		      offset: 8,
+		      offset: 4,
 		    },
 		  },
 		};
@@ -58,7 +62,7 @@ export default class StandardForm extends React.PureComponent{
 		if( this.props.onSubmit ){
 			formItem.push(
 				<FormItem {...tailFormItemLayout} key={"__submit"}>
-					<Button type="primary" htmlType="submit">提交</Button>
+					<Button type="primary" htmlType="submit" loading={this.state.submitLoading}>提交</Button>
 				</FormItem>
 			);
 		}

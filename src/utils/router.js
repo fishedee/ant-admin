@@ -17,7 +17,7 @@ let router = [
 			},
 			{
 				path:"/friend",
-				component:'Form/Form',
+				component:'Form/FormPage',
 			},
 			{
 				path:"/list",

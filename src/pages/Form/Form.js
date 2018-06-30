@@ -1,7 +1,6 @@
 import React from 'react';
 import {Input,Select,InputNumber,DatePicker} from 'antd';
 import StandardForm from '@/components/StandardForm';
-import PageHeader from '@/components/PageHeader';
 
 const Option = Select.Option;
 
@@ -9,11 +8,24 @@ export default class Form extends React.PureComponent{
 	state = {
 		data:{}
 	}
+	form = null;
 	onChange = (data)=>{
 		this.setState({data:data});
 	}
-	onSubmit = (data)=>{
+	onSubmit = async ()=>{
+		let {err,data} = await this.form.validateFields();
+		if( err ){
+			return;
+		}
 		console.log('submit',data);
+	}
+	onModalOk = async (onOk)=>{
+		let {err,data} = await this.form.validateFields();
+		if( err ){
+			return;
+		}
+		console.log('onModalOk',data);
+		onOk();
 	}
 	render = ()=>{
 		let columns = [
@@ -53,15 +65,18 @@ export default class Form extends React.PureComponent{
 				}
 			}
 		];
+		let onSubmit = this.onSubmit;
+		if( this.props.noSubmitButton ){
+			onSubmit = null;
+		}
 		return (
-			<PageHeader title={"表单"}>
-				<StandardForm
-					columns={columns}
-					data={this.state.data}
-					onChange={this.onChange}
-					onSubmit={this.onSubmit}
-				/>
-			</PageHeader>
+			<StandardForm
+				ref={(node)=>{this.form=node}}
+				columns={columns}
+				data={this.state.data}
+				onChange={this.onChange}
+				onSubmit={onSubmit}
+			/>
 		);
 	}
 }

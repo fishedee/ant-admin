@@ -2,9 +2,10 @@ import React,{Fragment} from 'react';
 import { Button , Input ,Select,InputNumber,DatePicker,Badge,Divider} from 'antd';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
-import FormModal from '@/pages/Form/FormModal'
+import StandardModal from '@/components/StandardModal';
 import PageHeader from '@/components/PageHeader';
 import moment from 'moment';
+import Form from '@/pages/Form/Form';
 
 const Option = Select.Option;
 const statusMap = ['default', 'processing', 'success', 'error'];
@@ -147,9 +148,12 @@ export default class Table extends React.PureComponent{
 					onSelectedRowsChange={this.onSelectedRowChange}
 					paginaction={this.state.paginaction}
 					onPaginactionChange={this.onPaginactionChange}/>
-				{this.state.modalVisible?<FormModal
+				<StandardModal
+					visible={this.state.modalVisible}
 					onOk={this.closeModal}
-					onCancel={this.closeModal}/>:null}
+					onCancel={this.closeModal}>
+					<Form noSubmitButton={true}/>
+				</StandardModal>
 			</PageHeader>
 		);
 	}
