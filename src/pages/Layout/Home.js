@@ -2,9 +2,11 @@ import React from 'react';
 import Navigator from '@/components/Navigator';
 import GlobalFooter from '@/components/GlobalFooter';
 import {copyright,title} from '@/utils/constant';
-import style from './Home.less';
+import authority from '@/utils/authority';
 import menu from '@/utils/menu';
+import style from './Home.less';
 
+@authority(['guest2'])
 export default class Home extends React.PureComponent{
 	onSelect = (path)=>{
 		console.log(path);

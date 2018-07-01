@@ -8,7 +8,7 @@ export default class StandardModal extends React.PureComponent{
 	child = null;
 	onOk = async ()=>{
 		this.setState({confirmLoading:true});
-		await this.child.onModalOk2(this.props.onOk);
+		await this.child.onModalOk(this.props.onOk);
 		this.setState({confirmLoading:false});
 	}
 	onCancel = ()=>{

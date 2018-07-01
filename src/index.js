@@ -5,8 +5,8 @@ import {Router} from 'redva/router';
 import createHistory from 'history/createHashHistory';
 import { LocaleProvider , Modal } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
-import getRouter from './utils/router';
-import request from './utils/request';
+import getRouter from '@/utils/router';
+import login from '@/models/login';
 
 require.context('./models/', true, /\.js$/);
 require.context('./pages/', true, /\.js$/);
@@ -24,6 +24,8 @@ const app = redva({
 });
 
 app.use(redvaLoading());
+
+app.model(login);
 
 app.router(({history,app})=>{
 	const router = getRouter(app);

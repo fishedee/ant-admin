@@ -4,12 +4,14 @@ import CheckIn from '@/components/CheckIn';
 import GlobalFooter from '@/components/GlobalFooter';
 import {copyright,title} from '@/utils/constant';
 import style from './Login.less';
+import qs from 'qs';
 
 export default class LoginPage extends React.PureComponent{
 	onSubmit = (value)=>{
 		console.log(value);
 	}
 	render(){
+		console.log(qs.parse(this.props.location.search.substr(1)));
 		return (
 		<div className={style.root}>
 			<CheckIn 
