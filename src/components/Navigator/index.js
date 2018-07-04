@@ -5,7 +5,7 @@ import style from './index.less'
 const {SubMenu} = Menu;
 const { Header, Content, Sider } = Layout;
 
-export default class Navigator extends React.PureComponent{
+export default class Navigator extends React.Component{
 	state = {
 		prevProps:null
 	}

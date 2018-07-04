@@ -1,8 +1,8 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Table, Alert } from 'antd';
 import styles from './index.less';
 
-export default class StandardTable extends PureComponent {
+export default class StandardTable extends React.Component {
   handleSelectedRowChange = (selectedRowKeys)=>{
     this.props.onSelectedRowsChange(selectedRowKeys);
   }

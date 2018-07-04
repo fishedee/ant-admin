@@ -11,7 +11,7 @@ const Option = Select.Option;
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
-export default class Table extends React.PureComponent{
+export default class Table extends React.Component{
 	state = {
 		modalVisible:false,
 		filter:{},

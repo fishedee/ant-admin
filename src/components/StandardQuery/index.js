@@ -6,7 +6,7 @@ import DefaultForm from '@/components/DefaultForm';
 const FormItem = Form.Item;
 
 @DefaultForm
-export default class StandardQuery extends React.PureComponent{
+export default class StandardQuery extends React.Component{
 
 	handleSearch = (e)=>{
 		const { form } = this.props;

@@ -18,7 +18,6 @@ export default function authority(roles){
 				}
 			}
 			render = () => {
-				console.log(this.props.login);
 				if( this.props.login == null ){
 					return (<Spin size="large" />);
 				}else{

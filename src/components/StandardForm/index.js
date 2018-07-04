@@ -5,7 +5,7 @@ import DefaultForm from '@/components/DefaultForm';
 const FormItem = Form.Item;
 
 @DefaultForm
-export default class StandardForm extends React.PureComponent{
+export default class StandardForm extends React.Component{
 	state = {
 		submitLoading:false,
 	}

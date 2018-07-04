@@ -5,13 +5,27 @@ import GlobalFooter from '@/components/GlobalFooter';
 import {copyright,title} from '@/utils/constant';
 import style from './Login.less';
 import qs from 'qs';
+import {connect} from 'redva';
 
-export default class LoginPage extends React.PureComponent{
-	onSubmit = (value)=>{
-		console.log(value);
+@connect()
+export default class LoginPage extends React.Component{
+	onSubmit = async (value)=>{
+		await this.props.dispatch({
+			type:'login/login',
+			payload:{
+				name:value.userName,
+				password:value.password,
+			}
+		});
+		let query = qs.parse(this.props.location.search.substr(1));
+		if( query.redirect ){
+			this.props.history.push(query.redirect);
+		}else{
+			this.props.history.push('/');
+		}
 	}
 	render(){
-		console.log(qs.parse(this.props.location.search.substr(1)));
+		console.log();
 		return (
 		<div className={style.root}>
 			<CheckIn 

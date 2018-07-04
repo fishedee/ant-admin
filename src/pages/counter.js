@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import {connect} from 'redva';
 import styles from './counter.css';
 
-class Counter extends React.PureComponent{
+class Counter extends React.Component{
 	onClick = ()=>{
 		this.props.dispatch({
 	      type: 'counter/inc',

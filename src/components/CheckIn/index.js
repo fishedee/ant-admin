@@ -7,7 +7,7 @@ import classname from 'classname';
 const Tab = Tabs.TabPane;
 const FormItem = Form.Item;
 @Form.create()
-export default class CheckIn extends React.PureComponent {
+export default class CheckIn extends React.Component {
   onSubmit = (e)=>{
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {

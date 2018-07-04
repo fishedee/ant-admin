@@ -5,22 +5,26 @@ import {copyright,title} from '@/utils/constant';
 import authority from '@/utils/authority';
 import menu from '@/utils/menu';
 import style from './Home.less';
+import {connect} from 'redva';
 
-@authority(['guest2'])
-export default class Home extends React.PureComponent{
+@authority(['admin','user'])
+@connect((state)=>{
+	return {login:state.login};
+})
+export default class Home extends React.Component{
 	onSelect = (path)=>{
-		console.log(path);
 		this.props.history.push(path);
 	}
-	onClick = (data)=>{
-		alert(data);
+	logout = (data)=>{
+		this.props.dispatch({
+			type:'/login/logout',
+		});
 	}
 	render(){
 		const login = {
-			name:"fishedee",
+			name:this.props.login.name,
 			dropdown:[
-				{name:"设置密码",onClick:this.onClick.bind(this,'1')},
-				{name:"退出",onClick:this.onClick.bind(this,'2')}
+				{name:"退出",onClick:this.logout}
 			]
 		}
 		return (

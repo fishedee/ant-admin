@@ -49,8 +49,8 @@
     "qs": "^6.5.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "redva": "^1.1.1",
-    "redva-loading": "^1.1.1"
+    "redva": "^1.1.3",
+    "redva-loading": "^1.1.3"
   },
   "homepage": "https://github.com/fishedee/ant-admin#readme"
 }

@@ -45,19 +45,19 @@ export default async function request(url, options) {
   };
   const newOptions = { ...defaultOptions, ...options };
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
-    if (!(newOptions.body instanceof FormData)) {
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-        ...newOptions.headers,
-      };
-      newOptions.body = qs.stringify(newOptions.body);
-    } else {
-      // newOptions.body is FormData
-      newOptions.headers = {
-        Accept: 'application/json',
-        ...newOptions.headers,
-      };
+    newOptions.headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+      ...newOptions.headers,
+    };
+    newOptions.body = qs.stringify(newOptions.body);
+  }
+  if( newOptions.query ){
+    let query = qs.stringify(newOptions.query);
+    if( url.indexOf('?') != -1 ){
+      url += '&'+query;
+    }else{
+      url += '?'+query;
     }
   }
   let response = await fetch(url, newOptions);
@@ -69,6 +69,6 @@ export default async function request(url, options) {
   if( newOptions.autoCheck ){
     checkBody(data);
   }
-
+  
   return data;
 }

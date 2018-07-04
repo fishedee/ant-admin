@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal } from 'antd';
 
-export default class StandardModal extends React.PureComponent{
+export default class StandardModal extends React.Component{
 	state = {
 		confirmLoading:false,
 	};

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class Login extends React.PureComponent{
+export default class Login extends React.Component{
 	render(){
 		return (<div>This is Login Page</div>);
 	}

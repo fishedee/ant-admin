@@ -15,7 +15,7 @@ export default function DefaultForm(component){
 	  	return obj;
 	  },
 	})(component);
-	return class FormWrapper extends React.PureComponent{
+	return class FormWrapper extends React.Component{
 	  state = {
 	  	data:{}
 	  }

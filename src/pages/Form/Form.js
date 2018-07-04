@@ -4,13 +4,19 @@ import StandardForm from '@/components/StandardForm';
 
 const Option = Select.Option;
 
-export default class Form extends React.PureComponent{
+export default class Form extends React.Component{
 	state = {
-		data:{}
+		data:{
+			number:0
+		}
 	}
 	form = null;
 	onChange = (data)=>{
-		this.setState({data:data});
+		this.state.data = data;
+		console.log('mccd',this.state.data.number);
+		this.state.data.number++;
+		console.log('mccu',this.state.data.number);
+		this.setState({});
 	}
 	onSubmit = async ()=>{
 		let {err,data} = await this.form.validateFields();
@@ -28,6 +34,7 @@ export default class Form extends React.PureComponent{
 		onOk();
 	}
 	render = ()=>{
+		console.log('mj',this.state.data);
 		let columns = [
 			{
 				title:"规则编号",

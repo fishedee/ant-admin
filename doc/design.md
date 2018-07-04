@@ -1,0 +1,242 @@
+# 1 概述
+
+ant-admin 是使用react+ant design+redva的一套后端管理系统开发框架，这是它的设计概念
+
+# 2 目标
+
+简单快速易懂的后端管理系统开发框架
+
+# 3 原则
+
+* 简单，符合react直观的开发概念，尽量减少高阶组件的使用
+* 组合，列表与条目应该能够随意组合，而不是列表中写死了条目的类型。
+* 快速，每个页面尽量能在一个js内就能完成
+
+# 4 约定 
+
+## 4.1 输入组件
+
+所有的输入组件，都必须包含有value和onChange两个字段，以让父组件能实现value的实时计算和校验。
+
+输入组件，包括基础输入组件，input，inputNumber，和容器输入组件form，table等等。
+
+## 4.2 模态对话框
+
+```
+class FormModal extends React.PureComponent{
+	onModalOk(onOk){
+		//doSomething you want
+		onOk(xxxx);
+	}
+	render(){
+		.....
+	}
+}
+class Page extends React.PureComponent{
+	render(){
+		return (
+			<StandardModal
+				visible={this.state.visible}
+				onOk={this.onOk}
+				onCancel={this.onCancel}>
+				<FormModal/>
+			</StandardModal>
+		);
+	}
+}
+```
+
+模态对话框的内容用一个Component来实现就可以了，与普通Component不同的是，它需要多一个onModalOk的回调函数就可以了
+
+## 4.3 跳转处理
+
+```
+this.props.history.push({
+	pathname:'xxx',
+	search:qs.stringify({
+		a:123,
+		b:456
+	})
+});
+```
+
+跳转前，将参数推入到history的search里面，要注意用qs进行转换。
+
+```
+var query = qs.parse(this.props.location.search.substr(1));
+```
+
+跳转后，在location的search里面取出参数，要注意用qs进行转换。
+
+## 4.4 错误处理
+
+```
+app.router(({history,app})=>{
+	const onError = (e)=>{
+		console.error(e);
+		Modal.error({
+			title: '错误',
+			content: e.message,
+		});
+	}
+	const router = getRouter(app);
+	return (
+	<ErrorCatch onError={onError}>
+		<LocaleProvider locale={zhCN}>
+			<Router history={history}>
+				{router}
+			</Router>
+		</LocaleProvider>
+	</ErrorCatch>);
+});
+```
+
+在app的入口已经做了全局的错误处理，注意，只捕捉在async区域内的错误，一旦错误发生并且未捕捉时，就会触发onError回调，所以，在编写代码时仅需要考虑正常流程就可以了。
+
+```
+componentDidMount = async ()=>{
+	let types = await this.props.dispatch({type:'/type/getAll'});
+	let cards = await this.props.dispatch({type:'/card/get'});
+	//....
+}
+```
+
+为什么不直接用redva的onError，因为redva的onError仅捕捉model层的错误，在组件内我们可能会有以上的代码，需要串联多个action的结果，任意一个出错时都需要打断全部流程。所以，我们需要的是一个全局的错误处理。
+
+## 4.5 模型设计
+
+```
+export default {
+	namespace:'card',
+	state:null,
+	actions:{
+		search({payload}){
+			return request('/card/search',{
+				method:'GET',
+				query:payload
+			});
+		},
+		get({payload}){
+			return request('/card/get',{
+				method:'GET',
+				query:{
+					cardId:payload.cardId
+				}
+			});
+		},
+		add({payload}){
+			return request('/card/add',{
+				method:'POST',
+				body:payload,
+			});
+		}
+	}
+}
+```
+在这里，我们将模型设计为最轻量的方式，也就是将redva仅仅作为request薄薄的封装层。
+
+```
+export default {
+	namespace:'card',
+	state:{
+		list:[],
+		where:{},
+		limit:{},
+		allData:{},
+	}
+	mutations:{
+		setList(state,{payload}){
+			state.card.list = payload.list;
+		},
+		setWhere(state,{payload}){
+			state.card.where = payload.where;
+		},
+		setLimit(state,{payload}){
+			state.card.limit = payload.limit;
+		},
+		setAllData(state,{payload}){
+			state.card.allData[payload.carddId] = payload;
+		}
+	}
+	actions:{
+		async search({payload},{getState,dispatch}){
+			let data = await request('/card/search',{
+				method:'GET',
+				query:payload
+			});
+			let state = getState();
+			await dispatch({
+				type:'setList'
+				payload:{list:data.data}
+			})
+			await dispatch({
+				type:'setLimit',
+				payload:{limit:{
+					...state.card.limit,
+					count:data.count,
+				}}
+			});
+		},
+		async get({payload}){
+			let data = await request('/card/get',{
+				method:'GET',
+				query:{
+					cardId:payload.cardId
+				}
+			});
+			await dispatch{
+				type:'setAllData',
+				payload:data.data
+			});
+		},
+		add({payload}){
+			request('/card/add',{
+				method:'POST',
+				body:payload,
+			});
+		}
+	}
+}
+```
+
+为什么我们不使用上面这种方式，将where,limit都放到model里面呢。上面这种方式的好处是：
+
+* 有缓存，二次进入该页面时会有缓存，显示上次拉取过的数据。
+
+缺点是：
+
+* 繁琐，原来setWhere,setLimit在component中已经干过一次了，在这里又要干一次，繁琐。
+* 不是智能缓存，上述的缓存方式还是相当粗糙的，没有作扁平化处理。所以，当mod数据以后，都需要重新拉数据，列表页的相应条目才会更新。但是，如果要做到完全的扁平化，就需要引入对象提取扁平化处理，以及拉数据时的组合处理，那就更加繁琐了。
+
+在开发后端框架中，我们不太希望因为缓存的原因，而增加代码的复杂性和降低开发效率，这是不必要的，所以斟酌之下，仅将model作为request的薄薄的封装层，一般情况下不放入state数据。
+
+## 4.6 不使用纯渲染
+
+```
+export default class Comp extends React.Component{
+	state = {
+		data:[]
+	};
+	onClick = ()=>{
+		this.state.data.push('123');
+		this.setState({});
+	}
+	render = ()=>{
+		return (
+			<div>
+				{this.state.data.map((item,key)=>{
+					return (<li key={key}>{item}</li>);
+				})}
+			</div>
+		);
+	}
+}
+```
+
+总的来说，我们都是使用Component，并且直接修改state来实现渲染。使用PureComponent加上immutable或immer的想法，能大幅提高react的运行效率。但是，这样做需要仔细地控制好Component的属性，避免高阶组件造成的不可渲染的问题。另外，由于我们简化了model的功能，要在Component上使用Pure的话，就只能用immutable，这也提高了繁琐的地方。
+
+所以，兼顾开发的效率，我们避免使用纯渲染，一律使用普通渲染方式.
+
+# 5 总结
+
+无

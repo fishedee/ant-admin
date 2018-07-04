@@ -16,7 +16,7 @@ module.exports = {
 		path:path.resolve(__dirname,'dist')
 	},
 
-	devtool: isDevelopment?'cheap-module-eval-source-map':'',
+	devtool: '',
 	
 	resolve:{
 		alias: {
