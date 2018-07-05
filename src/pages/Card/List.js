@@ -1,6 +1,8 @@
 import React,{Fragment} from 'react';
 import { connect } from 'redva';
-import { Button , Input ,Select,InputNumber,DatePicker,Badge,Divider} from 'antd';
+import { Button , Input ,Select,InputNumber,Badge,Divider} from 'antd';
+import MyDatePicker from '@/components/MyDatePicker';
+import MyTimePicker from '@/components/MyTimePicker';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
 import StandardModal from '@/components/StandardModal';
@@ -8,7 +10,7 @@ import PageHeader from '@/components/PageHeader';
 import moment from 'moment';
 import Detail from './Detail';
 
-const {RangePicker} = DatePicker;
+const {MyRangePicker,MyWeekPicker,MyMonthPicker} = MyDatePicker;
 const {Option} = Select;
 const typeOption = {
 	1:'储蓄卡',
@@ -46,10 +48,9 @@ export default class Table extends React.Component{
 	}
 	fetch = async ()=>{
 		let where = { ...this.state.where };
-		console.log(where.createTime);
 		if( where.createTime ){
-			where.beginTime = where.createTime[0],
-			where.endTime = where.createTime[1],
+			where.beginTime = where.createTime[0]+' 00:00:00',
+			where.endTime = where.createTime[1]+' 23:59:59',
 			where.creatTime = undefined;
 		}
 		let limit = { 
@@ -104,10 +105,7 @@ export default class Table extends React.Component{
 				field:"createTime",
 				render:()=>{
 					return (
-						<RangePicker
-						  showTime
-					      format={'YYYY/MM/DD HH:mm:ss'}
-					    />
+						<MyRangePicker/>
 					);
 				}
 			}
@@ -129,12 +127,10 @@ export default class Table extends React.Component{
 	      {
 	        title: '创建时间',
 	        dataIndex: 'createTime',
-	        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 	      },
 	      {
 	        title: '更新时间',
 	        dataIndex: 'modifyTime',
-	        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 	      },
 	      {
 	        title: '操作',

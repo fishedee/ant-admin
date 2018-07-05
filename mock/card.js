@@ -1,13 +1,14 @@
 var express = require('express');
-
+var moment = require('moment');
 var app = express.Router();
 
-var cards = [
-	{cardId:10001,name:'工资卡',type:1,createTime:new Date(),modifyTime:new Date()},
-	{cardId:10002,name:'投资卡',type:1,createTime:new Date(),modifyTime:new Date()},
-	{cardId:10003,name:'零用卡',type:2,createTime:new Date(),modifyTime:new Date()},
-	{cardId:10004,name:'家用卡',type:2,createTime:new Date(),modifyTime:new Date()}
+const now = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 
+var cards = [
+	{cardId:10001,name:'工资卡',type:1,createTime:now,modifyTime:now},
+	{cardId:10002,name:'投资卡',type:1,createTime:now,modifyTime:now},
+	{cardId:10003,name:'零用卡',type:2,createTime:now,modifyTime:now},
+	{cardId:10004,name:'家用卡',type:2,createTime:now,modifyTime:now}
 ];
 app.get('/search',function(req,res){
 	var query = req.query;
