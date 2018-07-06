@@ -2,13 +2,27 @@ var express = require('express');
 var moment = require('moment');
 var app = express.Router();
 
-const now = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+function now(){
+	return moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+}
 
 var cards = [
-	{cardId:10001,name:'工资卡',type:1,createTime:now,modifyTime:now},
-	{cardId:10002,name:'投资卡',type:1,createTime:now,modifyTime:now},
-	{cardId:10003,name:'零用卡',type:2,createTime:now,modifyTime:now},
-	{cardId:10004,name:'家用卡',type:2,createTime:now,modifyTime:now}
+	{cardId:10001,name:'工资卡',type:1,createTime:now(),modifyTime:now()},
+	{cardId:10002,name:'投资卡',type:1,createTime:now(),modifyTime:now()},
+	{cardId:10003,name:'零用卡',type:2,createTime:now(),modifyTime:now()},
+	{cardId:10004,name:'家用卡',type:2,createTime:now(),modifyTime:now()},
+	{cardId:10005,name:'工资卡',type:1,createTime:now(),modifyTime:now()},
+	{cardId:10006,name:'投资卡',type:1,createTime:now(),modifyTime:now()},
+	{cardId:10007,name:'零用卡',type:2,createTime:now(),modifyTime:now()},
+	{cardId:10008,name:'家用卡',type:2,createTime:now(),modifyTime:now()},
+	{cardId:10011,name:'工资卡',type:1,createTime:now(),modifyTime:now()},
+	{cardId:10012,name:'投资卡',type:1,createTime:now(),modifyTime:now()},
+	{cardId:10013,name:'零用卡',type:2,createTime:now(),modifyTime:now()},
+	{cardId:10014,name:'家用卡',type:2,createTime:now(),modifyTime:now()},
+	{cardId:10015,name:'工资卡',type:1,createTime:now(),modifyTime:now()},
+	{cardId:10016,name:'投资卡',type:1,createTime:now(),modifyTime:now()},
+	{cardId:10017,name:'零用卡',type:2,createTime:now(),modifyTime:now()},
+	{cardId:10018,name:'家用卡',type:2,createTime:now(),modifyTime:now()}
 ];
 app.get('/search',function(req,res){
 	var query = req.query;
@@ -34,7 +48,7 @@ app.get('/search',function(req,res){
 		}
 		return true;
 	});
-	var subResult = result.slice(query.pageIndex,query.pageSize);
+	var subResult = result.slice(query.pageIndex,query.pageIndex+query.pageSize);
 	res.json({
 		code:0,
 		msg:'',
@@ -73,7 +87,7 @@ app.get('/get',function(req,res){
 app.post('/add',function(req,res){
 	var body = req.body;
 
-	var maxCardId = cards.reduce(function(card,max){
+	var maxCardId = cards.reduce(function(max,card){
 		if( max < card.cardId ){
 			return card.cardId;
 		}else{
@@ -83,9 +97,9 @@ app.post('/add',function(req,res){
 	cards.push({
 		cardId:maxCardId+1,
 		name:body.name,
-		type:body.type,
-		createTime:new Date(),
-		modifyTime:new Date()
+		type:parseInt(body.type),
+		createTime:now(),
+		modifyTime:now()
 	});
 	res.json({
 		code:0,
@@ -115,9 +129,9 @@ app.post('/mod',function(req,res){
 		cards[result] = {
 			cardId:cardId,
 			name:body.name,
-			type:body.type,
+			type:parseInt(body.type),
 			createTime:oldCard.createTime,
-			modifyTime:new Date()
+			modifyTime:now()
 		};
 		res.json({
 			code:0,

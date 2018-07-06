@@ -31,6 +31,13 @@ export default {
         body:payload,
         autoCheck:true,
       })
+    },
+    async add({payload},{dispatch}){
+      return await request('/card/add',{
+        method:'POST',
+        body:payload,
+        autoCheck:true,
+      })
     }
   }
 };

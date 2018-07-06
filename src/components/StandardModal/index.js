@@ -6,10 +6,16 @@ export default class StandardModal extends React.Component{
 		confirmLoading:false,
 	};
 	child = null;
+	setModalOk = (child)=>{
+		this.child = child
+	}
 	onOk = async ()=>{
-		this.setState({confirmLoading:true});
-		await this.child.onModalOk(this.props.onOk);
-		this.setState({confirmLoading:false});
+		try{
+			this.setState({confirmLoading:true});
+			await this.child(this.props.onOk);
+		}finally{
+			this.setState({confirmLoading:false});
+		}
 	}
 	onCancel = ()=>{
 		this.props.onCancel();
@@ -24,9 +30,7 @@ export default class StandardModal extends React.Component{
 				destroyOnClose={true}
 				confirmLoading={this.state.confirmLoading}>
 				{React.cloneElement(this.props.children,{
-					ref:(node)=>{
-						this.child = node;
-					}
+					setModalOk:this.setModalOk
 				})}
 			</Modal>
 		);
