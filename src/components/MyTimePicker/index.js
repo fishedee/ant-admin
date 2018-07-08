@@ -5,6 +5,9 @@ import 'moment/locale/zh-cn';
 
 export default class MyTimePicker extends React.Component{
 	onChange = (date,timeString)=>{
+		if( timeString == ''){
+			timeString = undefined;
+		}
 		this.props.onChange(timeString);
 	}
 	render = ()=>{

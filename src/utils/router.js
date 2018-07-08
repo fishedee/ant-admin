@@ -4,36 +4,41 @@ import React from 'react';
 
 let router = [
 	{
+		name:"登录",
 		path:"/login",
-		component:'Login/Login',
+		component:'Layout/Login',
 	},
 	{
+		name:"首页",
 		path:"/",
 		component:'Layout/Home',
 		children:[
 			{
-				path:"/timeline",
-				component:'List/Table',
-			},
-			{
-				path:"/friend",
+				name:"银行卡列表",
+				path:"/card",
 				models:['card'],
 				component:'Card/List',
 			},
 			{
-				path:"/list",
-				component:'list',
-				children:[
-					{path:"/list/basic",component:'list1'},
-					{path:"/list/user/:userId",component:'list2'}
-				]
+				name:"银行卡详情",
+				path:"/card/detail",
+				models:['card'],
+				component:'Card/Detail',
 			},
 			{
-				path:"/counter",
-				models:['counter'],
-				component:'counter'
+				name:"银行卡列表2",
+				path:"/card2",
+				models:['card'],
+				component:'Card2/List',
 			},
 			{
+				name:"银行卡详情2",
+				path:"/card2/detail",
+				models:['card'],
+				component:'Card2/Detail',
+			},
+			{
+				name:"找不到页面",
 				path:"/404",
 				component:'notfound',
 			}
@@ -103,4 +108,43 @@ export default function getRouter(app){
 	}
 	routerComponent = getRouterComponent(app,router);
 	return routerComponent;
+}
+
+let nameMapper = {};
+
+function resetPath(url){
+	const urlSeg = url.split('/');
+	let newSeg = [];
+	for( const i in urlSeg ){
+		if( urlSeg[i] != ''){
+			newSeg.push(urlSeg[i]);
+		}
+	}
+	return '/'+newSeg.join("/");
+}
+
+function calNameMapper(router){
+	let result = {};
+	for( let i in router ){
+		const singleRouter = router[i];
+		result[singleRouter.path] = singleRouter.name;
+		if( singleRouter.children ){
+			let childResult = calNameMapper(singleRouter.children);
+			for( let j in childResult ){
+				result[j] = childResult[j];
+			}
+		}
+	}
+	return result;
+}
+
+nameMapper = calNameMapper(router);
+
+export function getRouterName(path){
+	path = resetPath(path);
+	if( nameMapper[path] ){
+		return nameMapper[path];
+	}else{
+		return "";
+	}
 }

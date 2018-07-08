@@ -7,6 +7,9 @@ const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
 export default class MyDatePicker extends React.Component{
 	onChange = (date,dateString)=>{
+		if( dateString == ''){
+			dateString = undefined;
+		}
 		this.props.onChange(dateString);
 	}
 	render = ()=>{
@@ -28,6 +31,9 @@ export default class MyDatePicker extends React.Component{
 
 MyDatePicker.MyMonthPicker = class MyMonthPicker extends React.Component{
 	onChange = (date,dateString)=>{
+		if( dateString == ''){
+			dateString = undefined;
+		}
 		this.props.onChange(dateString);
 	}
 	render = ()=>{
@@ -49,6 +55,9 @@ MyDatePicker.MyMonthPicker = class MyMonthPicker extends React.Component{
 
 MyDatePicker.MyWeekPicker = class MyWeekPicker extends React.Component{
 	onChange = (date,dateString)=>{
+		if( dateString == ''){
+			dateString = undefined;
+		}
 		this.props.onChange(dateString);
 	}
 	render = ()=>{
@@ -70,6 +79,10 @@ MyDatePicker.MyWeekPicker = class MyWeekPicker extends React.Component{
 
 MyDatePicker.MyRangePicker = class MyRangePicker extends React.Component{
 	onChange = (date,dateString)=>{
+		if( dateString[0] == '' &&
+			dateString[1] == '' ){
+			dateString = undefined;
+		}
 		this.props.onChange(dateString);
 	}
 	render = ()=>{

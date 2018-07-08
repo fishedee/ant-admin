@@ -5,8 +5,7 @@ import MyDatePicker from '@/components/MyDatePicker';
 import MyTimePicker from '@/components/MyTimePicker';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
-import StandardModal from '@/components/StandardModal';
-import Detail from './Detail';
+import qs from 'qs';
 
 const {MyRangePicker,MyWeekPicker,MyMonthPicker} = MyDatePicker;
 const {Option} = Select;
@@ -17,8 +16,6 @@ const typeOption = ['未分类','储蓄卡','信用卡'];
 })
 export default class Table extends React.Component{
 	state = {
-		modalVisible:false,
-		modalCardId:null,
 		list:[],
 		where:{},
 		limit:{
@@ -66,14 +63,21 @@ export default class Table extends React.Component{
 		this.setState({});
 	}
 	add = async ()=>{
-		this.state.modalVisible = true;
-		this.state.modalCardId = null;
-		this.setState({});
+		this.props.history.push({
+			pathname:'/card2/detail',
+			search:qs.stringify({
+				hasBack:true
+			})
+		});
 	}
 	mod = async (cardId)=>{
-		this.state.modalVisible = true;
-		this.state.modalCardId = cardId;
-		this.setState({});
+		this.props.history.push({
+			pathname:'/card2/detail',
+			search:qs.stringify({
+				cardId:cardId,
+				hasBack:true
+			})
+		});
 	}
 	del = async (cardId)=>{
 		await this.props.dispatch({
@@ -83,13 +87,6 @@ export default class Table extends React.Component{
 			}
 		});
 		await this.fetch();
-	}
-	closeModal = async (isOk)=>{
-		this.state.modalVisible = false;
-		this.setState({});
-		if( isOk ){
-			await this.fetch();
-		}
 	}
 	render = ()=>{
 		let queryColumns = [
@@ -171,12 +168,6 @@ export default class Table extends React.Component{
 					data={this.state.list}
 					paginaction={this.state.limit}
 					onPaginactionChange={this.onPaginactionChange}/>
-				<StandardModal 
-					visible={this.state.modalVisible}
-					onOk={this.closeModal.bind(this,true)} 
-					onCancel={this.closeModal.bind(this,false)}>
-					<Detail cardId={this.state.modalCardId}/>
-				</StandardModal>
 			</div>
 		);
 	}

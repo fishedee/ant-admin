@@ -12,13 +12,18 @@ export default class StandardForm extends React.Component{
 	handleSubmit = async (e)=>{
 		const { form } = this.props;
 		e.preventDefault();
-		try{
-			this.setState({submitLoading:true});
-			await this.props.onSubmit();
-			this.setState({submitLoading:false});
-		}catch(e){
-			this.setState({submitLoading:false});
-		}	
+		form.validateFields(async (err,values)=>{
+			if( err ){
+				return;
+			}
+			try{
+				this.setState({submitLoading:true});
+				await this.props.onSubmit(values);
+				this.setState({submitLoading:false});
+			}catch(e){
+				this.setState({submitLoading:false});
+			}	
+		})
 	}
 
 	renderFormItem = ()=>{
