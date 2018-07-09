@@ -9,9 +9,27 @@ const typeOption = ['未分类','储蓄卡','信用卡'];
 
 @connect()
 export default class Form extends React.Component{
-	state = {
+	static state = {
 		data:{},
-		cardId:null,
+	}
+	constructor(props){
+		super(props);
+		let query = qs.parse(this.props.location.search.substr(1));
+		if( query.cardId ){
+			this.state = {
+				data:{},
+				cardId:query.cardId
+			}
+		}else{
+			this.state = {
+				data:Form.data
+			}
+		}
+	}
+	componentWillUnmount = ()=>{
+		if( !this.state.cardId ){
+			Form.data = this.state.data;
+		}
 	}
 	form = null;
 	onChange = (data)=>{
@@ -19,9 +37,6 @@ export default class Form extends React.Component{
 		this.setState({});
 	}
 	componentDidMount = async ()=>{
-		let query = qs.parse(this.props.location.search.substr(1));
-		this.state.cardId = query.cardId;
-
 		if( this.state.cardId ){
 			let data = await this.props.dispatch({
 				type:'/card/get',
@@ -47,6 +62,7 @@ export default class Form extends React.Component{
 				type:'/card/add',
 				payload:this.state.data,
 			});
+			this.state.data = {};
 		}
 		this.props.history.go(-1);
 	}

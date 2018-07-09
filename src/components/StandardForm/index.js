@@ -25,7 +25,10 @@ export default class StandardForm extends React.Component{
 			}	
 		})
 	}
-
+	handleReset = ()=>{
+		const { form } = this.props;
+		form.resetFields();
+	}
 	renderFormItem = ()=>{
 		const { form } = this.props;
 		const { getFieldDecorator } = form;
@@ -68,6 +71,7 @@ export default class StandardForm extends React.Component{
 			formItem.push(
 				<FormItem {...tailFormItemLayout} key={"__submit"}>
 					<Button type="primary" htmlType="submit" loading={this.state.submitLoading}>提交</Button>
+					<Button onClick={this.handleReset}>重置</Button>
 				</FormItem>
 			);
 		}

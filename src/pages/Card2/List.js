@@ -15,7 +15,7 @@ const typeOption = ['未分类','储蓄卡','信用卡'];
 	return {loading:state.loading.global};
 })
 export default class Table extends React.Component{
-	state = {
+	static state = {
 		list:[],
 		where:{},
 		limit:{
@@ -24,6 +24,13 @@ export default class Table extends React.Component{
 			count:0,
 		}
 	};
+	constructor(props){
+		super(props);
+		this.state = Table.state;
+	}
+	componentWillUnmount = ()=>{
+		Table.state = this.state;
+	}
 	onQueryChange = (where)=>{
 		this.state.where = where;
 		this.setState({});
