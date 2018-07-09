@@ -9,6 +9,7 @@ import menu from '@/utils/menu';
 import {getRouterName} from '@/utils/router';
 import style from './Home.less';
 import {connect} from 'redva';
+import cache from '@/utils/cache';
 
 @authority(['admin','user'])
 @connect((state)=>{
@@ -29,6 +30,10 @@ export default class Home extends React.Component{
 			key:this.state.key+1
 		});
 	}
+	clearCache = ()=>{
+		cache.clear();
+		this.onReload();
+	}
 	logout = (data)=>{
 		this.props.dispatch({
 			type:'/login/logout',
@@ -38,6 +43,7 @@ export default class Home extends React.Component{
 		const login = {
 			name:this.props.login.name,
 			dropdown:[
+				{name:"清空缓存",onClick:this.clearCache},
 				{name:"退出",onClick:this.logout}
 			]
 		}

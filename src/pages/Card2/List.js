@@ -6,6 +6,7 @@ import MyTimePicker from '@/components/MyTimePicker';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
 import qs from 'qs';
+import cache from '@/utils/cache';
 
 const {MyRangePicker,MyWeekPicker,MyMonthPicker} = MyDatePicker;
 const {Option} = Select;
@@ -15,18 +16,20 @@ const typeOption = ['未分类','储蓄卡','信用卡'];
 	return {loading:state.loading.global};
 })
 export default class Table extends React.Component{
-	static state = {
-		list:[],
-		where:{},
-		limit:{
-			pageIndex:0,
-			pageSize:10,
-			count:0,
-		}
-	};
 	constructor(props){
 		super(props);
-		this.state = Table.state;
+		this.state = cache.get('/card2/list') || {
+			list:[],
+			where:{},
+			limit:{
+				pageIndex:0,
+				pageSize:10,
+				count:0,
+			}
+		}
+	}
+	componentDidUpdate = ()=>{
+		cache.set('/card2/list',this.state);
 	}
 	componentWillUnmount = ()=>{
 		Table.state = this.state;

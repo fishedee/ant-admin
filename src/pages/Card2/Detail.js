@@ -3,15 +3,13 @@ import { connect } from 'redva';
 import {Input,Select,InputNumber,DatePicker} from 'antd';
 import StandardForm from '@/components/StandardForm';
 import qs from 'qs';
+import cache from '@/utils/cache';
 
 const Option = Select.Option;
 const typeOption = ['未分类','储蓄卡','信用卡'];
 
 @connect()
 export default class Form extends React.Component{
-	static state = {
-		data:{},
-	}
 	constructor(props){
 		super(props);
 		let query = qs.parse(this.props.location.search.substr(1));
@@ -22,13 +20,13 @@ export default class Form extends React.Component{
 			}
 		}else{
 			this.state = {
-				data:Form.data
+				data:cache.get('/card2/detail') || {}
 			}
 		}
 	}
-	componentWillUnmount = ()=>{
+	componentDidUpdate = ()=>{
 		if( !this.state.cardId ){
-			Form.data = this.state.data;
+			cache.set('/card2/detail',this.state.data);
 		}
 	}
 	form = null;
