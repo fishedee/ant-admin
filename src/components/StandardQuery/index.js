@@ -31,13 +31,13 @@ export default class StandardQuery extends React.Component{
 		for( let i in columns ){
 			let singleColumn = columns[i];
 			formList.push(
-					<FormItem label={singleColumn.title} key={singleColumn.field}>
-						{getFieldDecorator(singleColumn.field)(singleColumn.render())}
+					<FormItem label={singleColumn.title} key={singleColumn.dataIndex}>
+						{getFieldDecorator(singleColumn.dataIndex)(singleColumn.render())}
 					</FormItem>
 			);
 		}
 		return (
-	      <Form onSubmit={this.handleSearch} layout="inline" style={{marginBottom:'16px'}}>
+	      <Form onSubmit={this.handleSearch} layout="inline">
 	        {formList}
 			<FormItem key={"__button"}>
 				<Button type="primary" htmlType="submit">

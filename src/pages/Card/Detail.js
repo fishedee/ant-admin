@@ -54,7 +54,7 @@ export default class Form extends React.Component{
 		let columns = [
 			{
 				title:"名称",
-				field:"name",
+				dataIndex:"name",
 				rules:[{ required: true}],
 				render:()=>{
 					return (<Input placeholder="请输入"/>);
@@ -62,7 +62,7 @@ export default class Form extends React.Component{
 			},
 			{
 				title:"类型",
-				field:"type",
+				dataIndex:"type",
 				rules:[{ required: true}],
 				render:()=>{
 					return (<Select placeholder="请选择" style={{ width: '100%' }}>

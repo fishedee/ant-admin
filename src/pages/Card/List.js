@@ -95,14 +95,14 @@ export default class Table extends React.Component{
 		let queryColumns = [
 			{
 				title:"名称",
-				field:"name",
+				dataIndex:"name",
 				render:()=>{
 					return (<Input placeholder="请输入"/>);
 				}
 			},
 			{
 				title:"类型",
-				field:"type",
+				dataIndex:"type",
 				render:()=>{
 					return (<Select placeholder="请选择" allowClear={true} style={{width:200}}>
 						{typeOption.map((name,index)=>{
@@ -113,7 +113,7 @@ export default class Table extends React.Component{
 			},
 			{
 				title:"时间",
-				field:"createTime",
+				dataIndex:"createTime",
 				render:()=>{
 					return (
 						<MyRangePicker/>
@@ -163,12 +163,15 @@ export default class Table extends React.Component{
 					data={this.state.where}
 					onChange={this.onQueryChange}
 					onSubmit={this.onQuerySubmit}/>
-				<div><Button type="primary" onClick={this.add}>新建</Button></div>
+				<div style={{marginTop:'16px'}}>
+					<Button type="primary" onClick={this.add}>新建</Button>
+				</div>
 				<StandardTable 
+					style={{marginTop:'16px'}}
 					rowKey={'cardId'}
 					loading={this.props.loading}
 					columns={columns}
-					data={this.state.list}
+					value={this.state.list}
 					paginaction={this.state.limit}
 					onPaginactionChange={this.onPaginactionChange}/>
 				<StandardModal 

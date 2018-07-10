@@ -1,17 +1,24 @@
 export default [
 	{
-		name:"用户管理",
+		name:"管理",
 		children:[
 			{
 				name:"银行卡",
 				icon:"user",
 				children:[
 					{name:"银行卡1",path:"/card"},
-					{name:"银行卡2",path:"/card2"}
+					{name:"银行卡2",path:"/card2"},
 				]
 			},
 			{
-				name:"管理2",
+				name:"订单",
+				icon:"shopping-cart",
+				children:[
+					{name:"订单",path:"/order"}
+				]
+			},
+			{
+				name:"系统",
 				icon:"laptop",
 				children:[
 					{name:"找不到页面",path:"/404"},

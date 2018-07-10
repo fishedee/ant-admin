@@ -1,24 +1,21 @@
 import React,{Fragment} from 'react';
 import { connect } from 'redva';
-import { Button , Input ,Select,InputNumber,Divider,Popconfirm} from 'antd';
+import { Button , Input , Divider,Popconfirm} from 'antd';
 import MyDatePicker from '@/components/MyDatePicker';
-import MyTimePicker from '@/components/MyTimePicker';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
 import qs from 'qs';
 import cache from '@/utils/cache';
 
-const {MyRangePicker,MyWeekPicker,MyMonthPicker} = MyDatePicker;
-const {Option} = Select;
-const typeOption = ['未分类','储蓄卡','信用卡'];
+const {MyRangePicker} = MyDatePicker;
 
 @connect((state)=>{
 	return {loading:state.loading.global};
 })
-export default class Table extends React.Component{
+export default class List extends React.Component{
 	constructor(props){
 		super(props);
-		this.state = cache.get('/card2/list') || {
+		this.state = cache.get('/order/list') || {
 			list:[],
 			where:{},
 			limit:{
@@ -29,7 +26,7 @@ export default class Table extends React.Component{
 		}
 	}
 	componentDidUpdate = ()=>{
-		cache.set('/card2/list',this.state);
+		cache.set('/order/list',this.state);
 	}
 	onQueryChange = (where)=>{
 		this.state.where = where;
@@ -59,7 +56,7 @@ export default class Table extends React.Component{
 			count:undefined
 		};
 		let data = await this.props.dispatch({
-			type:'/card/search',
+			type:'/order/search',
 			payload:{
 				...where,
 				...limit,
@@ -71,26 +68,26 @@ export default class Table extends React.Component{
 	}
 	add = async ()=>{
 		this.props.history.push({
-			pathname:'/card2/detail',
+			pathname:'/order/detail',
 			search:qs.stringify({
 				hasBack:true
 			})
 		});
 	}
-	mod = async (cardId)=>{
+	mod = async (orderId)=>{
 		this.props.history.push({
-			pathname:'/card2/detail',
+			pathname:'/order/detail',
 			search:qs.stringify({
-				cardId:cardId,
+				orderId:orderId,
 				hasBack:true
 			})
 		});
 	}
-	del = async (cardId)=>{
+	del = async (orderId)=>{
 		await this.props.dispatch({
-			type:'/card/del',
+			type:'/order/del',
 			payload:{
-				cardId:cardId,
+				orderId:orderId,
 			}
 		});
 		await this.fetch();
@@ -98,21 +95,17 @@ export default class Table extends React.Component{
 	render = ()=>{
 		let queryColumns = [
 			{
-				title:"名称",
+				title:"客户",
 				dataIndex:"name",
 				render:()=>{
 					return (<Input placeholder="请输入"/>);
 				}
 			},
 			{
-				title:"类型",
-				dataIndex:"type",
+				title:"电话",
+				dataIndex:"phone",
 				render:()=>{
-					return (<Select placeholder="请选择" allowClear={true} style={{width:200}}>
-						{typeOption.map((name,index)=>{
-							return (<Option value={index} key={index}>{name}</Option>);
-						})}
-	                </Select>);
+					return (<Input placeholder="请输入"/>);
 				}
 			},
 			{
@@ -127,17 +120,34 @@ export default class Table extends React.Component{
 		];
 		 const columns = [
 	      {
-	        title: '银行卡ID',
-	        dataIndex: 'cardId',
+	        title: '订单ID',
+	        dataIndex: 'orderId',
 	      },
 	      {
-	        title: '名称',
+	        title: '客户',
 	        dataIndex: 'name',
 	      },
 	      {
-	        title: '类型',
-	        dataIndex: 'type',
-	        render: (val) =>typeOption[val],
+	        title: '电话',
+	        dataIndex: 'phone',
+	      },
+	      {
+	        title: '地址',
+	        dataIndex: 'address',
+	      },
+	      {
+	        title: '商品数量',
+	        dataIndex: 'items',
+	        render(val){
+	        	return val.length+'个';
+	        }
+	      },
+	      {
+	        title: '总价',
+	        dataIndex: 'total',
+	        render(val){
+	        	return val + '元';
+	        }
 	      },
 	      {
 	        title: '创建时间',
@@ -151,9 +161,9 @@ export default class Table extends React.Component{
 	        title: '操作',
 	        render: (val,data) => (
 	          <Fragment>
-	            <a onClick={this.mod.bind(this,data.cardId)}>修改</a>
+	            <a onClick={this.mod.bind(this,data.orderId)}>修改</a>
 	            <Divider type="vertical" />
-	            <Popconfirm title="确定删除该银行卡?" onConfirm={this.del.bind(this,data.cardId)}>
+	            <Popconfirm title="确定删除该订单?" onConfirm={this.del.bind(this,data.orderId)}>
 	            	<a>删除</a>
 	            </Popconfirm>
 	          </Fragment>
@@ -172,7 +182,7 @@ export default class Table extends React.Component{
 				</div>
 				<StandardTable 
 					style={{marginTop:'16px'}}
-					rowKey={'cardId'}
+					rowKey={'orderId'}
 					loading={this.props.loading}
 					columns={columns}
 					value={this.state.list}

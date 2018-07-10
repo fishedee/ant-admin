@@ -23,7 +23,7 @@ function checkStatus(response) {
     return;
   }
   const errortext = codeMessage[response.status] || response.statusText;
-  const error = new Error(errortext);
+  const error = new Error(`请求错误 ${response.status}: ${response.url}：${errortext}`);
   error.code = 50001;
   error.msg = `请求错误 ${response.status}: ${response.url}：${errortext}`;
   throw error;
