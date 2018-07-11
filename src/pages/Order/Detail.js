@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'redva';
-import {Input,InputNumber} from 'antd';
+import {Input,InputNumber,Button} from 'antd';
 import StandardForm from '@/components/StandardForm';
 import StandardTable from '@/components/StandardTable';
 import qs from 'qs';
 import cache from '@/utils/cache';
+import InputWrapper from '@/components/InputWrapper';
 
 @connect()
 export default class Detail extends React.Component{
@@ -27,20 +28,44 @@ export default class Detail extends React.Component{
 			cache.set('/order/detail',this.state.data);
 		}
 	}
+	round = (num)=>{
+		return Math.round(parseFloat(num*100))/100
+	}
 	onChange = (data)=>{
+		let total = 0.0;
+		for( const i in data.items ){
+			let item = data.items[i];
+			item.price = item.price;
+			item.num = item.num;
+			item.amount = this.round(item.price * item.num);
+			total += item.amount;
+		}
+		data.total = total
 		this.state.data = data;
-		//FIXME 计算合计和总价
 		this.setState({});
 	}
 	delItems = (key)=>{
 		let index = this.state.data.items.findIndex((single)=>{
 			return single._key == key;
 		})
-		console.log(index,key);
 		if( index != -1 ){
 			this.state.data.items.splice(index,1);
 			this.setState({});
 		}
+	}
+	addItem = ()=>{
+		this.state.data.items = this.state.data.items || [];
+		let maxKey = this.state.data.items.reduce((max,single)=>{
+			if( max > single._key ){
+				return max;
+			}else{
+				return single._key;
+			}
+		},0);
+		this.state.data.items.push({
+			_key:maxKey+1,
+		});
+		this.setState({});
 	}
 	componentDidMount = async ()=>{
 		if( this.state.orderId ){
@@ -54,7 +79,6 @@ export default class Detail extends React.Component{
 			for( let i in data.items ){
 				data.items[i]._key = parseInt(i);
 			}
-			console.log(data);
 			this.state.data = data;
 			this.setState({});
 		}
@@ -86,7 +110,7 @@ export default class Detail extends React.Component{
 				labelCol:{span:2},
 				wrapperCol:{span:10},
 				rules:[{ required: true}],
-				render:()=>{
+				render:(value)=>{
 					return (<Input placeholder="请输入"/>);
 				}
 			},
@@ -122,21 +146,21 @@ export default class Detail extends React.Component{
 				        title: '单价',
 				        dataIndex: 'price',
 				        render:()=>{
-				        	return (<Input style={{border:'0px'}}/>);
+				        	return (<InputNumber style={{width:'100%'}} step={0.01} precision={2}/>);
 				        }
 				      },
 				      {
 				        title: '数量',
 				        dataIndex: 'num',
 				        render:()=>{
-				        	return (<Input style={{border:'0px'}}/>);
+				        	return (<InputNumber style={{width:'100%'}} step={1} precision={0}/>);
 				        }
 				      },
 				      {
 				        title: '总价',
 				        dataIndex: 'amount',
 				        render:()=>{
-				        	return (<Input disabled={true}/>);
+				        	return (<InputNumber style={{width:'100%'}} step={0.01} precision={2} disabled={true}/>);
 				        }
 				      },
 				      {
@@ -147,10 +171,14 @@ export default class Detail extends React.Component{
 				      }
 				    ];
 					return (
-						<StandardTable
-							rowKey={'_key'}
-							columns={columns}
-						/>
+						<InputWrapper
+							prefix={<Button type="primary" onClick={this.addItem}>添加</Button>}>
+							<StandardTable
+								style={{marginTop:'16px'}}
+								rowKey={'_key'}
+								columns={columns}
+							/>
+						</InputWrapper>
 					);
 				}
 			},
@@ -161,7 +189,7 @@ export default class Detail extends React.Component{
 				wrapperCol:{span:22},
 				rules:[{ required: true}],
 				render:()=>{
-					return (<Input disabled={true}/>);
+					return (<InputNumber style={{width:'100%'}} disabled={true} step={0.01} precision={2}/>);
 				}
 			},
 		];

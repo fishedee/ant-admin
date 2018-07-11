@@ -20,6 +20,12 @@ export default class StandardTable extends React.Component {
   };
 
   onCellChange = (key,dataIndex,event)=>{
+    let value = null;
+    if( event.target ){
+      value = event.target.value;
+    }else{
+      value = event;
+    }
     let list = this.props.value;
     let newList = list.map((item)=>{
       if( item[this.props.rowKey] != key ){
@@ -27,15 +33,14 @@ export default class StandardTable extends React.Component {
       }
       return {
         ...item,
-        [dataIndex]:event.target.value,
+        [dataIndex]:value,
       };
     })
-    this.props.onChange(newList,key,dataIndex,event.target.value);
+    this.props.onChange(newList,key,dataIndex,value);
   }
 
   render() {
     const { value, paginaction , loading, columns, rowKey ,selectedRows ,style} = this.props;
-
     let paginationProps = false;
     if( paginaction ){
       paginationProps = {

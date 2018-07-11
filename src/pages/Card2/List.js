@@ -33,16 +33,14 @@ export default class Table extends React.Component{
 	}
 	onQueryChange = (where)=>{
 		this.state.where = where;
+		this.state.limit.pageIndex = 0;
 		this.setState({});
+		this.fetch();
 	}
 	onPaginactionChange = (limit)=>{
 		this.state.limit = limit;
 		this.fetch();
 		this.setState({});
-	}
-	onQuerySubmit = ()=>{
-		this.state.limit.pageIndex = 0;
-		this.fetch();
 	}
 	componentDidMount = ()=>{
 		this.fetch();
@@ -165,8 +163,7 @@ export default class Table extends React.Component{
 				<StandardQuery 
 					columns={queryColumns} 
 					data={this.state.where}
-					onChange={this.onQueryChange}
-					onSubmit={this.onQuerySubmit}/>
+					onChange={this.onQueryChange}/>
 				<div style={{marginTop:'16px'}}>
 					<Button type="primary" onClick={this.add}>添加</Button>
 				</div>

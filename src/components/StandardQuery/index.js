@@ -31,22 +31,26 @@ export default class StandardQuery extends React.Component{
 		for( let i in columns ){
 			let singleColumn = columns[i];
 			formList.push(
-					<FormItem label={singleColumn.title} key={singleColumn.dataIndex}>
-						{getFieldDecorator(singleColumn.dataIndex)(singleColumn.render())}
-					</FormItem>
+				<FormItem label={singleColumn.title} key={singleColumn.dataIndex}>
+					{getFieldDecorator(singleColumn.dataIndex)(singleColumn.render())}
+				</FormItem>
+			);
+		}
+		if( this.props.onSubmit ){
+			formList.push(
+				<FormItem key={"__button"}>
+					<Button type="primary" htmlType="submit">
+					  查询
+					</Button>
+					<Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+				      重置
+				    </Button>
+				</FormItem>
 			);
 		}
 		return (
 	      <Form onSubmit={this.handleSearch} layout="inline">
 	        {formList}
-			<FormItem key={"__button"}>
-				<Button type="primary" htmlType="submit">
-				  查询
-				</Button>
-				<Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-			      重置
-			    </Button>
-			</FormItem>
 	      </Form>
 	    );
 	}

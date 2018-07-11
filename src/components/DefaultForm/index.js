@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form } from 'antd';
+import equal from 'fast-deep-equal';
 
 export default function DefaultForm(component){
 	let FormComponent = Form.create({
@@ -21,28 +22,24 @@ export default function DefaultForm(component){
 	  }
 	  formRef = null
 	  static getDerivedStateFromProps(props, state) {
-	  	if( props.data != state.prevData ){
-	  		let newData = {};
-	  		for( let key in props.data ){
-	  			let singleData = props.data[key];
-	  			let oldData = state.data[key];
-	  			if( oldData ){
-	  				newData[key] = {
-	  					...oldData,
-	  					value:singleData
-	  				}
-	  			}else{
-	  				newData[key] = {
-	  					value:singleData
-	  				}
-	  			}
-	  		}
-	  		return {
-	  			prevData:props.data,
-	  			data:newData,
-	  		};
-	  	}
-	  	return null;
+	  	let newData = {};
+  		for( let key in props.data ){
+  			let singleData = props.data[key];
+  			let oldData = state.data[key];
+  			if( oldData ){
+  				newData[key] = {
+  					...oldData,
+  					value:singleData
+  				}
+  			}else{
+  				newData[key] = {
+  					value:singleData
+  				}
+  			}
+  		}
+  		return {
+  			data:newData,
+  		};
 	  }
 	  validateFields = (validator)=>{
 	  	return new Promise((resolve,reject)=>{

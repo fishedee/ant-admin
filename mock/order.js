@@ -156,7 +156,7 @@ app.post('/mod',function(req,res){
 	}else{
 		var oldOrder = orders[result];
 		orders[result] = {
-			cardId:cardId,
+			orderId:orderId,
 			name:body.name,
 			phone:body.phone,
 			address:body.address,
