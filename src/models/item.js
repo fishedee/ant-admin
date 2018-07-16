@@ -1,49 +1,49 @@
 import request from '@/utils/request';
 
 export default {
-  namespace: 'card',
+  namespace: 'item',
   state: null,
   actions: {
     async search({payload},{dispatch}){
-      return await request('/card/search',{
+      return await request('/item/search',{
         method:'GET',
         query:payload,
         autoCheck:true,
       });
     },
     async getAll({payload},{dispatch}){
-      return await request('/card/get',{
+      return await request('/item/search',{
         method:'GET',
         query:{
           pageIndex:0,
-          pageSize:1000,
+          pageSize:10000,
         },
         autoCheck:true,
-      })
+      });
     },
     async get({payload},{dispatch}){
-      return await request('/card/get',{
+      return await request('/item/get',{
         method:'GET',
         query:payload,
         autoCheck:true,
       })
     },
     async del({payload},{dispatch}){
-      return await request('/card/del',{
+      return await request('/item/del',{
         method:'POST',
         body:payload,
         autoCheck:true,
       })
     },
     async mod({payload},{dispatch}){
-      return await request('/card/mod',{
+      return await request('/item/mod',{
         method:'POST',
         body:payload,
         autoCheck:true,
       })
     },
     async add({payload},{dispatch}){
-      return await request('/card/add',{
+      return await request('/item/add',{
         method:'POST',
         body:payload,
         autoCheck:true,

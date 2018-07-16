@@ -12,13 +12,16 @@ var orders = [
 		name:'张三',
 		phone:'15018749403',
 		address:'广东省深圳市',
+		cardId:10001,
 		items:[
 			{
+				itemId:10001,
 				price:1,
 				num:2,
 				amount:2
 			},
 			{
+				itemId:10002,
 				price:2,
 				num:3,
 				amount:6
@@ -33,13 +36,16 @@ var orders = [
 		name:'李四',
 		phone:'15018749404',
 		address:'广东省佛山市',
+		cardId:10002,
 		items:[
 			{
+				itemId:10003,
 				price:1.1,
 				num:2,
 				amount:2.2
 			},
 			{
+				itemId:10004,
 				price:2,
 				num:3,
 				amount:6
@@ -123,9 +129,15 @@ app.post('/add',function(req,res){
 	orders.push({
 		orderId:maxOrderId+1,
 		name:body.name,
+		cardId:body.cardId,
 		phone:body.phone,
 		address:body.address,
-		items:body.items,
+		items:body.items.map((item)=>{
+			return {
+				...item,
+				itemId:parseInt(item.itemId),
+			}
+		}),
 		total:body.total,
 		createTime:now(),
 		modifyTime:now()
@@ -158,9 +170,15 @@ app.post('/mod',function(req,res){
 		orders[result] = {
 			orderId:orderId,
 			name:body.name,
+			cardId:body.cardId,
 			phone:body.phone,
 			address:body.address,
-			items:body.items,
+			items:body.items.map((item)=>{
+				return {
+					...item,
+					itemId:parseInt(item.itemId),
+				}
+			}),
 			total:body.total,
 			createTime:oldOrder.createTime,
 			modifyTime:now()

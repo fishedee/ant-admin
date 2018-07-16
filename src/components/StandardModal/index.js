@@ -1,22 +1,10 @@
 import React from 'react';
 import { Modal } from 'antd';
-
+import style from './index.less';
 export default class StandardModal extends React.Component{
 	state = {
 		confirmLoading:false,
 	};
-	child = null;
-	setModalOk = (child)=>{
-		this.child = child
-	}
-	onOk = async ()=>{
-		try{
-			this.setState({confirmLoading:true});
-			await this.child(this.props.onOk);
-		}finally{
-			this.setState({confirmLoading:false});
-		}
-	}
 	onCancel = ()=>{
 		this.props.onCancel();
 	}
@@ -25,13 +13,13 @@ export default class StandardModal extends React.Component{
 			<Modal
 				title="表单"
 				visible={this.props.visible}
-				onOk={this.onOk}
-				onCancel={this.onCancel}
+				onCancel={this.props.onCancel}
+				maskClosable={false}
 				destroyOnClose={true}
-				confirmLoading={this.state.confirmLoading}>
-				{React.cloneElement(this.props.children,{
-					setModalOk:this.setModalOk
-				})}
+				footer={null}
+				width={"80%"}
+				wrapClassName={style.form}>
+				{this.props.children}
 			</Modal>
 		);
 	}

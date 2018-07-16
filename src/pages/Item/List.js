@@ -1,20 +1,10 @@
 import React,{Fragment} from 'react';
 import { connect } from 'redva';
-import { Button , Input ,InputNumber,Divider,Popconfirm} from 'antd';
-import MySelect from '@/components/MySelect';
-import MyDatePicker from '@/components/MyDatePicker';
-import MyTimePicker from '@/components/MyTimePicker';
+import { Button , Input ,Divider,Popconfirm} from 'antd';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
 import qs from 'qs';
 import cache from '@/utils/cache';
-
-const {MyRangePicker,MyWeekPicker,MyMonthPicker} = MyDatePicker;
-const typeOption = {
-	0:'未分类',
-	1:'储蓄卡',
-	2:'信用卡'
-};
 
 @connect((state)=>{
 	return {loading:state.loading.global};
@@ -22,7 +12,7 @@ const typeOption = {
 export default class Table extends React.Component{
 	constructor(props){
 		super(props);
-		this.state = cache.get('/card2/list') || {
+		this.state = cache.get('/item/list') || {
 			list:[],
 			where:{},
 			limit:{
@@ -33,10 +23,13 @@ export default class Table extends React.Component{
 		}
 	}
 	componentDidUpdate = ()=>{
-		cache.set('/card2/list',this.state);
+		cache.set('/item/list',this.state);
 	}
 	onQueryChange = (where)=>{
 		this.state.where = where;
+		this.setState({});
+	}
+	onQuerySubmit = ()=>{
 		this.state.limit.pageIndex = 0;
 		this.setState({});
 		this.fetch();
@@ -51,17 +44,12 @@ export default class Table extends React.Component{
 	}
 	fetch = async ()=>{
 		let where = { ...this.state.where };
-		if( where.createTime ){
-			where.beginTime = where.createTime[0]+' 00:00:00',
-			where.endTime = where.createTime[1]+' 23:59:59',
-			where.createTime = undefined;
-		}
 		let limit = { 
 			...this.state.limit , 
 			count:undefined
 		};
 		let data = await this.props.dispatch({
-			type:'/card/search',
+			type:'/item/search',
 			payload:{
 				...where,
 				...limit,
@@ -73,26 +61,26 @@ export default class Table extends React.Component{
 	}
 	add = async ()=>{
 		this.props.history.push({
-			pathname:'/card2/detail',
+			pathname:'/item/detail',
 			search:qs.stringify({
 				hasBack:true
 			})
 		});
 	}
-	mod = async (cardId)=>{
+	mod = async (itemId)=>{
 		this.props.history.push({
-			pathname:'/card2/detail',
+			pathname:'/item/detail',
 			search:qs.stringify({
-				cardId:cardId,
+				itemId:itemId,
 				hasBack:true
 			})
 		});
 	}
-	del = async (cardId)=>{
+	del = async (itemId)=>{
 		await this.props.dispatch({
-			type:'/card/del',
+			type:'/item/del',
 			payload:{
-				cardId:cardId,
+				itemId:itemId,
 			}
 		});
 		await this.fetch();
@@ -105,37 +93,16 @@ export default class Table extends React.Component{
 				render:()=>{
 					return (<Input placeholder="请输入"/>);
 				}
-			},
-			{
-				title:"类型",
-				dataIndex:"type",
-				render:()=>{
-					return (<MySelect options={typeOption}/>);
-				}
-			},
-			{
-				title:"时间",
-				dataIndex:"createTime",
-				render:()=>{
-					return (
-						<MyRangePicker/>
-					);
-				}
 			}
 		];
 		 const columns = [
 	      {
-	        title: '银行卡ID',
-	        dataIndex: 'cardId',
+	        title: '商品ID',
+	        dataIndex: 'itemId',
 	      },
 	      {
 	        title: '名称',
 	        dataIndex: 'name',
-	      },
-	      {
-	        title: '类型',
-	        dataIndex: 'type',
-	        render: (val) =>typeOption[val],
 	      },
 	      {
 	        title: '创建时间',
@@ -149,9 +116,9 @@ export default class Table extends React.Component{
 	        title: '操作',
 	        render: (val,data) => (
 	          <Fragment>
-	            <a onClick={this.mod.bind(this,data.cardId)}>修改</a>
+	            <a onClick={this.mod.bind(this,data.itemId)}>修改</a>
 	            <Divider type="vertical" />
-	            <Popconfirm title="确定删除该银行卡?" onConfirm={this.del.bind(this,data.cardId)}>
+	            <Popconfirm title="确定删除该商品?" onConfirm={this.del.bind(this,data.itemId)}>
 	            	<a>删除</a>
 	            </Popconfirm>
 	          </Fragment>
@@ -163,13 +130,14 @@ export default class Table extends React.Component{
 				<StandardQuery 
 					columns={queryColumns} 
 					data={this.state.where}
-					onChange={this.onQueryChange}/>
+					onChange={this.onQueryChange}
+					onSubmit={this.onQuerySubmit}/>
 				<div style={{marginTop:'16px'}}>
 					<Button type="primary" onClick={this.add}>添加</Button>
 				</div>
 				<StandardTable 
 					style={{marginTop:'16px'}}
-					rowKey={'cardId'}
+					rowKey={'itemId'}
 					loading={this.props.loading}
 					columns={columns}
 					value={this.state.list}

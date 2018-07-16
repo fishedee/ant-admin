@@ -1,13 +1,11 @@
 import React,{Fragment} from 'react';
 import { connect } from 'redva';
-import { Button , Input ,InputNumber,Divider,Popconfirm} from 'antd';
+import { Input} from 'antd';
 import MySelect from '@/components/MySelect';
 import MyDatePicker from '@/components/MyDatePicker';
-import MyTimePicker from '@/components/MyTimePicker';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
 import qs from 'qs';
-import cache from '@/utils/cache';
 
 const {MyRangePicker,MyWeekPicker,MyMonthPicker} = MyDatePicker;
 const typeOption = {
@@ -22,7 +20,7 @@ const typeOption = {
 export default class Table extends React.Component{
 	constructor(props){
 		super(props);
-		this.state = cache.get('/card2/list') || {
+		this.state = {
 			list:[],
 			where:{},
 			limit:{
@@ -31,9 +29,6 @@ export default class Table extends React.Component{
 				count:0,
 			}
 		}
-	}
-	componentDidUpdate = ()=>{
-		cache.set('/card2/list',this.state);
 	}
 	onQueryChange = (where)=>{
 		this.state.where = where;
@@ -71,39 +66,13 @@ export default class Table extends React.Component{
 		this.state.list = data.data.data;
 		this.setState({});
 	}
-	add = async ()=>{
-		this.props.history.push({
-			pathname:'/card2/detail',
-			search:qs.stringify({
-				hasBack:true
-			})
-		});
-	}
-	mod = async (cardId)=>{
-		this.props.history.push({
-			pathname:'/card2/detail',
-			search:qs.stringify({
-				cardId:cardId,
-				hasBack:true
-			})
-		});
-	}
-	del = async (cardId)=>{
-		await this.props.dispatch({
-			type:'/card/del',
-			payload:{
-				cardId:cardId,
-			}
-		});
-		await this.fetch();
-	}
 	render = ()=>{
 		let queryColumns = [
 			{
 				title:"名称",
 				dataIndex:"name",
 				render:()=>{
-					return (<Input placeholder="请输入"/>);
+					return (<Input placeholder="请输入" autoFocus/>);
 				}
 			},
 			{
@@ -145,18 +114,6 @@ export default class Table extends React.Component{
 	        title: '更新时间',
 	        dataIndex: 'modifyTime',
 	      },
-	      {
-	        title: '操作',
-	        render: (val,data) => (
-	          <Fragment>
-	            <a onClick={this.mod.bind(this,data.cardId)}>修改</a>
-	            <Divider type="vertical" />
-	            <Popconfirm title="确定删除该银行卡?" onConfirm={this.del.bind(this,data.cardId)}>
-	            	<a>删除</a>
-	            </Popconfirm>
-	          </Fragment>
-	        ),
-	      },
 	    ];
 		return (
 			<div>
@@ -164,9 +121,6 @@ export default class Table extends React.Component{
 					columns={queryColumns} 
 					data={this.state.where}
 					onChange={this.onQueryChange}/>
-				<div style={{marginTop:'16px'}}>
-					<Button type="primary" onClick={this.add}>添加</Button>
-				</div>
 				<StandardTable 
 					style={{marginTop:'16px'}}
 					rowKey={'cardId'}
@@ -174,7 +128,8 @@ export default class Table extends React.Component{
 					columns={columns}
 					value={this.state.list}
 					paginaction={this.state.limit}
-					onPaginactionChange={this.onPaginactionChange}/>
+					onPaginactionChange={this.onPaginactionChange}
+					onSelect={this.props.onSelect}/>
 			</div>
 		);
 	}

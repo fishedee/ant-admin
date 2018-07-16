@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form } from 'antd';
-import equal from 'fast-deep-equal';
 
 export default function DefaultForm(component){
 	let FormComponent = Form.create({

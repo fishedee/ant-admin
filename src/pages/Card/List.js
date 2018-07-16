@@ -1,6 +1,7 @@
 import React,{Fragment} from 'react';
 import { connect } from 'redva';
-import { Button , Input ,Select,InputNumber,Divider,Popconfirm} from 'antd';
+import { Button , Input ,InputNumber,Divider,Popconfirm} from 'antd';
+import MySelect from '@/components/MySelect';
 import MyDatePicker from '@/components/MyDatePicker';
 import MyTimePicker from '@/components/MyTimePicker';
 import StandardQuery from '@/components/StandardQuery';
@@ -9,8 +10,11 @@ import StandardModal from '@/components/StandardModal';
 import Detail from './Detail';
 
 const {MyRangePicker,MyWeekPicker,MyMonthPicker} = MyDatePicker;
-const {Option} = Select;
-const typeOption = ['未分类','储蓄卡','信用卡'];
+const typeOption = {
+	0:'未分类',
+	1:'储蓄卡',
+	2:'信用卡'
+};
 
 @connect((state)=>{
 	return {loading:state.loading.global};
@@ -104,11 +108,7 @@ export default class Table extends React.Component{
 				title:"类型",
 				dataIndex:"type",
 				render:()=>{
-					return (<Select placeholder="请选择" allowClear={true} style={{width:200}}>
-						{typeOption.map((name,index)=>{
-							return (<Option value={index} key={index}>{name}</Option>);
-						})}
-	                </Select>);
+					return (<MySelect options={typeOption}/>);
 				}
 			},
 			{
@@ -164,7 +164,7 @@ export default class Table extends React.Component{
 					onChange={this.onQueryChange}
 					onSubmit={this.onQuerySubmit}/>
 				<div style={{marginTop:'16px'}}>
-					<Button type="primary" onClick={this.add}>新建</Button>
+					<Button type="primary" onClick={this.add}>添加</Button>
 				</div>
 				<StandardTable 
 					style={{marginTop:'16px'}}
@@ -176,9 +176,10 @@ export default class Table extends React.Component{
 					onPaginactionChange={this.onPaginactionChange}/>
 				<StandardModal 
 					visible={this.state.modalVisible}
-					onOk={this.closeModal.bind(this,true)} 
 					onCancel={this.closeModal.bind(this,false)}>
-					<Detail cardId={this.state.modalCardId}/>
+					<Detail 
+						cardId={this.state.modalCardId}
+						onSubmit={this.closeModal.bind(this,true)}/>
 				</StandardModal>
 			</div>
 		);

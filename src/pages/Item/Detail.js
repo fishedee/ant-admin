@@ -1,26 +1,42 @@
 import React from 'react';
 import { connect } from 'redva';
-import {Input,Select,InputNumber,DatePicker} from 'antd';
+import {Input} from 'antd';
 import StandardForm from '@/components/StandardForm';
-
-const Option = Select.Option;
-const typeOption = ['未分类','储蓄卡','信用卡'];
+import qs from 'qs';
+import cache from '@/utils/cache';
 
 @connect()
 export default class Form extends React.Component{
-	state = {
-		data:{}
+	constructor(props){
+		super(props);
+		let query = qs.parse(this.props.location.search.substr(1));
+		if( query.itemId ){
+			this.state = {
+				data:{},
+				itemId:query.itemId
+			}
+		}else{
+			this.state = {
+				data:cache.get('/item/detail') || {}
+			}
+		}
 	}
+	componentDidUpdate = ()=>{
+		if( !this.state.itemId ){
+			cache.set('/item/detail',this.state.data);
+		}
+	}
+	form = null;
 	onChange = (data)=>{
 		this.state.data = data;
 		this.setState({});
 	}
 	componentDidMount = async ()=>{
-		if( this.props.cardId ){
+		if( this.state.itemId ){
 			let data = await this.props.dispatch({
-				type:'/card/get',
+				type:'/item/get',
 				payload:{
-					cardId:this.props.cardId,
+					itemId:this.state.itemId,
 				}
 			});
 			this.state.data = data.data;
@@ -28,21 +44,23 @@ export default class Form extends React.Component{
 		}
 	}
 	onSubmit = async ()=>{
-		if( this.props.cardId ){
+		if( this.state.itemId ){
 			await this.props.dispatch({
-				type:'/card/mod',
+				type:'/item/mod',
 				payload:{
-					cardId:this.props.cardId,
+					itemId:this.state.itemId,
 					...this.state.data,
 				}
 			});
 		}else{
 			await this.props.dispatch({
-				type:'/card/add',
+				type:'/item/add',
 				payload:this.state.data,
 			});
+			this.state.data = {};
+			this.componentDidUpdate();
 		}
-		this.props.onSubmit();
+		this.props.history.go(-1);
 	}
 	render = ()=>{
 		let columns = [
@@ -53,22 +71,11 @@ export default class Form extends React.Component{
 				render:()=>{
 					return (<Input placeholder="请输入"/>);
 				}
-			},
-			{
-				title:"类型",
-				dataIndex:"type",
-				rules:[{ required: true}],
-				render:()=>{
-					return (<Select placeholder="请选择" style={{ width: '100%' }}>
-	                 	{typeOption.map((name,index)=>{
-							return (<Option value={index} key={index}>{name}</Option>);
-						})}
-	                </Select>);
-				}
 			}
 		];
 		return (
 			<StandardForm
+				ref={(node)=>{this.form=node}}
 				columns={columns}
 				data={this.state.data}
 				onChange={this.onChange}

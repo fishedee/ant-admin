@@ -16,37 +16,41 @@ let router = [
 			{
 				name:"银行卡列表",
 				path:"/card",
-				models:['card'],
 				component:'Card/List',
 			},
 			{
 				name:"银行卡详情",
 				path:"/card/detail",
-				models:['card'],
 				component:'Card/Detail',
 			},
 			{
 				name:"银行卡列表2",
 				path:"/card2",
-				models:['card'],
 				component:'Card2/List',
 			},
 			{
 				name:"银行卡详情2",
 				path:"/card2/detail",
-				models:['card'],
 				component:'Card2/Detail',
+			},
+			{
+				name:"商品列表",
+				path:"/item",
+				component:'Item/List',
+			},
+			{
+				name:"商品详情",
+				path:"/item/detail",
+				component:'Item/Detail',
 			},
 			{
 				name:"订单列表",
 				path:"/order",
-				models:['order'],
 				component:'Order/List',
 			},
 			{
 				name:"订单详情",
 				path:"/order/detail",
-				models:['order'],
 				component:'Order/Detail',
 			},
 			{
@@ -66,14 +70,6 @@ function analyseComponent(app,router){
 	}
 	router.wrapperComponent = dynamic({
       app: app,
-      models: () => {
-      	if( !router.models ){
-      		router.models = [];
-      	}
-  		return router.models.map(model => {
-          return import(`../models/`+model);
-        });
-      },
       component: async () => {
         let raw = await import(`../pages/`+router.component);
         const Component = raw.default || raw;

@@ -3,13 +3,25 @@ import { Table, Alert } from 'antd';
 import styles from './index.less';
 
 export default class StandardTable extends React.Component {
-  handleSelectedRowChange = (selectedRowKeys)=>{
-    this.props.onSelectedRowsChange(selectedRowKeys);
+  state = {
+    selectedRows:[],
   }
 
-  cleanSelectedKeys = () => {
-    this.props.onSelectedRowsChange([]);
-  };
+  handleSelectedRowChange = (rows)=>{
+    this.setState({selectedRows:rows});
+  }
+
+  onRowClick = (data)=>{
+    if( this.props.onSelect ){
+      this.setState({selectedRows:[data[this.props.rowKey]]});
+    }
+  }
+
+  onRowDoubleClick = (data)=>{
+    if( this.props.onSelect ){
+      this.props.onSelect(data);
+    }
+  }
 
   handleTableChange = (pagination) => {
     this.props.onPaginactionChange({
@@ -21,7 +33,7 @@ export default class StandardTable extends React.Component {
 
   onCellChange = (key,dataIndex,event)=>{
     let value = null;
-    if( event.target ){
+    if( event && event.target ){
       value = event.target.value;
     }else{
       value = event;
@@ -40,7 +52,8 @@ export default class StandardTable extends React.Component {
   }
 
   render() {
-    const { value, paginaction , loading, columns, rowKey ,selectedRows ,style} = this.props;
+    const { value, paginaction , loading, columns, rowKey ,style ,onSelect} = this.props;
+
     let paginationProps = false;
     if( paginaction ){
       paginationProps = {
@@ -56,16 +69,17 @@ export default class StandardTable extends React.Component {
     }
     
     let rowSelection = null;
-    if( selectedRows ){
+    if( onSelect ){
       rowSelection = {
-        selectedRowKeys:selectedRows,
+        selectedRowKeys:this.state.selectedRows,
         onChange: this.handleSelectedRowChange,
+        type:'radio',
       };
     }
 
     let newColumns = [];
     for( let i in columns ){
-      let newColumn = columns[i];
+      let newColumn = {...columns[i]};
       ((newColumn)=>{
         if( newColumn.render ){
           newColumn.oldRender = newColumn.render;
@@ -88,20 +102,6 @@ export default class StandardTable extends React.Component {
 
     return (
       <div className={styles.standardTable}>
-        {rowSelection?<div className={styles.tableAlert}>
-          <Alert
-            message={
-              <Fragment>
-                已选择 <a style={{ fontWeight: 600 }}>{selectedRows.length}</a> 项
-                <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 12 }}>
-                  清空
-                </a>
-              </Fragment>
-            }
-            type="info"
-            showIcon
-          />
-        </div>:null}
         <Table
           style={style}
           bordered={true}
@@ -109,9 +109,15 @@ export default class StandardTable extends React.Component {
           rowKey={rowKey || 'key'}
           rowSelection={rowSelection}
           dataSource={value}
-          columns={columns}
+          columns={newColumns}
           pagination={paginationProps}
           onChange={this.handleTableChange}
+          onRow={(record)=>{
+            return {
+              onClick:this.onRowClick.bind(this,record),
+              onDoubleClick:this.onRowDoubleClick.bind(this,record),
+            };
+          }}
         />
       </div>
     );

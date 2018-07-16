@@ -1,8 +1,12 @@
 import React from 'react';
 import { connect } from 'redva';
 import {Input,InputNumber,Button} from 'antd';
+import MySelect from '@/components/MySelect';
+import MyInputButton from '@/components/MyInputButton';
 import StandardForm from '@/components/StandardForm';
 import StandardTable from '@/components/StandardTable';
+import StandardModal from '@/components/StandardModal';
+import CardList from '@/pages/Card2/Select';
 import qs from 'qs';
 import cache from '@/utils/cache';
 import InputWrapper from '@/components/InputWrapper';
@@ -14,11 +18,15 @@ export default class Detail extends React.Component{
 		let query = qs.parse(this.props.location.search.substr(1));
 		if( query.orderId ){
 			this.state = {
+				modalVisible:false,
 				data:{},
+				itemMap:{},
 				orderId:query.orderId
 			}
 		}else{
 			this.state = {
+				modalVisible:false,
+				itemMap:{},
 				data:cache.get('/order/detail') || {}
 			}
 		}
@@ -67,7 +75,21 @@ export default class Detail extends React.Component{
 		});
 		this.setState({});
 	}
+	onCardChange = (card)=>{
+		this.state.data.cardId = card.cardId;
+		this.state.data.cardName = card.name;
+		this.state.modalVisible = false;
+		this.setState({});
+	}
 	componentDidMount = async ()=>{
+		let data = await this.props.dispatch({
+			type:'/item/getAll',
+		});
+		let itemMap = {};
+		for( let i in data.data.data ){
+			itemMap[data.data.data[i].itemId] = data.data.data[i];
+		}
+		this.state.itemMap = itemMap;
 		if( this.state.orderId ){
 			let data = await this.props.dispatch({
 				type:'/order/get',
@@ -79,9 +101,16 @@ export default class Detail extends React.Component{
 			for( let i in data.items ){
 				data.items[i]._key = parseInt(i);
 			}
+			let cardInfo = await this.props.dispatch({
+				type:'/card/get',
+				payload:{
+					cardId:data.cardId,
+				}
+			});
+			data.cardName = cardInfo.data.name;
 			this.state.data = data;
-			this.setState({});
 		}
+		this.setState({});
 	}
 	onSubmit = async ()=>{
 		if( this.state.orderId ){
@@ -110,7 +139,7 @@ export default class Detail extends React.Component{
 				labelCol:{span:2},
 				wrapperCol:{span:10},
 				rules:[{ required: true}],
-				render:(value)=>{
+				render:()=>{
 					return (<Input placeholder="请输入"/>);
 				}
 			},
@@ -125,10 +154,32 @@ export default class Detail extends React.Component{
 				}
 			},
 			{
+				title:"银行卡",
+				dataIndex:"cardId",
+				labelCol:{span:2},
+				wrapperCol:{span:10},
+				rules:[{ required: true}],
+				render:()=>{
+					let name = '';
+					if( this.state.data.cardId ){
+						name = '['+this.state.data.cardId+']'+this.state.data.cardName;
+					}
+					return (
+					<div>
+						<MyInputButton placeholder="请输入" onClick={()=>{this.state.modalVisible=true;this.setState({});}}>{name}</MyInputButton>
+						<StandardModal 
+							visible={this.state.modalVisible}
+							onCancel={()=>{this.state.modalVisible=false;this.setState({});}}>
+							<CardList onSelect={this.onCardChange}/>
+						</StandardModal>
+					</div>);
+				}
+			},
+			{
 				title:"地址",
 				dataIndex:"address",
 				labelCol:{span:2},
-				wrapperCol:{span:22},
+				wrapperCol:{span:10},
 				rules:[{ required: true}],
 				render:()=>{
 					return (<Input placeholder="请输入"/>);
@@ -142,6 +193,13 @@ export default class Detail extends React.Component{
 				rules:[{ required: true}],
 				render:(value)=>{
 					const columns = [
+					  {
+					  	title:'商品',
+					  	dataIndex:'itemId',
+					  	render:()=>{
+					  		return (<MySelect style={{width:"100%"}} options={this.state.itemMap} showSearch={true} renderOption={(value,key)=>('['+key+']'+value.name)}/>);
+					  	}
+					  },
 				      {
 				        title: '单价',
 				        dataIndex: 'price',
