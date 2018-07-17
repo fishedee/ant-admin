@@ -62,8 +62,8 @@ export default class List extends React.Component{
 				...limit,
 			}
 		});
-		this.state.limit.count = data.data.count;
-		this.state.list = data.data.data;
+		this.state.limit.count = data.count;
+		this.state.list = data.data;
 		this.setState({});
 	}
 	add = async ()=>{

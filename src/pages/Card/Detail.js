@@ -23,7 +23,7 @@ export default class Form extends React.Component{
 					cardId:this.props.cardId,
 				}
 			});
-			this.state.data = data.data;
+			this.state.data = data;
 			this.setState({});
 		}
 	}

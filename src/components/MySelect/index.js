@@ -5,7 +5,7 @@ const Option = Select.Option;
 
 export default class MySelect extends React.Component{
 	render = ()=>{
-		let {style,options,renderOption,...resetProps} = this.props;
+		let {style,options,renderOption,placeholder,...resetProps} = this.props;
 		style = {
 			minWidth:'170px',
 			...style,
@@ -14,6 +14,7 @@ export default class MySelect extends React.Component{
 			return value;
 		}
 		return (<Select 
+			placeholder={placeholder}
 			allowClear={true} 
 			style={style} 
 			filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}

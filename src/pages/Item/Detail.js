@@ -16,14 +16,14 @@ export default class Form extends React.Component{
 				itemId:query.itemId
 			}
 		}else{
-			this.state = {
-				data:cache.get('/item/detail') || {}
+			this.state = cache.get('/item/detail') || {
+				data:{}
 			}
 		}
 	}
 	componentDidUpdate = ()=>{
 		if( !this.state.itemId ){
-			cache.set('/item/detail',this.state.data);
+			cache.set('/item/detail',this.state);
 		}
 	}
 	form = null;
@@ -39,7 +39,7 @@ export default class Form extends React.Component{
 					itemId:this.state.itemId,
 				}
 			});
-			this.state.data = data.data;
+			this.state.data = data;
 			this.setState({});
 		}
 	}

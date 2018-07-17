@@ -62,19 +62,12 @@ export default class Table extends React.Component{
 				...limit,
 			}
 		});
-		this.state.limit.count = data.data.count;
-		this.state.list = data.data.data;
+		this.state.limit.count = data.count;
+		this.state.list = data.data;
 		this.setState({});
 	}
 	render = ()=>{
 		let queryColumns = [
-			{
-				title:"名称",
-				dataIndex:"name",
-				render:()=>{
-					return (<Input placeholder="请输入" autoFocus/>);
-				}
-			},
 			{
 				title:"类型",
 				dataIndex:"type",
@@ -82,6 +75,14 @@ export default class Table extends React.Component{
 					return (<MySelect options={typeOption}/>);
 				}
 			},
+			{
+				title:"名称",
+				dataIndex:"name",
+				render:()=>{
+					return (<Input placeholder="请输入" autoFocus/>);
+				}
+			},
+			
 			{
 				title:"时间",
 				dataIndex:"createTime",

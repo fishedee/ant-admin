@@ -19,14 +19,14 @@ export default class Form extends React.Component{
 				cardId:query.cardId
 			}
 		}else{
-			this.state = {
-				data:cache.get('/card2/detail') || {}
+			this.state = cache.get('/card2/detail') || {
+				data:{}
 			}
 		}
 	}
 	componentDidUpdate = ()=>{
 		if( !this.state.cardId ){
-			cache.set('/card2/detail',this.state.data);
+			cache.set('/card2/detail',this.state);
 		}
 	}
 	form = null;
@@ -42,7 +42,7 @@ export default class Form extends React.Component{
 					cardId:this.state.cardId,
 				}
 			});
-			this.state.data = data.data;
+			this.state.data = data;
 			this.setState({});
 		}
 	}

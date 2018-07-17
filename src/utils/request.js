@@ -70,5 +70,9 @@ export default async function request(url, options) {
     checkBody(data);
   }
   
-  return data;
+  if( newOptions.autoCheck ){
+    return data.data;
+  }else{
+    return data;
+  }
 }

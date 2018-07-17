@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'redva';
 import {Input,InputNumber,Button} from 'antd';
 import MySelect from '@/components/MySelect';
-import MyInputButton from '@/components/MyInputButton';
+import MyModalSelect from '@/components/MyModalSelect';
 import StandardForm from '@/components/StandardForm';
 import StandardTable from '@/components/StandardTable';
 import StandardModal from '@/components/StandardModal';
@@ -18,22 +18,22 @@ export default class Detail extends React.Component{
 		let query = qs.parse(this.props.location.search.substr(1));
 		if( query.orderId ){
 			this.state = {
-				modalVisible:false,
 				data:{},
 				itemMap:{},
+				cardInfo:null,
 				orderId:query.orderId
 			}
 		}else{
-			this.state = {
-				modalVisible:false,
+			this.state = cache.get('/order/detail') || {
+				data:{},
 				itemMap:{},
-				data:cache.get('/order/detail') || {}
+				cardInfo:null,
 			}
 		}
 	}
 	componentDidUpdate = ()=>{
 		if( !this.state.orderId ){
-			cache.set('/order/detail',this.state.data);
+			cache.set('/order/detail',this.state);
 		}
 	}
 	round = (num)=>{
@@ -58,7 +58,7 @@ export default class Detail extends React.Component{
 		})
 		if( index != -1 ){
 			this.state.data.items.splice(index,1);
-			this.setState({});
+			this.onChange(this.state.data);
 		}
 	}
 	addItem = ()=>{
@@ -73,21 +73,15 @@ export default class Detail extends React.Component{
 		this.state.data.items.push({
 			_key:maxKey+1,
 		});
-		this.setState({});
-	}
-	onCardChange = (card)=>{
-		this.state.data.cardId = card.cardId;
-		this.state.data.cardName = card.name;
-		this.state.modalVisible = false;
-		this.setState({});
+		this.onChange(this.state.data);
 	}
 	componentDidMount = async ()=>{
 		let data = await this.props.dispatch({
 			type:'/item/getAll',
 		});
 		let itemMap = {};
-		for( let i in data.data.data ){
-			itemMap[data.data.data[i].itemId] = data.data.data[i];
+		for( let i in data.data ){
+			itemMap[data.data[i].itemId] = data.data[i];
 		}
 		this.state.itemMap = itemMap;
 		if( this.state.orderId ){
@@ -97,7 +91,6 @@ export default class Detail extends React.Component{
 					orderId:this.state.orderId,
 				}
 			});
-			data = data.data;
 			for( let i in data.items ){
 				data.items[i]._key = parseInt(i);
 			}
@@ -107,7 +100,7 @@ export default class Detail extends React.Component{
 					cardId:data.cardId,
 				}
 			});
-			data.cardName = cardInfo.data.name;
+			this.state.cardInfo = cardInfo;
 			this.state.data = data;
 		}
 		this.setState({});
@@ -160,19 +153,13 @@ export default class Detail extends React.Component{
 				wrapperCol:{span:10},
 				rules:[{ required: true}],
 				render:()=>{
-					let name = '';
-					if( this.state.data.cardId ){
-						name = '['+this.state.data.cardId+']'+this.state.data.cardName;
-					}
 					return (
-					<div>
-						<MyInputButton placeholder="请输入" onClick={()=>{this.state.modalVisible=true;this.setState({});}}>{name}</MyInputButton>
-						<StandardModal 
-							visible={this.state.modalVisible}
-							onCancel={()=>{this.state.modalVisible=false;this.setState({});}}>
-							<CardList onSelect={this.onCardChange}/>
-						</StandardModal>
-					</div>);
+						<MyModalSelect 
+							placeholder="请输入"
+							renderValue={(value)=>('['+value+']'+this.state.cardInfo.name)}
+							extactValue={(data)=>{this.state.cardInfo=data;return data.cardId}}>
+							<CardList/>
+						</MyModalSelect>);
 				}
 			},
 			{
@@ -197,7 +184,7 @@ export default class Detail extends React.Component{
 					  	title:'商品',
 					  	dataIndex:'itemId',
 					  	render:()=>{
-					  		return (<MySelect style={{width:"100%"}} options={this.state.itemMap} showSearch={true} renderOption={(value,key)=>('['+key+']'+value.name)}/>);
+					  		return (<MySelect placeholder="请选择" style={{width:"100%"}} options={this.state.itemMap} showSearch={true} renderOption={(value,key)=>('['+key+']'+value.name)}/>);
 					  	}
 					  },
 				      {
