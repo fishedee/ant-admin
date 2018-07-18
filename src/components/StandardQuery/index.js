@@ -10,7 +10,7 @@ export default class StandardQuery extends React.Component{
 	handleSearch = (e)=>{
 		const { form } = this.props;
 		e.preventDefault();
-		form.validateFields((err, fieldsValue) => {
+		form.validateFields({force:true},(err, fieldsValue) => {
       		if (err) {
       			return;
       		}

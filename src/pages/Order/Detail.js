@@ -1,8 +1,8 @@
-import React from 'react';
+import React,{Fragment} from 'react';
 import { connect } from 'redva';
 import {Input,InputNumber,Button} from 'antd';
 import MySelect from '@/components/MySelect';
-import MyModalSelect from '@/components/MyModalSelect';
+import MyInputButton from '@/components/MyInputButton';
 import StandardForm from '@/components/StandardForm';
 import StandardTable from '@/components/StandardTable';
 import StandardModal from '@/components/StandardModal';
@@ -30,6 +30,7 @@ export default class Detail extends React.Component{
 				cardInfo:null,
 			}
 		}
+		this.state.modalVisible = false;
 	}
 	componentDidUpdate = ()=>{
 		if( !this.state.orderId ){
@@ -153,13 +154,37 @@ export default class Detail extends React.Component{
 				wrapperCol:{span:10},
 				rules:[{ required: true}],
 				render:()=>{
+					let value = '';
+					if( this.state.data.cardId ){
+						value = '['+this.state.data.cardId+']'+this.state.cardInfo.name;
+					}
+					let openModal = ()=>{
+						this.state.modalVisible = true;
+						this.setState({});
+					}
+					let closeModal = ()=>{
+						this.state.modalVisible = false ;
+						this.setState({});
+					}
+					let onSelect = (data)=>{
+						this.state.data.cardId = data.cardId;
+						this.state.cardInfo = data;
+						this.state.modalVisible = false ;
+						this.setState({});
+					}
 					return (
-						<MyModalSelect 
-							placeholder="请输入"
-							renderValue={(value)=>('['+value+']'+this.state.cardInfo.name)}
-							extactValue={(data)=>{this.state.cardInfo=data;return data.cardId}}>
-							<CardList/>
-						</MyModalSelect>);
+					<Fragment>
+						<MyInputButton onClick={openModal} placeholder="请选择">
+							{value}
+						</MyInputButton>
+						<StandardModal
+							title="选择银行卡"
+							visible={this.state.modalVisible}
+							onCancel={closeModal}>
+							<CardList onSelect={onSelect}/>
+						</StandardModal>
+					</Fragment>
+					);
 				}
 			},
 			{

@@ -12,7 +12,7 @@ export default class StandardForm extends React.Component{
 	handleSubmit = async (e)=>{
 		const { form } = this.props;
 		e.preventDefault();
-		form.validateFields(async (err,values)=>{
+		form.validateFields({force:true},async (err,values)=>{
 			if( err ){
 				return;
 			}
