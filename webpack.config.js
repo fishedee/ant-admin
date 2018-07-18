@@ -1,6 +1,7 @@
 const path = require('path');
 const args = require('minimist')(process.argv.slice(2));
 const htmlWebpackPlugin = require('html-webpack-plugin');
+const cleanWebpackPlugin = require('clean-webpack-plugin');
 
 const isDevelopment = (args.mode == 'development');
 
@@ -65,6 +66,7 @@ module.exports = {
 	},
 
 	plugins:[
+		new cleanWebpackPlugin(['dist']),
 		new htmlWebpackPlugin({
 			filename:'index.html',
 			title:'antd admin',

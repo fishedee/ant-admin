@@ -8,6 +8,13 @@ import zhCN from 'antd/lib/locale-provider/zh_CN';
 import getRouter from '@/utils/router';
 import ErrorCatch from '@/components/ErrorCatch';
 
+//FIXME webpack __webpack_require__.e undefined (https://github.com/webpack/webpack/issues/7248)
+if(typeof(__webpack_require__.e) === "undefined") {
+  __webpack_require__.e = function(unusedChunkId) {
+    return new Promise(function(resolve) { resolve(); });
+  };
+}
+
 const modelRequire = require.context('./models/', true, /\.js$/);
 require.context('./pages/', true, /\.js$/);
 require.context('./components/', true, /\.js$/);

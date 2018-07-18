@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "prod": "webpack --mode production",
-    "dev": "webpack-dev-server --mode development --hot",
+    "dev": "webpack --mode development",
+    "start": "webpack-dev-server --mode development --hot",
     "mock": "node-dev mock/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,6 +30,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "body-parser": "^1.18.3",
+    "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.11",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
