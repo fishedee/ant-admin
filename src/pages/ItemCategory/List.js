@@ -27,7 +27,10 @@ export default class List extends React.Component{
 		this.setState({});
 	}
 	onDetailChange = (detail)=>{
-		this.state.detail = detail;
+		this.state.detail = {
+			...detail,
+			parent:this.state.detail.parent,
+		};
 		this.setState({});
 	}
 	componentDidMount = ()=>{
@@ -49,7 +52,7 @@ export default class List extends React.Component{
 		this.state.detail = {
 			itemCategoryId:null,
 			name:'',
-			parent:parseInt(this.state.itemCategoryId) || 0 ,
+			parent:this.state.itemCategoryId || 0 ,
 		};
 		this.setState({});
 	}
@@ -115,7 +118,7 @@ export default class List extends React.Component{
 		<Row>
 			<Col span={8}>
 				<div>
-					<Button type="primary" onClick={this.add}>添加</Button>
+					<Button type="primary" onClick={this.add}>添加类别</Button>
 					<Button type="danger" style={{marginLeft:'16px'}} onClick={this.del}>删除</Button>
 				</div>
 				<MyTreeSelect 

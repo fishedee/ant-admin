@@ -26,6 +26,8 @@ export default class MyTreeSelect extends React.Component{
 		let data = keys[0];
 		if( data == '_all'){
 			data = undefined;
+		}else{
+			data = parseInt(data);
 		}
 		this.props.onChange(data);
 	}
@@ -123,6 +125,8 @@ export default class MyTreeSelect extends React.Component{
 		let value = this.props.value;
 		if( !value ){
 			value = '_all';
+		}else{
+			value = value+'';
 		}
 		return (
 		<div style={this.props.style} className={classname(style.container,this.props.className)}>
