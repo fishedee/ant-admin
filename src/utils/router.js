@@ -34,6 +34,11 @@ let router = [
 				component:'Card2/Detail',
 			},
 			{
+				name:"商品类别",
+				path:"/itemCategory",
+				component:'ItemCategory/List',
+			},
+			{
 				name:"商品列表",
 				path:"/item",
 				component:'Item/List',
@@ -56,7 +61,7 @@ let router = [
 			{
 				name:"找不到页面",
 				path:"/404",
-				component:'notfound',
+				component:'Layout/NotFound',
 			}
 		]
 	}

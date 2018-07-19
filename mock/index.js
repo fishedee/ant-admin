@@ -6,6 +6,7 @@ var logger = require('morgan');
 var loginRouter = require('./login');
 var cardRouter = require('./card');
 var itemRouter = require('./item');
+var itemCategoryRouter = require('./itemcategory');
 var orderRouter = require('./order');
 var middleware = require('./middleware');
 
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use('/login',loginRouter);
 app.use('/item',middleware.checkMustLogin,itemRouter);
+app.use('/itemcategory',middleware.checkMustLogin,itemCategoryRouter);
 app.use('/card',middleware.checkMustLogin,cardRouter);
 app.use('/order',middleware.checkMustLogin,orderRouter);
 

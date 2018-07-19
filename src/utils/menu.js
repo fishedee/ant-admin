@@ -14,6 +14,7 @@ export default [
 				name:"订单",
 				icon:"shopping-cart",
 				children:[
+					{name:"商品类别",path:"/itemCategory"},
 					{name:"商品",path:"/item"},
 					{name:"订单",path:"/order"}
 				]
