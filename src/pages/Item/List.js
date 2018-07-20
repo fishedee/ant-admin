@@ -1,6 +1,7 @@
 import React,{Fragment} from 'react';
 import { connect } from 'redva';
-import { Button , Input ,Divider,Popconfirm} from 'antd';
+import { Button , Input ,Divider,Popconfirm,Row,Col} from 'antd';
+import MyTreeSelect from '@/components/MyTreeSelect';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
 import qs from 'qs';
@@ -19,11 +20,17 @@ export default class Table extends React.Component{
 				pageIndex:0,
 				pageSize:10,
 				count:0,
-			}
+			},
+			allCategorys:{},
 		}
 	}
 	componentDidUpdate = ()=>{
 		cache.set('/item/list',this.state);
+	}
+	onTreeChange = (id)=>{
+		this.state.where.itemCategoryId = id;
+		this.setState({});
+		this.fetch();
 	}
 	onQueryChange = (where)=>{
 		this.state.where = where;
@@ -43,6 +50,11 @@ export default class Table extends React.Component{
 		this.fetch();
 	}
 	fetch = async ()=>{
+		let allCategorys = await this.props.dispatch({
+			type:'/itemcategory/getAll'
+		});
+		this.state.allCategorys = allCategorys;
+
 		let where = { ...this.state.where };
 		let limit = { 
 			...this.state.limit , 
@@ -63,6 +75,7 @@ export default class Table extends React.Component{
 		this.props.history.push({
 			pathname:'/item/detail',
 			search:qs.stringify({
+				itemCategoryId:this.state.where.itemCategoryId,
 				hasBack:true
 			})
 		});
@@ -105,6 +118,13 @@ export default class Table extends React.Component{
 	        dataIndex: 'name',
 	      },
 	      {
+	        title: '类别',
+	        dataIndex: 'itemCategoryId',
+	        render:(value)=>{
+	        	return this.state.allCategorys[value].name;
+	        }
+	      },
+	      {
 	        title: '创建时间',
 	        dataIndex: 'createTime',
 	      },
@@ -126,24 +146,33 @@ export default class Table extends React.Component{
 	      },
 	    ];
 		return (
-			<div>
-				<StandardQuery 
-					columns={queryColumns} 
-					data={this.state.where}
-					onChange={this.onQueryChange}
-					onSubmit={this.onQuerySubmit}/>
-				<div style={{marginTop:'16px'}}>
-					<Button type="primary" onClick={this.add}>添加</Button>
-				</div>
-				<StandardTable 
-					style={{marginTop:'16px'}}
-					rowKey={'itemId'}
-					loading={this.props.loading}
-					columns={columns}
-					value={this.state.list}
-					paginaction={this.state.limit}
-					onPaginactionChange={this.onPaginactionChange}/>
-			</div>
+			<Row gutter={16}>
+				<Col span={8}>
+					<MyTreeSelect
+						value={this.state.where.itemCategoryId}
+						onChange={this.onTreeChange}
+						nodes={this.state.allCategorys}
+						renderNode={(data)=>('['+data.itemCategoryId+']'+data.name)}/>
+				</Col>
+				<Col span={16}>
+					<StandardQuery 
+						columns={queryColumns} 
+						data={this.state.where}
+						onChange={this.onQueryChange}
+						onSubmit={this.onQuerySubmit}/>
+					<div style={{marginTop:'16px'}}>
+						<Button type="primary" onClick={this.add}>添加</Button>
+					</div>
+					<StandardTable 
+						style={{marginTop:'16px'}}
+						rowKey={'itemId'}
+						loading={this.props.loading}
+						columns={columns}
+						value={this.state.list}
+						paginaction={this.state.limit}
+						onPaginactionChange={this.onPaginactionChange}/>
+				</Col>
+			</Row>
 		);
 	}
 }

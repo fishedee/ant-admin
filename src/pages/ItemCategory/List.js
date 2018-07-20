@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'redva';
-import {Row,Col,Button,Input} from 'antd';
+import {Row,Col,Button,Input,Popconfirm} from 'antd';
 import MySelect from '@/components/MySelect';
 import MyTreeSelect from '@/components/MyTreeSelect';
 import StandardForm from '@/components/StandardForm';
@@ -40,12 +40,7 @@ export default class List extends React.Component{
 		let data = await this.props.dispatch({
 			type:'/itemcategory/getAll'
 		});
-		let result = {};
-		for( let i in data ){
-			let single = data[i];
-			result[single.itemCategoryId] = single;
-		}
-		this.state.data = result;
+		this.state.data = data;
 		this.setState({});
 	}
 	add = ()=>{
@@ -115,11 +110,13 @@ export default class List extends React.Component{
 			}
 		];
 		return (
-		<Row>
+		<Row gutter={16}>
 			<Col span={8}>
 				<div>
 					<Button type="primary" onClick={this.add}>添加类别</Button>
-					<Button type="danger" style={{marginLeft:'16px'}} onClick={this.del}>删除</Button>
+					<Popconfirm title="确定删除该类别?" onConfirm={this.del}>
+						<Button type="danger" style={{marginLeft:'16px'}}>删除</Button>
+					</Popconfirm>
 				</div>
 				<MyTreeSelect 
 					style={{marginTop:'16px'}}

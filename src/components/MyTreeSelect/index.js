@@ -4,6 +4,7 @@ import style from './index.less';
 import classname from 'classname';
 
 const DirectoryTree = Tree.DirectoryTree;
+const Search = Input.Search;
 const TreeNode = Tree.TreeNode;
 
 export default class MyTreeSelect extends React.Component{
@@ -130,9 +131,8 @@ export default class MyTreeSelect extends React.Component{
 		}
 		return (
 		<div style={this.props.style} className={classname(style.container,this.props.className)}>
-			<Input 
-				placehoder="请输入" 
-				size="small" 
+			<Search 
+				placeholder="搜索" 
 				value={this.state.filterInput} 
 				onChange={this.onFilterChange}/>
 			<DirectoryTree

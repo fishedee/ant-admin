@@ -5,11 +5,17 @@ export default {
   state: null,
   actions: {
     async getAll({payload},{dispatch}){
-      return await request('/itemcategory/getAll',{
+      let data = await request('/itemcategory/getAll',{
         method:'GET',
         query:{},
         autoCheck:true,
       });
+      let result = {};
+      for( let i in data ){
+        let single = data[i];
+        result[single.itemCategoryId] = single;
+      }
+      return result;
     },
     async get({payload},{dispatch}){
       return await request('/itemcategory/get',{
