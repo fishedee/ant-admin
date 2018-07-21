@@ -64,7 +64,7 @@ export default class List extends React.Component{
 		this.state.detail = {
 			parent:0
 		}
-		this.state.itemCategoryId = 0;
+		this.state.itemCategoryId = undefined;
 		await this.fetch();
 	}
 	onSubmit = async ()=>{
@@ -110,29 +110,31 @@ export default class List extends React.Component{
 			}
 		];
 		return (
-		<Row gutter={16}>
-			<Col span={8}>
-				<div>
-					<Button type="primary" onClick={this.add}>添加类别</Button>
-					<Popconfirm title="确定删除该类别?" onConfirm={this.del}>
-						<Button type="danger" style={{marginLeft:'16px'}}>删除</Button>
-					</Popconfirm>
-				</div>
-				<MyTreeSelect 
-					style={{marginTop:'16px'}}
-					value={this.state.itemCategoryId}
-					onChange={this.onChange}
-					nodes={this.state.data} 
-					renderNode={(data)=>('['+data.itemCategoryId+']'+data.name)}/>
-			</Col>
-			<Col span={16}>
-				<StandardForm
-					columns={columns}
-					data={this.state.detail}
-					onChange={this.onDetailChange}
-					onSubmit={this.onSubmit}
-				/>
-			</Col>
+		<Row>
+			<Row>
+				<Button type="primary" onClick={this.add}>添加类别</Button>
+				<Popconfirm title="确定删除该类别?" onConfirm={this.del}>
+					<Button type="danger" style={{marginLeft:'16px'}}>删除</Button>
+				</Popconfirm>
+			</Row>
+			<Row gutter={16}
+				style={{marginTop:'16px'}}>
+				<Col span={8}>
+					<MyTreeSelect 
+						value={this.state.itemCategoryId}
+						onChange={this.onChange}
+						nodes={this.state.data} 
+						renderNode={(data)=>('['+data.itemCategoryId+']'+data.name)}/>
+				</Col>
+				<Col span={16}>
+					<StandardForm
+						columns={columns}
+						data={this.state.detail}
+						onChange={this.onDetailChange}
+						onSubmit={this.onSubmit}
+					/>
+				</Col>
+			</Row>
 		</Row>
 		);
 	}

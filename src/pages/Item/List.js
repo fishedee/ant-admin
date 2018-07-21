@@ -53,7 +53,10 @@ export default class Table extends React.Component{
 		let allCategorys = await this.props.dispatch({
 			type:'/itemcategory/getAll'
 		});
-		this.state.allCategorys = allCategorys;
+		this.state.allCategorys = {
+			0:{itemCategoryId:0,name:'无分组'},
+			...allCategorys,
+		};
 
 		let where = { ...this.state.where };
 		let limit = { 

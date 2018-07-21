@@ -41,7 +41,7 @@ export default class MyTreeSelect extends React.Component{
 			let singleChild = root.children[i];
 			childNodes.push(this.renderNode(singleChild));
 		}
-		if( root.id == 0 ){
+		if( root.id == '_all' ){
 			return (
 				<TreeNode title="全部" key={'_all'}>
 					{childNodes}
@@ -75,7 +75,7 @@ export default class MyTreeSelect extends React.Component{
 			}
 		}
 		if( newChildren.length == 0 
-			&& root.id != 0 ){
+			&& root.id != '_all' ){
 			return null;
 		}else{
 			return {
@@ -99,7 +99,7 @@ export default class MyTreeSelect extends React.Component{
 			let single = nodes[id];
 			let parent = 0;
 			if( !single.parent ){
-				parent = 0;
+				parent = '_all';
 			}else{
 				parent = single.parent;
 			}
@@ -112,8 +112,8 @@ export default class MyTreeSelect extends React.Component{
 			});
 		}
 		let root = {
-			id:0,
-			children:this.buildNode(children,0),
+			id:'_all',
+			children:this.buildNode(children,'_all'),
 			data:{}
 		};
 		const filterInput = this.state.filterInput.trim();
@@ -124,7 +124,7 @@ export default class MyTreeSelect extends React.Component{
 	}
 	render = ()=>{
 		let value = this.props.value;
-		if( !value ){
+		if( value == undefined ){
 			value = '_all';
 		}else{
 			value = value+'';
