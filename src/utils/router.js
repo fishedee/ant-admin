@@ -59,6 +59,16 @@ let router = [
 				component:'Order/Detail',
 			},
 			{
+				name:"订单列表2",
+				path:"/order2",
+				component:'Order2/List',
+			},
+			{
+				name:"订单详情2",
+				path:"/order2/detail",
+				component:'Order2/Detail',
+			},
+			{
 				name:"找不到页面",
 				path:"/404",
 				component:'Layout/NotFound',

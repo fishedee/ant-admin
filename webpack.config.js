@@ -5,6 +5,8 @@ const cleanWebpackPlugin = require('clean-webpack-plugin');
 
 const isDevelopment = (args.mode == 'development');
 
+const theme = {
+}
 module.exports = {
 	entry:[
 		'./src/index.js',
@@ -36,16 +38,26 @@ module.exports = {
 					plugins:[
 						'transform-decorators-legacy',
 						'transform-runtime',
-						["import", { "libraryName": "antd", "style": "css" }]
+						["import", { "libraryName": "antd", "style": true }]
 					]
 				}
 			},
 			{
 				test:/\.less$/,
+				exclude:/node_modules/,
 				use:[
 					{loader:'style-loader'},
 					{loader:'css-loader',options: { importLoaders: 1 ,modules:true}},
-					{loader:'less-loader'},
+					{loader:'less-loader',options:{modifyVars:theme,javascriptEnabled: true}},
+				]
+			},
+			{
+				test:/\.less$/,
+				include:/node_modules/,
+				use:[
+					{loader:'style-loader'},
+					{loader:'css-loader',options: { importLoaders: 1}},
+					{loader:'less-loader',options:{modifyVars:theme,javascriptEnabled: true}},
 				]
 			},
 			{
