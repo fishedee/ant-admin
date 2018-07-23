@@ -23,8 +23,6 @@ export default class Detail extends React.Component{
 			this.state = {
 				data:{},
 				itemMap:{},
-				itemTable:[],
-				filterInput:'',
 				cardInfo:null,
 				orderId:query.orderId
 			}
@@ -32,39 +30,37 @@ export default class Detail extends React.Component{
 			this.state = cache.get('/order2/detail') || {
 				data:{},
 				itemMap:{},
-				itemTable:[],
-				filterInput:'',
 				cardInfo:null,
 			}
 		}
 		this.state.modalVisible = false;
 		this.state.itemModalVisible = false;
-		this.state.itemModalData = {};
-	}
-	onFilterChange = (filterInput)=>{
-		this.state.filterInput = filterInput;
-		let result = [];
-		for( let i in this.state.itemMap ){
-			let single = this.state.itemMap[i];
-			if( single.name.indexOf(filterInput) != -1 ||
-				(single.itemId+'').indexOf(filterInput) != -1 ){
-				result.push(single);
-			}
-		}
-		this.state.itemTable = result;
-		this.setState({});
-	}
-	onSelect = (item)=>{
-		this.state.itemModalVisible = true;
-		this.state.itemModalData = {
-			itemId:item.itemId,
-		}
-		this.setState({});
+		this.state.itemId = undefined
 	}
 	componentDidUpdate = ()=>{
 		if( !this.state.orderId ){
 			cache.set('/order2/detail',this.state);
 		}
+	}
+	onTableSelectChange = (itemId)=>{
+		this.state.itemId = itemId;
+		this.setState({});
+	}
+	filterTableSelect = (data,input)=>{
+		if( data.name.indexOf(input) != -1 ){
+			return true;
+		}
+		if( (data.itemId+'').indexOf(input) != -1 ){
+			return true;
+		}
+		return false;
+	}
+	onTableSelectSelect = (itemId)=>{
+		this.state.itemModalVisible = true;
+		this.state.itemModalData = {
+			itemId:itemId,
+		}
+		this.setState({});
 	}
 	round = (num)=>{
 		return Math.round(parseFloat(num*100))/100
@@ -84,7 +80,7 @@ export default class Detail extends React.Component{
 	}
 	submitItem = (data)=>{
 		this.state.itemModalVisible = false;
-		this.onFilterChange('');
+		this.tableSelect.clear();
 		this.tableSelect.focus();
 		this.setState({});
 		if( data._key ){
@@ -141,7 +137,7 @@ export default class Detail extends React.Component{
 			itemMap[data.data[i].itemId] = data.data[i];
 		}
 		this.state.itemMap = itemMap;
-		this.onFilterChange('');
+		this.tableSelect.clear();
 		this.tableSelect.focus();
 		if( this.state.orderId ){
 			let data = await this.props.dispatch({
@@ -328,15 +324,15 @@ export default class Detail extends React.Component{
 				<Col span={8}>
 					<MyTableSelect
 						ref={(node)=>{this.tableSelect=node}}
-						columns={selectedColumns}
-						value={this.state.itemTable}
-						rowKey={'itemId'}
-						filterInput={this.state.filterInput}
-						onFilterChange={this.onFilterChange}
-						onSelect={this.onSelect}/>
+						value={this.state.itemId}
+						onChange={this.onTableSelectChange}
+						rows={this.state.itemMap}
+						renderRow={selectedColumns}
+						filterRow={this.filterTableSelect}
+						onSelect={this.onTableSelectSelect}/>
 					<StandardModal
 						visible={this.state.itemModalVisible}
-						onCancel={()=>{this.state.itemModalVisible=false;this.setState({});}}>
+						onCancel={()=>{this.state.itemModalVisible=false;this.tableSelect.focus();this.setState({});}}>
 						<ItemDetail 
 							allItems={this.state.itemMap}
 							onSubmit={this.submitItem} 

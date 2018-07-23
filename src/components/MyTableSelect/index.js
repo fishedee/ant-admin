@@ -8,91 +8,98 @@ const Search = Input.Search;
 
 export default class MyTableSelect extends React.Component{
 	state = {
-		selectedRow:null,
-		lastCount:-1,
+		filterInput:'',
+		list:[],
 	}
 	search = null;
 	focus = ()=>{
 		this.search.focus();
 	}
+	clear = ()=>{
+		this.state.filterInput = '';
+		this.setState({});
+		this.resetSelectedRow();
+	}
 	onFilterChange = (event)=>{
-		let filterInput = event.target.value;
-		this.props.onFilterChange(filterInput);
+		this.state.filterInput = event.target.value;
+		this.setState({});
+		this.resetSelectedRow();
+	}
+	resetSelectedRow = ()=>{
+		this.filterRows();
+		const list = this.state.list;
+		if( list.length != 0 ){
+			this.props.onChange(list[0]['_tableSelectKey']);
+		}
 	}
 	onSelectedRowChange = (selectedRow)=>{
-		this.state.selectedRow = selectedRow;
-		this.setState({});
+		this.props.onChange(selectedRow);
 	}
 	onKeyDown = (event)=>{
-		const list = this.props.value;
-		const rowKey = this.props.rowKey;
+		const list = this.state.list;
 		let selectedRowIndex = list.findIndex((single)=>{
-			return single[this.props.rowKey] == this.state.selectedRow;
+			return single['_tableSelectKey'] == this.props.value;
 		});
 		if( selectedRowIndex == -1 ){
 			return;
 		}
 		if( event.keyCode == 13 ){
 			event.preventDefault();
-			this.props.onSelect(list[selectedRowIndex]);
+			this.props.onSelect(this.props.value);
 		}else if( event.keyCode == 38 &&
-			selectedRowIndex != 0 ){
+			selectedRowIndex > 0 ){
 			//up
 			selectedRowIndex --;
-			this.state.selectedRow = list[selectedRowIndex][rowKey];
-			this.setState({});
+			this.props.onChange(list[selectedRowIndex]['_tableSelectKey']);
 		}else if (event.keyCode == 40 &&
-			selectedRowIndex != this.props.value.length - 1 ){
+			selectedRowIndex < this.state.list.length - 1 ){
 			//down
 			selectedRowIndex ++;
-			this.state.selectedRow = list[selectedRowIndex][rowKey];
-			this.setState({});
+			this.props.onChange(list[selectedRowIndex]['_tableSelectKey']);
 		}
 	}
 	onRowDoubleClick = (selectedRow)=>{
-		const list = this.props.value;
-		const rowKey = this.props.rowKey;
+		const list = this.state.list;
 		let selectedRowIndex = list.findIndex((single)=>{
-			return single[this.props.rowKey] == this.state.selectedRow;
+			return single['_tableSelectKey'] == this.props.value;
 		});
 		if( selectedRowIndex == -1 ){
 			return;
 		}
-		this.props.onSelect(list[selectedRowIndex]);
+		this.props.onSelect(this.props.value);
+	}
+	filterRows = ()=>{
+		const rows = this.props.rows;
+		let list = [];
+		for( const i in rows ){
+			let single = rows[i];
+			let shouldExist = this.props.filterRow(single,this.state.filterInput);
+			if( shouldExist ){
+				list.push({
+					...single,
+					'_tableSelectKey':i,
+				});
+			}	
+		}
+		this.state.list = list;
 	}
 	render = ()=>{
-		//默认选择第一个
-		const list = this.props.value;
-		const rowKey = this.props.rowKey;
-		if( list && list.length != 0 ){
-			if( list.length != this.state.lastCount ){
-				this.state.lastCount = list.length;
-				this.state.selectedRow = list[0][rowKey];
-			}else{
-				let selectedRowIndex = list.findIndex((single)=>{
-					return single[this.props.rowKey] == this.state.selectedRow;
-				});
-				if( selectedRowIndex == -1 ){
-					this.state.selectedRow = list[0][rowKey];
-				}
-			}
-		}
+		this.filterRows();
 		return (
 		<div style={this.props.style} className={classname(style.container,this.props.className)}>
 			<Search
 				ref={(node)=>{this.search=node}}
 				placeholder="搜索" 
-				value={this.props.filterInput} 
+				value={this.state.filterInput} 
 				onChange={this.onFilterChange}
-				onKeyDown={this.onKeyDown}
-				autoFocus={this.props.autoFocus}/>
+				onKeyDown={this.onKeyDown}/>
 			<StandardTable
 				className={style.root}
-				value={this.props.value}
-				loading={this.props.loading}
-				rowKey={this.props.rowKey}
-				columns={this.props.columns}
-				selectedRow={this.state.selectedRow}
+				value={this.state.list}
+				loading={false}
+				rowKey={'_tableSelectKey'}
+				columns={this.props.renderRow}
+				selectedRow={this.props.value}
 				onSelectedRowChange={this.onSelectedRowChange}
 				onRowDoubleClick={this.onRowDoubleClick}/>
 		</div>
