@@ -110,10 +110,12 @@ module.exports = {
 	
 
 	devServer:{
+		host: '0.0.0.0',
+    	disableHostCheck: true,
 		compress: true,
 		proxy:{
 			"/": {
-				target:"http://localhost:8585",
+				target:"http://localhost:3001",
 				changeOrigin: true
 			}
 		}

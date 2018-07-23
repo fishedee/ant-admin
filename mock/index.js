@@ -27,7 +27,7 @@ app.use('/itemcategory',middleware.checkMustLogin,itemCategoryRouter);
 app.use('/card',middleware.checkMustLogin,cardRouter);
 app.use('/order',middleware.checkMustLogin,orderRouter);
 
-var server = app.listen(8585, function () {
+var server = app.listen(3001, function () {
 	var host = server.address().address;
 	var port = server.address().port;
 
