@@ -8,33 +8,17 @@ const { Header, Content, Sider } = Layout;
 
 export default class Navigator extends React.Component{
 	state = {
-		prevProps:null
+		collapsed:true,
 	}
-	static getDerivedStateFromProps(props, state ) {
-		if( state.prevProps == null ||
-			props.url != state.prevProps.url ||
-			props.menu != state.prevProps.menu ){
-			let selectedKey = Navigator.getSelectedKey(props.url,props.menu);
-			if( selectedKey.length != 0 ){
-				return {
-					prevProps:props,
-					topMenuSelectedKey:selectedKey.i+"",
-					mainMenuSelectedKey:selectedKey.i+","+selectedKey.j+","+selectedKey.k,
-					mainMenuOpenKeys:[selectedKey.i+","+selectedKey.j],
-				};
-			}else{
-				return {
-					prevProps:props,
-					topMenuSelectedKey:"0",
-					mainMenuSelectedKey:"",
-					mainMenuOpenKeys:[]
-				};
-			}
-			
-		}
-		return null;
+	onCollapse = (collapsed)=>{
+		 this.setState({ 
+		 	collapsed:collapsed 
+		 });
 	}
-	static explode(str){
+	onSelect = (event)=>{
+		this.props.onSelect(event.item.props.path);
+	}
+	explode = (str)=>{
 		let result = str.split("/");
 		let newResult = [];
 		for( let i in result ){
@@ -44,111 +28,82 @@ export default class Navigator extends React.Component{
 		}
 		return newResult;
 	}
-	static getMatch(str1,str2){
-		if( str1.length < str2.length ){
+	getMatch = (url,path)=>{
+		url = this.explode(url);
+		path = this.explode(path);
+		if( url.length < path.length ){
 			return -1;
 		}
-		for( let i = 0 ;i != str2.length ;i ++ ){
-			if( str1[i] != str2[i] ){
+		for( let i = 0 ;i != path.length ;i ++ ){
+			if( url[i] != path[i] ){
 				return -1;
 			}
 		}
-		return str2.length;
+		return path.length;
 	}
-	static getSelectedKey(curUrl,menu){
-		let url = Navigator.explode(curUrl);
-		let match = {
-			length:0,
-			i:0,
-			j:0,
-			k:0,
-		};
-		for( let i in menu ){
-			let subMenu = menu[i].children;
-			for( let j in subMenu ){
-				let leafMenu = subMenu[j].children;
-				for( let k in leafMenu ){
-					let target = leafMenu[k]
-					let targetUrl = Navigator.explode(target.path)
-					let targetMatch = Navigator.getMatch(url,targetUrl);
-					if( targetMatch > match.length ){
-						match = {
-							length:targetMatch,
-							i:i,
-							j:j,
-							k:k,
-						}
+	getSelectKey = (menus,key,url)=>{
+		let maxMatch = {
+			key:0,
+			match:-1,
+		}
+		for( let i in menus ){
+			let menu = menus[i];
+			let children = menu.children || [];
+			if( children.length != 0 ){
+				let match = this.getSelectKey(children,key+i+",",url);
+				if( match.match >= maxMatch.match ){
+					maxMatch = match;
+				}
+			}else{
+				let match = this.getMatch(url,menu.path);
+				if( match >= maxMatch.match ){
+					maxMatch = {
+						key:key+i,
+						match:match
 					}
 				}
 			}
 		}
-		return match;
+		return maxMatch;
 	}
-	onOpenMainMenu = (openKeys)=>{
-		const latestOpenKey = openKeys.find(key => this.state.mainMenuOpenKeys.indexOf(key) === -1);
-		if( latestOpenKey && latestOpenKey.length != 0 ){
-			this.setState({mainMenuOpenKeys:[latestOpenKey]});
+	getMainMenuInner = (menus,key)=>{
+		let subMenuItem = [];
+		for( let i in menus ){
+			let menu = menus[i];
+			let children = menu.children || [];
+			let item = null;
+			if( children.length == 0 ){
+				item = (<Menu.Item key={key+i} path={menu.path}>
+					 {menu.icon?(<Icon type={menu.icon}/>):null}
+              		<span>{menu.name}</span>
+				</Menu.Item>);
+			}else{
+				let childrenItem = this.getMainMenuInner(children,key+i+",");
+				item = (<SubMenu key={key+i} title={
+					<span>{menu.icon?(<Icon type={menu.icon}/>):null}<span>{menu.name}</span></span>}>
+					{childrenItem}
+				</SubMenu>);
+			}
+			subMenuItem.push(item);
 		}
-	}
-	onSelectTopMenu = (event)=>{
-		this.setState({
-			topMenuSelectedKey:event.key
-		});
-	}
-	onSelectMainMenu = (event)=>{
-		this.props.onSelect(event.item.props.path);
-	}
-	onSelectDropDown = (event)=>{
-		event.item.props.onClick();
-	}
-	getTopMenu = ()=>{
-		const menu = this.props.menu;
-		const menuItem = [];
-		for( let i in menu ){
-			menuItem.push(<Menu.Item key={i}>{menu[i].name}</Menu.Item>);
-		}
-		return (
-			<Menu
-				theme="dark"
-				mode="horizontal"
-				selectedKeys={[this.state.topMenuSelectedKey]}
-				onSelect={this.onSelectTopMenu}
-				style={{lineHeight:'64px'}}
-			>
-				{menuItem}
-			</Menu>
-		);
+		return subMenuItem;
 	}
 	getMainMenu = ()=>{
-		const menu = this.props.menu[this.state.topMenuSelectedKey];
-		let subMenuItem = [];
-		for( let i in menu.children ){
-			let subMenu = menu.children[i];
-			let leafMenuItem = [];
-			for( let j in subMenu.children ){
-				let leafMenu = subMenu.children[j];
-				leafMenuItem.push(
-					<Menu.Item key={this.state.topMenuSelectedKey+","+i+","+j} path={leafMenu.path}>{leafMenu.name}</Menu.Item>
-				);
-			}
-			subMenuItem.push(
-				<SubMenu key={this.state.topMenuSelectedKey+","+i} title={<span><Icon type={subMenu.icon} />{subMenu.name}</span>}>
-					{leafMenuItem}
-				</SubMenu>
-			);
-		}
+		const menu = this.props.menu;
+		const selectKey = this.getSelectKey(menu,"",this.props.url);
 		return (
 			<Menu
 	          mode="inline"
-	          openKeys={this.state.mainMenuOpenKeys}
-	          selectedKeys={[this.state.mainMenuSelectedKey]}
-	          style={{ height: '100%', borderRight: 0 }}
-	          onOpenChange={this.onOpenMainMenu}
-	          onSelect={this.onSelectMainMenu}
+	          theme="dark"
+	          selectedKeys={[selectKey.key]}
+	          onSelect={this.onSelect}
 	        >
-	        	{subMenuItem}
+	        	{this.getMainMenuInner(menu,'')}
 	        </Menu>
 		);
+	}
+	onSelectDropDown = (event)=>{
+		event.item.props.onClick();
 	}
 	getDropdownMenu = ()=>{
 		let menuItem = [];
@@ -166,24 +121,21 @@ export default class Navigator extends React.Component{
 	}
 	render = ()=>{
 		return (
-		<Layout className={style.root}>
-			<Header className={style.header}>
-			  <h1 className={style.title}>{this.props.title}</h1>
-			  <div className={style.empty}/>
-			  {this.getTopMenu()}
-		      <Dropdown overlay={this.getDropdownMenu()}>
-		      	<div><Avatar icon="user" className={style.icon}/><span className={style.user}>{this.props.login.name}</span></div>
-		      </Dropdown>
-			</Header>
-			<Layout className={style.root2}>
-				<Sider className={style.sider}>
+			<Layout className={style.root}>
+				<Sider 
+					className={style.sider} 
+					collapsible={true} 
+					collapsed={this.state.collapsed}
+					onCollapse={this.onCollapse}>
+					<Dropdown overlay={this.getDropdownMenu()}>
+						<div className={style.head}><Avatar icon="user" className={style.icon}/><div className={style.user}>{this.props.login.name}</div></div>
+					</Dropdown>
 					{this.getMainMenu()}
 				</Sider>
 				<Content className={style.content}>
 					{this.props.children}
 				</Content>
 			</Layout>
-		</Layout>
 		);
 	}
 }

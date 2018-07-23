@@ -1,32 +1,27 @@
 export default [
 	{
-		name:"管理",
+		name:"银行卡",
+		icon:"user",
 		children:[
-			{
-				name:"银行卡",
-				icon:"user",
-				children:[
-					{name:"银行卡1",path:"/card"},
-					{name:"银行卡2",path:"/card2"},
-				]
-			},
-			{
-				name:"订单",
-				icon:"shopping-cart",
-				children:[
-					{name:"商品类别",path:"/itemCategory"},
-					{name:"商品",path:"/item"},
-					{name:"订单",path:"/order"},
-					{name:"订单2",path:"/order2"}
-				]
-			},
-			{
-				name:"系统",
-				icon:"laptop",
-				children:[
-					{name:"找不到页面",path:"/404"},
-				]
-			}
+			{name:"银行卡1",path:"/card"},
+			{name:"银行卡2",path:"/card2"},
+		]
+	},
+	{
+		name:"订单",
+		icon:"shopping-cart",
+		children:[
+			{name:"商品类别",path:"/itemCategory"},
+			{name:"商品",path:"/item"},
+			{name:"订单",path:"/order"},
+			{name:"订单2",path:"/order2"}
+		]
+	},
+	{
+		name:"系统",
+		icon:"laptop",
+		children:[
+			{name:"找不到页面",path:"/404"},
 		]
 	}
 ]
