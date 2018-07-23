@@ -11,6 +11,10 @@
     .ant-table-selection-column{
       display: none;
     }
+    .ant-table-tbody > tr > td{
+      //避免border-bottom动画导致黑条的出现
+      transition:none;
+    }
   }
 
   .tableAlert {
