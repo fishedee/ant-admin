@@ -3,23 +3,22 @@ import { Table, Alert } from 'antd';
 import styles from './index.less';
 
 export default class StandardTable extends React.Component {
-  state = {
-    selectedRows:[],
-  }
-
   handleSelectedRowChange = (rows)=>{
-    this.setState({selectedRows:rows});
+    if( this.props.onSelectedRowChange ){
+      let key = rows.length != 0 ? rows[0]:undefined
+      this.props.onSelectedRowChange(key);
+    }
   }
 
   onRowClick = (data)=>{
-    if( this.props.onSelect ){
-      this.setState({selectedRows:[data[this.props.rowKey]]});
+    if( this.props.onSelectedRowChange ){
+      this.props.onSelectedRowChange(data[this.props.rowKey]);
     }
   }
 
   onRowDoubleClick = (data)=>{
-    if( this.props.onSelect ){
-      this.props.onSelect(data);
+    if( this.props.onRowDoubleClick ){
+      this.props.onRowDoubleClick(data[this.props.rowKey]);
     }
   }
 
@@ -52,7 +51,7 @@ export default class StandardTable extends React.Component {
   }
 
   render() {
-    const { value, paginaction , loading, columns, rowKey ,style ,onSelect} = this.props;
+    const { value, paginaction , loading, columns, rowKey ,style ,selectedRow,onSelectedRowChange} = this.props;
 
     let paginationProps = false;
     if( paginaction ){
@@ -69,9 +68,13 @@ export default class StandardTable extends React.Component {
     }
     
     let rowSelection = null;
-    if( onSelect ){
+    if( onSelectedRowChange ){
+      let selectedRows = [];
+      if( selectedRow ){
+        selectedRows = [selectedRow]
+      }
       rowSelection = {
-        selectedRowKeys:this.state.selectedRows,
+        selectedRowKeys:selectedRows,
         onChange: this.handleSelectedRowChange,
         type:'radio',
       };
@@ -104,6 +107,8 @@ export default class StandardTable extends React.Component {
       <div className={styles.standardTable}>
         <Table
           style={style}
+          className={this.props.className}
+          size={"small"}
           bordered={true}
           loading={loading}
           rowKey={rowKey || 'key'}
@@ -115,7 +120,7 @@ export default class StandardTable extends React.Component {
           onRow={(record)=>{
             return {
               onClick:this.onRowClick.bind(this,record),
-              onDoubleClick:this.onRowDoubleClick.bind(this,record),
+              onDoubleClick:this.onRowDoubleClick,
             };
           }}
         />

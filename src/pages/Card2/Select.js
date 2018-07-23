@@ -27,7 +27,20 @@ export default class Table extends React.Component{
 				pageIndex:0,
 				pageSize:10,
 				count:0,
-			}
+			},
+			selectedRow:null,
+		}
+	}
+	onSelectedRowChange = (selectedRow)=>{
+		this.state.selectedRow = selectedRow;
+		this.setState({});
+	}
+	onRowDoubleClick = ()=>{
+		let selectedRowIndex = this.state.list.findIndex((single)=>{
+			return single.cardId == this.state.selectedRow;
+		})
+		if( selectedRowIndex != -1 ){
+			this.props.onSelect(this.state.list[selectedRowIndex]);
 		}
 	}
 	onQueryChange = (where)=>{
@@ -79,7 +92,7 @@ export default class Table extends React.Component{
 				title:"名称",
 				dataIndex:"name",
 				render:()=>{
-					return (<Input placeholder="请输入" autoFocus/>);
+					return (<Input placeholder="请输入" autoFocus onKeyDown={this.onKeyDown}/>);
 				}
 			},
 			
@@ -128,9 +141,11 @@ export default class Table extends React.Component{
 					loading={this.props.loading}
 					columns={columns}
 					value={this.state.list}
+					selectedRow={this.state.selectedRow}
+					onSelectedRowChange={this.onSelectedRowChange}
+					onRowDoubleClick={this.onRowDoubleClick}
 					paginaction={this.state.limit}
-					onPaginactionChange={this.onPaginactionChange}
-					onSelect={this.props.onSelect}/>
+					onPaginactionChange={this.onPaginactionChange}/>
 			</div>
 		);
 	}

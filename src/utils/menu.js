@@ -17,7 +17,7 @@ export default [
 					{name:"商品类别",path:"/itemCategory"},
 					{name:"商品",path:"/item"},
 					{name:"订单",path:"/order"},
-					{name:"订单2",path:"/order"}
+					{name:"订单2",path:"/order2"}
 				]
 			},
 			{
