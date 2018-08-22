@@ -128,6 +128,14 @@ export default class Table extends React.Component{
 	        }
 	      },
 	      {
+	        title: '次类别',
+	        dataIndex: 'itemCategoryId2',
+	        render:(value)=>{
+	        	console.log(this.state.allCategorys,value)
+	        	return this.state.allCategorys[value].name;
+	        }
+	      },
+	      {
 	        title: '创建时间',
 	        dataIndex: 'createTime',
 	      },

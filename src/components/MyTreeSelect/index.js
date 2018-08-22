@@ -124,10 +124,20 @@ export default class MyTreeSelect extends React.Component{
 	}
 	render = ()=>{
 		let value = this.props.value;
-		if( value == undefined ){
-			value = '_all';
+		let nodes = this.props.nodes;
+		if( !nodes['0'] ){
+			//options没有0值时，0和undefined等同
+			if( !value ){
+				value = '_all';
+			}else{
+				value = value+'';
+			}
 		}else{
-			value = value+'';
+			if( value == undefined ){
+				value = '_all';
+			}else{
+				value = value+'';
+			}
 		}
 		return (
 		<div style={this.props.style} className={classname(style.container,this.props.className)}>

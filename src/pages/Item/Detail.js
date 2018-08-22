@@ -91,6 +91,14 @@ export default class Form extends React.Component{
 				render:()=>{
 					return (<MySelect placeholder="请选择" options={this.state.allCategorys} renderOption={(data)=>(data.name)}/>);
 				}
+			},
+			{
+				title:"类别",
+				dataIndex:"itemCategoryId2",
+				rules:[],
+				render:()=>{
+					return (<MySelect placeholder="请选择" options={this.state.allCategorys} renderOption={(data)=>(data.name)}/>);
+				}
 			}
 		];
 		return (

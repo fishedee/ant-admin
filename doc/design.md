@@ -320,6 +320,15 @@ comonentDidUpdate = ()=>{
 
 启动时将state从cache中读取出来，每个页面更新后都将state实时保存到cache。当然，cache你可以设计为本地内存级别的，也可以是localStorage级别的。
 
+## 5.9 选择列表
+
+在当前组件中，有三种可以用来做选择列表的组件，MySelect,MyTreeSelect和MyTableSelect，他们的value都必须要是整数。另外，对于0和undefined是否等同的问题，组件的行为为：
+
+* 当nodes或options含有0的key的数据时，0和undefined就是不等同的。
+* 当nodes或options不含有0的key的数据时，0和undefined就是等同的。
+
+这样的设计既保证了能选中为0的nodes，也能方便没有0的nodes时，0就相当于没有选择。
+
 # 6 总结
 
 设计一个，既满足程序员简单快速灵活的要求，又符合用户对后台系统的需求，的后台管理系统，比我原来想象的麻烦多了。
