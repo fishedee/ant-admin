@@ -322,12 +322,23 @@ comonentDidUpdate = ()=>{
 
 ## 5.9 选择列表
 
-在当前组件中，有三种可以用来做选择列表的组件，MySelect,MyTreeSelect和MyTableSelect，他们的value都必须要是整数。另外，对于0和undefined是否等同的问题，组件的行为为：
+在当前组件中，有三种可以用来做选择列表的组件，MySelect,MyTreeSelect和MyTableSelect，他们的value都必须要是整数。这三个的组件的共同点是：
+
+* value属性，代表现在选中的条目
+* onChange属性，代表选中的条目被改变了
+* options,nodes和rows，代表可供选择的条目
+* renderOption,renderNode和renderRow，代表可供选择的条目是如何展示的
+* filterRow，代表可供选择的条目是怎么被filterInput改变的，仅MyTableSelect拥有的属性
+* onSelect，和onChange不同的是，它需要在onChange的加强后才能触发，例如是回车键或双击，仅MyTableSelect拥有的属性
+
+另外，对于0和undefined是否等同的问题，组件的行为为：
 
 * 当nodes或options含有0的key的数据时，0和undefined就是不等同的。
 * 当nodes或options不含有0的key的数据时，0和undefined就是等同的。
 
 这样的设计既保证了能选中为0的nodes，也能方便没有0的nodes时，0就相当于没有选择。
+
+
 
 # 6 总结
 
