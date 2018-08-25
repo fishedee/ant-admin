@@ -83,10 +83,14 @@ export default class MyTableSelect extends React.Component{
 		}
 		this.state.list = list;
 	}
+	searchNode = null;
+	onClick = ()=>{
+		this.search.focus();
+	}
 	render = ()=>{
 		this.filterRows();
 		return (
-		<div style={this.props.style} className={classname(style.container,this.props.className)}>
+		<div style={this.props.style} className={classname(style.container,this.props.className)} onClick={this.onClick}>
 			<Search
 				ref={(node)=>{this.search=node}}
 				placeholder="搜索" 

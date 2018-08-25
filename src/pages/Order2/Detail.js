@@ -12,6 +12,7 @@ import qs from 'qs';
 import cache from '@/utils/cache';
 import InputWrapper from '@/components/InputWrapper';
 import ItemDetail from './ItemDetail';
+import MyAutoComplete from '@/components/MyAutoComplete';
 
 @connect()
 export default class Detail extends React.Component{
@@ -258,7 +259,8 @@ export default class Detail extends React.Component{
 				wrapperCol:{span:8},
 				rules:[{ required: true}],
 				render:()=>{
-					return (<Input placeholder="请输入"/>);
+					let dataSource=["广东省佛山市","广东省广州市","广东省深圳市"];
+					return (<MyAutoComplete placeholder="请输入" dataSource={dataSource}/>);
 				}
 			},
 			{

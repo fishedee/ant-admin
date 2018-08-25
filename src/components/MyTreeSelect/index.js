@@ -122,6 +122,10 @@ export default class MyTreeSelect extends React.Component{
 		}
 		return this.renderNode(root);
 	}
+	searchNode = null;
+	onClick = ()=>{
+		this.searchNode.focus();
+	}
 	render = ()=>{
 		let value = this.props.value;
 		let nodes = this.props.nodes;
@@ -140,8 +144,9 @@ export default class MyTreeSelect extends React.Component{
 			}
 		}
 		return (
-		<div style={this.props.style} className={classname(style.container,this.props.className)}>
+		<div style={this.props.style} className={classname(style.container,this.props.className)} onClick={this.onClick}>
 			<Search 
+				ref={(node)=>(this.searchNode=node)}
 				placeholder="搜索" 
 				value={this.state.filterInput} 
 				onChange={this.onFilterChange}/>
