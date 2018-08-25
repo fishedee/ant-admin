@@ -29,11 +29,11 @@ export default class MyTableSelect extends React.Component{
 		this.filterRows();
 		const list = this.state.list;
 		if( list.length != 0 ){
-			this.props.onChange(list[0]['_tableSelectKey']);
+			this.props.onChange(parseInt(list[0]['_tableSelectKey']));
 		}
 	}
 	onSelectedRowChange = (selectedRow)=>{
-		this.props.onChange(selectedRow);
+		this.props.onChange(parseInt(selectedRow));
 	}
 	onKeyDown = (event)=>{
 		const list = this.state.list;
@@ -45,17 +45,17 @@ export default class MyTableSelect extends React.Component{
 		}
 		if( event.keyCode == 13 ){
 			event.preventDefault();
-			this.props.onSelect(this.props.value);
+			this.props.onSelect(parseInt(this.props.value));
 		}else if( event.keyCode == 38 &&
 			selectedRowIndex > 0 ){
 			//up
 			selectedRowIndex --;
-			this.props.onChange(list[selectedRowIndex]['_tableSelectKey']);
+			this.props.onChange(parseInt(list[selectedRowIndex]['_tableSelectKey']));
 		}else if (event.keyCode == 40 &&
 			selectedRowIndex < this.state.list.length - 1 ){
 			//down
 			selectedRowIndex ++;
-			this.props.onChange(list[selectedRowIndex]['_tableSelectKey']);
+			this.props.onChange(parseInt(list[selectedRowIndex]['_tableSelectKey']));
 		}
 	}
 	onRowDoubleClick = (selectedRow)=>{
@@ -66,7 +66,7 @@ export default class MyTableSelect extends React.Component{
 		if( selectedRowIndex == -1 ){
 			return;
 		}
-		this.props.onSelect(this.props.value);
+		this.props.onSelect(parseInt(this.props.value));
 	}
 	filterRows = ()=>{
 		const rows = this.props.rows;
@@ -77,7 +77,7 @@ export default class MyTableSelect extends React.Component{
 			if( shouldExist ){
 				list.push({
 					...single,
-					'_tableSelectKey':i,
+					'_tableSelectKey':parseInt(i),
 				});
 			}	
 		}
