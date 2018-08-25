@@ -1,10 +1,14 @@
 import React from 'react';
 import { connect } from 'redva';
 import {Input,Select,InputNumber,DatePicker} from 'antd';
+import MyRadio from '@/components/MyRadio';
 import StandardForm from '@/components/StandardForm';
 
 const Option = Select.Option;
-const typeOption = ['未分类','储蓄卡','信用卡'];
+const typeOption = {
+	1:'储蓄卡',
+	2:'信用卡',
+}
 
 @connect()
 export default class Form extends React.Component{
@@ -59,11 +63,7 @@ export default class Form extends React.Component{
 				dataIndex:"type",
 				rules:[{ required: true}],
 				render:()=>{
-					return (<Select placeholder="请选择" style={{ width: '100%' }}>
-	                 	{typeOption.map((name,index)=>{
-							return (<Option value={index} key={index}>{name}</Option>);
-						})}
-	                </Select>);
+					return (<MyRadio radios={typeOption}/>);
 				}
 			}
 		];
