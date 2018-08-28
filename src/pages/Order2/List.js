@@ -4,6 +4,9 @@ import { Button , Input , Divider,Popconfirm} from 'antd';
 import MyDatePicker from '@/components/MyDatePicker';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
+import DetailPrint from './DetailPrint';
+import StubPrint from './StubPrint';
+import PrintModal from '@/components/PrintModal';
 import qs from 'qs';
 import cache from '@/utils/cache';
 
@@ -16,6 +19,7 @@ export default class List extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = cache.get('/order2/list') || {
+			itemMap:{},
 			list:[],
 			where:{},
 			limit:{
@@ -24,6 +28,12 @@ export default class List extends React.Component{
 				count:0,
 			}
 		}
+		this.state.printModalVisible = false;
+		this.state.printDocuments = [];
+	}
+	onPrintModalClose = ()=>{
+		this.state.printModalVisible = false;
+		this.setState({});
 	}
 	componentDidUpdate = ()=>{
 		cache.set('/order2/list',this.state);
@@ -45,6 +55,14 @@ export default class List extends React.Component{
 		this.fetch();
 	}
 	fetch = async ()=>{
+		let data2 = await this.props.dispatch({
+			type:'/item/getAll',
+		});
+		let itemMap = {};
+		for( let i in data2.data ){
+			itemMap[data2.data[i].itemId] = data2.data[i];
+		}
+		this.state.itemMap = itemMap;
 		let where = { ...this.state.where };
 		if( where.createTime ){
 			where.beginTime = where.createTime[0]+' 00:00:00',
@@ -91,6 +109,16 @@ export default class List extends React.Component{
 			}
 		});
 		await this.fetch();
+	}
+	print = (data)=>{
+		var print1 = DetailPrint({
+			...data,
+			itemMap:this.state.itemMap
+		});
+		var print2 = StubPrint();
+		this.state.printDocuments = [print1,print2];
+		this.state.printModalVisible = true;
+		this.setState({});
 	}
 	render = ()=>{
 		let queryColumns = [
@@ -161,6 +189,8 @@ export default class List extends React.Component{
 	        title: '操作',
 	        render: (val,data) => (
 	          <Fragment>
+	            <a onClick={this.print.bind(this,data)}>打印</a>
+	            <Divider type="vertical" />
 	            <a onClick={this.mod.bind(this,data.orderId)}>修改</a>
 	            <Divider type="vertical" />
 	            <Popconfirm title="确定删除该订单?" onConfirm={this.del.bind(this,data.orderId)}>
@@ -172,6 +202,10 @@ export default class List extends React.Component{
 	    ];
 		return (
 			<div>
+				<PrintModal
+							visible={this.state.printModalVisible}
+							documents={this.state.printDocuments}
+							onClose={this.onPrintModalClose}/>
 				<StandardQuery 
 					columns={queryColumns} 
 					data={this.state.where}

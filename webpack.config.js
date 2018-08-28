@@ -23,7 +23,8 @@ module.exports = {
 	
 	resolve:{
 		alias: {
-	      '@': path.resolve(__dirname,'src')
+	      '@': path.resolve(__dirname,'src'),
+	      'art-template':path.resolve(__dirname,'node_modules/art-template/lib/template-web.js')
 	    }
 	},
 
