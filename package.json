@@ -8,6 +8,8 @@
     "dev": "webpack --mode development",
     "start": "webpack-dev-server --mode development --hot",
     "mock": "node-dev mock/index.js",
+    "electron":"electron ./electron",
+    "electron-packager":"rm -rf electron-out && electron-packager ./electron --overwrite --appname=ant-admin --arch=x64 --platform=darwin,win32 --out=./electron-out",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -32,6 +34,8 @@
     "body-parser": "^1.18.3",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.11",
+    "electron": "^2.0.8",
+    "electron-packager": "^12.1.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "file-loader": "^1.1.11",
