@@ -8,8 +8,8 @@
     "dev": "webpack --mode development",
     "start": "webpack-dev-server --mode development --hot",
     "mock": "node-dev mock/index.js",
-    "electron":"electron ./electron",
-    "electron-packager":"rm -rf electron-out && electron-packager ./electron --overwrite --appname=ant-admin --arch=x64 --platform=darwin,win32 --out=./electron-out",
+    "electron": "electron ./electron",
+    "electron-packager": "rm -rf electron-out && electron-packager ./electron --overwrite --appname=ant-admin --arch=x64 --platform=darwin,win32 --out=./electron-out",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -53,6 +53,7 @@
     "antd": "^3.6.2",
     "art-template": "^4.13.0",
     "classname": "^0.0.0",
+    "html2canvas": "^1.0.0-alpha.12",
     "qs": "^6.5.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",

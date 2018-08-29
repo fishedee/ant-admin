@@ -1,18 +1,22 @@
 import React from 'react';
-import { Modal ,Button,Tabs} from 'antd';
+import { Modal ,Button,Tabs,Radio} from 'antd';
 import style from './index.less';
-
+import classname from 'classname';
+import html2canvas from 'html2canvas';
 const TabPane = Tabs.TabPane;
 
 class PrintPreview extends React.Component{
 	frameNodeList = [];
+	canvasNodeList = [];
 	constructor(props){
 		super(props);
 		for( const i in this.props.documents){
 			this.frameNodeList.push(null);
+			this.canvasNodeList.push(null);
 		}
 		this.state = {
 			activeKey:'0',
+			showMode:'html'
 		}
 	}
 	componentDidMount = ()=>{
@@ -28,6 +32,9 @@ class PrintPreview extends React.Component{
 	getNode = (index,node)=>{
 		this.frameNodeList[index] = node;
 	}
+	getCanvasNode = (index,node)=>{
+		this.canvasNodeList[index] = node;
+	}
 	printCurrent = ()=>{
 		var win = this.frameNodeList[this.state.activeKey].contentWindow;
 		win.print();
@@ -38,30 +45,75 @@ class PrintPreview extends React.Component{
 			win.print();
 		}
 	}
+	onLoad = (index)=>{
+		var win = this.frameNodeList[index].contentWindow;
+		var canvas = this.canvasNodeList[index];
+		var shareContent = win.document.querySelector('.page');
+	    var width = shareContent.offsetWidth;
+	    var height = shareContent.offsetHeight;
+	    var scale = 2;
+	    canvas.width = width * scale;
+	    canvas.height = height * scale;
+	    canvas.getContext("2d").scale(scale, scale);
+	    var opts = {
+	        scale: scale,
+	        canvas: canvas,
+	        width: width,
+	        height: height,
+	        useCORS: true
+	    };
+
+		html2canvas(shareContent,opts);
+	}
 	onChange = (activeKey)=>{
 		this.state.activeKey = activeKey;
 		this.setState({});
 	}
+	onShowModeChange = (e)=>{
+		this.state.showMode = e.target.value;
+		this.setState({});
+	}
 	render = ()=>{
+		var frameShow = '';
+		var canvasShow = '';
+		if( this.state.showMode == 'html'){
+			canvasShow = style.hidden;
+		}else{
+			frameShow = style.hidden;
+		}
+		console.log(this.state.showMode,frameShow,canvasShow);
 		return (
-		<Tabs
-          activeKey={this.state.activeKey}
-          onChange={this.onChange}
-          tabPosition={'top'}
-          className={style.tab}
-        >
-        	{this.props.documents.map((doc,index)=>{
-        		return (
-        			<TabPane tab={"第"+(index+1)+"页"} key={index} forceRender={true}>
-		        		<iframe 
-							ref={this.getNode.bind(this,index)}
-							className={style.frame}
-							frameBorder="0"
-						/>
-		        	</TabPane>
-        		);
-        	})}
-        </Tabs>
+		<div className={style.container}>
+			<Radio.Group onChange={this.onShowModeChange} value={this.state.showMode} buttonStyle="solid">
+				<Radio.Button value="html">网页模式</Radio.Button>
+				<Radio.Button value="image">图片模式</Radio.Button>
+			</Radio.Group>
+			<Tabs
+	          activeKey={this.state.activeKey}
+	          onChange={this.onChange}
+	          tabPosition={'top'}
+	          className={style.tab}
+	        >
+	        	{this.props.documents.map((doc,index)=>{
+	        		return (
+	        			<TabPane tab={"第"+(index+1)+"页"} key={index} forceRender={true}>
+				        		
+								<div className={style.canvasWrapper}>
+									<canvas 
+										ref={this.getCanvasNode.bind(this,index)}
+										className={classname(style.canvas,canvasShow)}/>
+								</div>
+								<iframe 
+									ref={this.getNode.bind(this,index)}
+									onLoad={this.onLoad.bind(this,index)}
+									className={classname(style.frame,frameShow)}
+									frameBorder="0"
+								/>
+			        	</TabPane>
+	        		);
+	        	})}
+	        </Tabs>
+        </div>
 		);
 		 
 		return 
