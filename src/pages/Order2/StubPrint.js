@@ -19,13 +19,13 @@ var tpl = `
 			margin-top:15mm;
 			margin-bottom:15mm;
 		}
-		.page{
+		#body{
 			width:120mm;
 			margin:0 auto;
 		}
 	</style>
 	<style media="print">
-		.page{
+		#body{
 			margin:0;
 		}
 		#printButton{
@@ -35,9 +35,7 @@ var tpl = `
 </head>
 <body>
 	<div id="body">
-		<div class="page">
-			Hello Fish
-		</div>
+		Hello Fish
 	</div>
 </body>
 </html>

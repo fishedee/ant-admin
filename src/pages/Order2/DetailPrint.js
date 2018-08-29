@@ -19,8 +19,9 @@ var tpl = `
 			margin-top:15mm;
 			margin-bottom:15mm;
 		}
-		.page{
+		#body{
 			width:120mm;
+			padding:25px;
 			margin:0 auto;
 		}
 		.title{
@@ -100,8 +101,9 @@ var tpl = `
 		}
 	</style>
 	<style media="print">
-		.page{
+		#body{
 			margin:0;
+			padding:0;
 		}
 		#printButton{
 			display:none;
@@ -110,43 +112,41 @@ var tpl = `
 </head>
 <body>
 	<div id="body">
-		<div class="page">
-			<div class="title">ant-admin销售订单</div>
-			<div class="header">
-				<div class="name">客户：<span><%= name %></span></div>
-				<div class="orderId">销售单号：<span><%= orderId %></span></div>
-				<div class="phone">客户电话：<span><%= phone %></span></div>
-				<div class="date">日期：<span><%= createTime %></span></div>
-			</div>
-			<table class="content">
-				<thead>
-					<td class="num">对照号</td>
-					<td class="product">商品</td>
-					<td class="price">单价</td>
-					<td class="count">数量</td>
-					<td class="total">金额</td>
-				</thead>
-				<tbody>
-					<% for( var i = 0 ;i != items.length ;i++ ){%>
-					<tr>
-						<td class="num"><%= i+1 %></td>
-						<td class="product"><%= itemMap[items[i].itemId].name %></td>
-						<td class="price"><%= items[i].price %></td>
-						<td class="count"><%= items[i].num %></td>
-						<td class="total"><%= items[i].amount %></td>
-					</tr>
-					<%}%>
-					<tr class="allTotal">
-						<td class="allTotalNumber" colspan="5">&nbsp;合计金额：<%= total %></td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="footer">
-				<div class="receiver">收货人：<span></span></div>
-				<div class="manager">经手人：<span></span></div>
-				<div class="notice">注：签名作为未付款凭证，货物出门，恕不退换！</div>
-				<div class="pageCount">第1页/共1页</div>
-			</div>
+		<div class="title">ant-admin销售订单</div>
+		<div class="header">
+			<div class="name">客户：<span><%= name %></span></div>
+			<div class="orderId">销售单号：<span><%= orderId %></span></div>
+			<div class="phone">客户电话：<span><%= phone %></span></div>
+			<div class="date">日期：<span><%= createTime %></span></div>
+		</div>
+		<table class="content">
+			<thead>
+				<td class="num">对照号</td>
+				<td class="product">商品</td>
+				<td class="price">单价</td>
+				<td class="count">数量</td>
+				<td class="total">金额</td>
+			</thead>
+			<tbody>
+				<% for( var i = 0 ;i != items.length ;i++ ){%>
+				<tr>
+					<td class="num"><%= i+1 %></td>
+					<td class="product"><%= itemMap[items[i].itemId].name %></td>
+					<td class="price"><%= items[i].price %></td>
+					<td class="count"><%= items[i].num %></td>
+					<td class="total"><%= items[i].amount %></td>
+				</tr>
+				<%}%>
+				<tr class="allTotal">
+					<td class="allTotalNumber" colspan="5">&nbsp;合计金额：<%= total %></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="footer">
+			<div class="receiver">收货人：<span></span></div>
+			<div class="manager">经手人：<span></span></div>
+			<div class="notice">注：签名作为未付款凭证，货物出门，恕不退换！</div>
+			<div class="pageCount">第1页/共1页</div>
 		</div>
 	</div>
 </body>

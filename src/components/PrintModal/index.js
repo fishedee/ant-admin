@@ -16,7 +16,8 @@ class PrintPreview extends React.Component{
 		}
 		this.state = {
 			activeKey:'0',
-			showMode:'html'
+			showMode:'html',
+			hasLoadCanvas:false,
 		}
 	}
 	componentDidMount = ()=>{
@@ -45,10 +46,10 @@ class PrintPreview extends React.Component{
 			win.print();
 		}
 	}
-	onLoad = (index)=>{
+	loadCanvas = (index)=>{
 		var win = this.frameNodeList[index].contentWindow;
 		var canvas = this.canvasNodeList[index];
-		var shareContent = win.document.querySelector('.page');
+		var shareContent = win.document.getElementById('body');
 	    var width = shareContent.offsetWidth;
 	    var height = shareContent.offsetHeight;
 	    var scale = 2;
@@ -71,6 +72,13 @@ class PrintPreview extends React.Component{
 	}
 	onShowModeChange = (e)=>{
 		this.state.showMode = e.target.value;
+		if( this.state.showMode == 'image' &&
+			this.state.hasLoadCanvas == false ){
+			this.state.hasLoadCanvas = true;
+			for( const i in this.props.documents){
+				this.loadCanvas(i);
+			}
+		}
 		this.setState({});
 	}
 	render = ()=>{
@@ -81,7 +89,6 @@ class PrintPreview extends React.Component{
 		}else{
 			frameShow = style.hidden;
 		}
-		console.log(this.state.showMode,frameShow,canvasShow);
 		return (
 		<div className={style.container}>
 			<Radio.Group onChange={this.onShowModeChange} value={this.state.showMode} buttonStyle="solid">
@@ -105,7 +112,6 @@ class PrintPreview extends React.Component{
 								</div>
 								<iframe 
 									ref={this.getNode.bind(this,index)}
-									onLoad={this.onLoad.bind(this,index)}
 									className={classname(style.frame,frameShow)}
 									frameBorder="0"
 								/>
