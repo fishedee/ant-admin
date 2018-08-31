@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal ,Button,Tabs,Radio} from 'antd';
+import { Modal ,Button,Tabs,Radio,Switch} from 'antd';
 import style from './index.less';
 import classname from 'classname';
 import html2canvas from 'html2canvas';
@@ -10,19 +10,18 @@ class PrintPreview extends React.Component{
 	canvasNodeList = [];
 	constructor(props){
 		super(props);
-		for( const i in this.props.documents){
+		for( const i in this.props.pages){
 			this.frameNodeList.push(null);
 			this.canvasNodeList.push(null);
 		}
 		this.state = {
 			activeKey:'0',
-			showMode:'html',
-			hasLoadCanvas:false,
+			showMode:true,
 		}
 	}
 	componentDidMount = ()=>{
-		for( const i in this.props.documents ){
-			var docText = this.props.documents[i];
+		for( const i in this.props.pages ){
+			var docText = this.props.pages[i];
 			var win = this.frameNodeList[i].contentWindow;
 			var doc = win.document;
 			doc.open();
@@ -71,40 +70,38 @@ class PrintPreview extends React.Component{
 		this.setState({});
 	}
 	onShowModeChange = (e)=>{
-		this.state.showMode = e.target.value;
-		if( this.state.showMode == 'image' &&
-			this.state.hasLoadCanvas == false ){
-			this.state.hasLoadCanvas = true;
-			for( const i in this.props.documents){
-				this.loadCanvas(i);
-			}
-		}
+		this.state.showMode = e;
 		this.setState({});
 	}
 	render = ()=>{
+		var prefix = this.props.prefix;
 		var frameShow = '';
 		var canvasShow = '';
-		if( this.state.showMode == 'html'){
+		if( this.state.showMode == false ){
 			canvasShow = style.hidden;
 		}else{
 			frameShow = style.hidden;
 		}
 		return (
 		<div className={style.container}>
-			<Radio.Group onChange={this.onShowModeChange} value={this.state.showMode} buttonStyle="solid">
-				<Radio.Button value="html">网页模式</Radio.Button>
-				<Radio.Button value="image">图片模式</Radio.Button>
-			</Radio.Group>
+			<div className={style.header}>
+				<Switch 
+					className={style.showMode} 
+					checkedChildren="图片模式" 
+					unCheckedChildren="网页模式" 
+					checked={this.state.showMode}
+					onChange={this.onShowModeChange}/>
+				{prefix}
+			</div>
 			<Tabs
 	          activeKey={this.state.activeKey}
 	          onChange={this.onChange}
 	          tabPosition={'top'}
 	          className={style.tab}
 	        >
-	        	{this.props.documents.map((doc,index)=>{
+	        	{this.props.pages.map((doc,index)=>{
 	        		return (
 	        			<TabPane tab={"第"+(index+1)+"页"} key={index} forceRender={true}>
-				        		
 								<div className={style.canvasWrapper}>
 									<canvas 
 										ref={this.getCanvasNode.bind(this,index)}
@@ -112,6 +109,7 @@ class PrintPreview extends React.Component{
 								</div>
 								<iframe 
 									ref={this.getNode.bind(this,index)}
+									onLoad={this.loadCanvas.bind(this,index)}
 									className={classname(style.frame,frameShow)}
 									frameBorder="0"
 								/>
@@ -121,11 +119,50 @@ class PrintPreview extends React.Component{
 	        </Tabs>
         </div>
 		);
-		 
-		return 
 	}
 }
 
+class PrintPreviewWrapper extends React.Component{
+	node = null;
+	constructor(props){
+		super(props);
+		this.state = {
+			printStyle:0,
+		}
+	} 
+	printCurrent = ()=>{
+		this.node.printCurrent();
+	}
+	printAll = ()=>{
+		this.node.printAll();
+	}
+	onPrintStyleChange = (e)=>{
+		this.state.printStyle = e.target.value;
+		this.setState({});
+	}
+	render = ()=>{
+		let {documents} = this.props;
+		let pages = documents[this.state.printStyle].pages;
+		return (<PrintPreview 
+			ref={(node)=>(this.node=node)}
+			key={this.state.printStyle}
+			prefix={
+				<Radio.Group 
+					onChange={this.onPrintStyleChange} 
+					value={this.state.printStyle} 
+					buttonStyle="solid">
+					{documents.map((doc,index)=>{
+						return (<Radio.Button 
+							key={index} 
+							value={index}>
+							{doc.name}
+						</Radio.Button>);
+					})}
+				</Radio.Group>
+			}
+			pages={pages}/>);
+	}
+}
 export default class PrintModal extends React.Component{
 	node = null
 	onCancel = ()=>{
@@ -159,7 +196,7 @@ export default class PrintModal extends React.Component{
 					<Button key="back" onClick={this.onCancel}>取消</Button>,
 				]}
 				wrapClassName={style.printDialog}>
-				<PrintPreview 
+				<PrintPreviewWrapper 
 					ref={(node)=>(this.node=node)}
 					{...resetProps}/>
 			</Modal>

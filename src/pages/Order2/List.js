@@ -116,7 +116,16 @@ export default class List extends React.Component{
 			itemMap:this.state.itemMap
 		});
 		var print2 = StubPrint();
-		this.state.printDocuments = [print1,print2];
+		this.state.printDocuments = [
+			{
+				name:'竖列打印',
+				pages:[print1,print2]
+			},
+			{
+				name:'竖列打印',
+				pages:[print2,print2,print1]
+			}
+		];
 		this.state.printModalVisible = true;
 		this.setState({});
 	}
