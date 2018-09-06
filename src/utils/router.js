@@ -14,6 +14,11 @@ let router = [
 		component:'Layout/Home',
 		children:[
 			{
+				name:"首页跳转",
+				path:"/",
+				component:"Layout/HomeRedirect",
+			},
+			{
 				name:"银行卡列表",
 				path:"/card",
 				component:'Card/List',
@@ -106,16 +111,11 @@ function analyseComponent(app,router){
 }
 
 function getRouterComponent(app,router){
-	let redirectRouter = [];
 	for( let i = 0 ; i != router.length ;i ++ ){
 		analyseComponent(app,router[i]);
-		if( router[i].children && router[i].children.length != 0 ){
-			redirectRouter.push(<Redirect exact={true} from={router[i].path} to={router[i].children[0].path} key={"redirect_"+router[i].path}/>);
-		}
 	}
 	return (
 		<Switch>
-			{redirectRouter}
 			{router.map((singleRouter)=>{
 				const hasChildren = singleRouter.children && singleRouter.children.length != 0;
 				return (<Route exact={!hasChildren} path={singleRouter.path} key={singleRouter.path} component={singleRouter.wrapperComponent}/>);
