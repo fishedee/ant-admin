@@ -1,4 +1,4 @@
-export default [
+export var adminMenu = [
 	{
 		name:"银行卡",
 		icon:"user",
@@ -24,4 +24,22 @@ export default [
 			{name:"找不到页面",path:"/404"},
 		]
 	}
-]
+];
+
+export var userMenu = [
+	{
+		name:"银行卡",
+		icon:"user",
+		children:[
+			{name:"银行卡1",path:"/card"},
+			{name:"银行卡2",path:"/card2"},
+		]
+	},
+	{
+		name:"系统",
+		icon:"laptop",
+		children:[
+			{name:"找不到页面",path:"/404"},
+		]
+	}
+];

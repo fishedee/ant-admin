@@ -5,7 +5,7 @@ import GlobalFooter from '@/components/GlobalFooter';
 import {copyright,title} from '@/utils/constant';
 import PageHeader from '@/components/PageHeader';
 import authority from '@/utils/authority';
-import menu from '@/utils/menu';
+import {adminMenu,userMenu} from '@/utils/menu';
 import {getRouterName} from '@/utils/router';
 import style from './Home.less';
 import {connect} from 'redva';
@@ -35,8 +35,8 @@ export default class Home extends React.Component{
 		this.onReload();
 	}
 	logout = (data)=>{
-		this.props.dispatch({
-			type:'/login/logout',
+		this.props.history.push({
+			pathname:'/login',
 		});
 	}
 	render(){
@@ -49,6 +49,13 @@ export default class Home extends React.Component{
 		}
 		const query = qs.parse(this.props.location.search.substr(1));
 		const name = getRouterName(this.props.location.pathname);
+		const role = this.props.login.role;
+		var menu = null;
+		if( role == 'admin'){
+			menu = adminMenu;
+		}else{
+			menu = userMenu;
+		}
 		return (
 			<Navigator 
 				title={title} 
