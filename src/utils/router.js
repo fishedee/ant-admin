@@ -74,6 +74,28 @@ let router = [
 				component:'Order2/Detail',
 			},
 			{
+				name:"文章详情展示",
+				path:"/article",
+				component:'Article/List',
+				children:[
+					{
+						name:"文章跳转",
+						path:"/article",
+						component:'Article/Index',
+					},
+					{
+						name:"文章详情1",
+						path:"/article/detail1",
+						component:'Article/Detail1',
+					},
+					{
+						name:"文章详情2",
+						path:"/article/detail2",
+						component:'Article/Detail2',
+					},
+				]
+			},
+			{
 				name:"找不到页面",
 				path:"/404",
 				component:'Layout/NotFound',
