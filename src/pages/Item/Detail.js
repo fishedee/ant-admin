@@ -3,9 +3,16 @@ import { connect } from 'redva';
 import {Input} from 'antd';
 import StandardForm from '@/components/StandardForm';
 import MySelect from '@/components/MySelect';
+import MyCheckbox from '@/components/MyCheckbox';
 import qs from 'qs';
 import cache from '@/utils/cache';
 
+var allFeatures = {
+	1:"七天无理由退款",
+	2:"货到付款",
+	3:"信用卡支付",
+	4:"送运费险",
+};
 @connect()
 export default class Form extends React.Component{
 	constructor(props){
@@ -57,6 +64,7 @@ export default class Form extends React.Component{
 	}
 	onSubmit = async ()=>{
 		if( this.state.itemId ){
+			console.log(this.state.data);
 			await this.props.dispatch({
 				type:'/item/mod',
 				payload:{
@@ -99,7 +107,15 @@ export default class Form extends React.Component{
 				render:()=>{
 					return (<MySelect placeholder="请选择" options={this.state.allCategorys} renderOption={(data)=>(data.name)}/>);
 				}
-			}
+			},
+			{
+				title:"特性",
+				dataIndex:"feature",
+				rules:[],
+				render:()=>{
+					return (<MyCheckbox placeholder="请选择" options={allFeatures} renderOption={(data)=>(data.name)}/>);
+				}
+			},
 		];
 		return (
 			<StandardForm

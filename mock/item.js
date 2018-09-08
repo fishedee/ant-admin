@@ -7,12 +7,12 @@ function now(){
 }
 
 var items = [
-	{itemId:10001,name:'口罩',itemCategoryId:10001,itemCategoryId2:0,createTime:now(),modifyTime:now()},
-	{itemId:10002,name:'彩板大坑',itemCategoryId:10002,itemCategoryId2:0,createTime:now(),modifyTime:now()},
-	{itemId:10003,name:'彩板波纹',itemCategoryId:10003,itemCategoryId2:0,createTime:now(),modifyTime:now()},
-	{itemId:10004,name:'3#角铁',itemCategoryId:10004,itemCategoryId2:0,createTime:now(),modifyTime:now()},
-	{itemId:10005,name:'4#角铁',itemCategoryId:10005,itemCategoryId2:0,createTime:now(),modifyTime:now()},
-	{itemId:10006,name:'5#角铁',itemCategoryId:10006,itemCategoryId2:0,createTime:now(),modifyTime:now()},
+	{itemId:10001,name:'口罩',itemCategoryId:10001,feature:[1,2],itemCategoryId2:0,createTime:now(),modifyTime:now()},
+	{itemId:10002,name:'彩板大坑',itemCategoryId:10002,feature:[1],itemCategoryId2:0,createTime:now(),modifyTime:now()},
+	{itemId:10003,name:'彩板波纹',itemCategoryId:10003,feature:[2],itemCategoryId2:0,createTime:now(),modifyTime:now()},
+	{itemId:10004,name:'3#角铁',itemCategoryId:10004,feature:[3],itemCategoryId2:0,createTime:now(),modifyTime:now()},
+	{itemId:10005,name:'4#角铁',itemCategoryId:10005,feature:[1,2,3],itemCategoryId2:0,createTime:now(),modifyTime:now()},
+	{itemId:10006,name:'5#角铁',itemCategoryId:10006,feature:[],itemCategoryId2:0,createTime:now(),modifyTime:now()},
 ];
 app.get('/search',function(req,res){
 	var query = req.query;
@@ -81,6 +81,7 @@ app.post('/add',function(req,res){
 		itemId:maxItemId+1,
 		itemCategoryId:parseInt(body.itemCategoryId),
 		itemCategoryId2:parseInt(body.itemCategoryId2),
+		feature:body.feature,
 		name:body.name,
 		createTime:now(),
 		modifyTime:now()
@@ -115,6 +116,7 @@ app.post('/mod',function(req,res){
 			name:body.name,
 			itemCategoryId:parseInt(body.itemCategoryId),
 			itemCategoryId2:parseInt(body.itemCategoryId2)||0,
+			feature:body.feature,
 			createTime:oldItem.createTime,
 			modifyTime:now()
 		};
