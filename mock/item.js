@@ -79,8 +79,8 @@ app.post('/add',function(req,res){
 	},0);
 	items.push({
 		itemId:maxItemId+1,
-		itemCategoryId:parseInt(body.itemCategoryId),
-		itemCategoryId2:parseInt(body.itemCategoryId2),
+		itemCategoryId:parseInt(body.itemCategoryId) || 0,
+		itemCategoryId2:parseInt(body.itemCategoryId2) || 0,
 		feature:body.feature,
 		name:body.name,
 		image:body.image,
@@ -115,7 +115,7 @@ app.post('/mod',function(req,res){
 		items[result] = {
 			itemId:itemId,
 			name:body.name,
-			itemCategoryId:parseInt(body.itemCategoryId),
+			itemCategoryId:parseInt(body.itemCategoryId) || 0,
 			itemCategoryId2:parseInt(body.itemCategoryId2)||0,
 			feature:body.feature,
 			image:body.image,

@@ -2,6 +2,8 @@ import React from 'react';
 import { Upload, Icon, message,Button ,notification ,Card } from 'antd';
 import style from './index.less';
 import {uploadImage} from '@/utils/constant';
+import customRequest from './customRequest';
+import ImageCompressor from 'image-compressor.js';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -9,6 +11,11 @@ function getBase64(img, callback) {
   reader.readAsDataURL(img);
 }
 
+function sleep(timeout){
+  return new Promise(function(resolve,reject){
+    setTimeout(resolve,timeout); 
+  })
+}
 export default class Avatar extends React.Component {
   state = {
     progress: 0,
@@ -44,11 +51,22 @@ export default class Avatar extends React.Component {
       throw new Error("未知的上传错误!"+info.file.status);
     }
   }
-  onRemove = ()=>{
-    return false
-  }
-  onPreview = ()=>{
-
+  customRequest = (option)=>{
+    new ImageCompressor(option.file,{
+      quality: .8,
+      maxWidth:this.props.maxWidth || 1920,
+      maxHeight:this.props.maxHeight ||1920,
+      success(result) {
+        option.file = result;
+        customRequest({
+          ...option,
+          file:result,
+        });
+      },
+      error(e) {
+        option.onError(e);
+      },
+    });
   }
   render() {
     const value = this.props.value;
@@ -74,8 +92,9 @@ export default class Avatar extends React.Component {
           listType="picture"
           showUploadList={false}
           action={uploadImage.action}
+          withCredentials={true}
           onChange={this.onChange}
-          onRemove={this.onRemove}
+          customRequest={this.customRequest}
         >
          {info}
         </Upload>
