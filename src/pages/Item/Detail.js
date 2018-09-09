@@ -4,6 +4,7 @@ import {Input} from 'antd';
 import StandardForm from '@/components/StandardForm';
 import MySelect from '@/components/MySelect';
 import MyCheckbox from '@/components/MyCheckbox';
+import MyUploadImage from '@/components/MyUploadImage';
 import qs from 'qs';
 import cache from '@/utils/cache';
 
@@ -90,6 +91,14 @@ export default class Form extends React.Component{
 				rules:[{ required: true}],
 				render:()=>{
 					return (<Input placeholder="请输入"/>);
+				}
+			},
+			{
+				title:"图片",
+				dataIndex:"image",
+				rules:[{ required: true}],
+				render:()=>{
+					return (<MyUploadImage placeholder="请上传"/>);
 				}
 			},
 			{

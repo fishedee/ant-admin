@@ -8,6 +8,7 @@ var cardRouter = require('./card');
 var itemRouter = require('./item');
 var itemCategoryRouter = require('./itemcategory');
 var orderRouter = require('./order');
+var uploadRouter = require('./upload');
 var middleware = require('./middleware');
 
 var app = express();
@@ -26,6 +27,7 @@ app.use('/item',middleware.checkMustLogin,itemRouter);
 app.use('/itemcategory',middleware.checkMustLogin,itemCategoryRouter);
 app.use('/card',middleware.checkMustLogin,cardRouter);
 app.use('/order',middleware.checkMustLogin,orderRouter);
+app.use('/upload',middleware.checkMustLogin,uploadRouter);
 
 var server = app.listen(3001, function () {
 	var host = server.address().address;
