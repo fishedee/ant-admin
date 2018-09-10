@@ -3,7 +3,7 @@ import BraftEditor, { EditorState } from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import style from './index.less';
 import customRequest from '../MyUploadImage/customRequest';
-import {uploadFile} from '@/utils/constant';
+import {uploadFile,uploadImage} from '@/utils/constant';
 import ImageCompressor from 'image-compressor.js';
 
 function fromHTML(html){
@@ -17,14 +17,14 @@ function toHTML(state){
 export default class MyEditor extends React.Component{
 	state = {
 		content:null,
-		stateContent:null,
+		stateContent:fromHTML(''),
 	}
-	uploadFile = (param)=>{
+	uploadFile = (param,config)=>{
 		customRequest({
 			data:{},
 			headers:{},
-			action:uploadFile.action,
-			filename:uploadFile.name,
+			action:config.action,
+			filename:config.name,
 			file:param.file,
 			withCredentials:true,
 			onProgress:function(e){
@@ -35,9 +35,10 @@ export default class MyEditor extends React.Component{
 			},
 			onSuccess:function(data,xhr){
 				try{
-					var url = uploadFile.onResponse(data);
+					var url = config.onResponse(data);
 					param.success({
 						url:url,
+            meta:{},
 					});
 				}catch(e){
 					param.error(e);
@@ -52,7 +53,7 @@ export default class MyEditor extends React.Component{
 	      maxHeight:this.props.maxHeight ||1920,
 	      success:(result)=>{
 	      	param.file = result;
-	       	this.uploadFile(param);
+	       	this.uploadFile(param,uploadImage);
 	      },
 	      error:(e)=>{
 	        param.error(e);
@@ -64,27 +65,34 @@ export default class MyEditor extends React.Component{
 		if( type.substr(0,6) =="image/"){
 			this.uploadImage(param);
 		}else{
-			this.uploadFile(param);
+			this.uploadFile(param,uploadFile);
 		}
 	}
 	onChange = (state)=>{
-		console.log(state);
 		this.state.stateContent = state;
-		//this.state.content = toHTML(state);
 		this.setState({});
-		//this.props.onChange(this.state.content);
 	}
+  save = ()=>{
+    this.state.content = toHTML(this.state.stateContent);
+    this.props.onChange(this.state.content);
+  }
 	render = ()=>{
 		const {value,onChange} = this.props;
 		const media = {
 			uploadFn:this.uploadFn,
 		}
+    if( value != this.state.content ){
+      this.state.content = value;
+      this.state.stateContent = fromHTML(value);
+    }
 		return (
 		<BraftEditor
 			className={style.root}
 			media={media}
-			value={this.state.stateContent}
-			onChange={this.onChange}
+      value={this.state.stateContent}
+      onChange={this.onChange}
+      onSave={this.save}
+      onBlur={this.save}
 		/>
 		);
 	} 

@@ -5,7 +5,7 @@ import StandardForm from '@/components/StandardForm';
 import MySelect from '@/components/MySelect';
 import MyCheckbox from '@/components/MyCheckbox';
 import MyUploadImage from '@/components/MyUploadImage';
-//import MyEditor,{toHTML,fromHTML} from '@/components/MyEditor';
+import MyEditor from '@/components/MyEditor';
 import qs from 'qs';
 import cache from '@/utils/cache';
 

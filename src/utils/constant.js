@@ -5,6 +5,7 @@ const uploadImage = {
 	name:'data',
 	action:'/upload/image',
 	onResponse:function(response){
+		console.log('upload image');
 		if( response.code != 0){
 			throw new Error(response.msg);
 		}
@@ -15,6 +16,7 @@ const uploadFile = {
 	name:'data',
 	action:'/upload/image',
 	onResponse:function(response){
+		console.log('upload file');
 		if( response.code != 0){
 			throw new Error(response.msg);
 		}
