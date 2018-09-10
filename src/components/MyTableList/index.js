@@ -6,7 +6,7 @@ import classname from 'classname';
 
 const Search = Input.Search;
 
-export default class MyTableSelect extends React.Component{
+export default class MyTableList extends React.Component{
 	state = {
 		filterInput:'',
 		list:[],

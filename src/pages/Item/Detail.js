@@ -3,6 +3,7 @@ import { connect } from 'redva';
 import {Input} from 'antd';
 import StandardForm from '@/components/StandardForm';
 import MySelect from '@/components/MySelect';
+import MyTreeSelect from '@/components/MyTreeSelect';
 import MyCheckbox from '@/components/MyCheckbox';
 import MyUploadImage from '@/components/MyUploadImage';
 import MyEditor from '@/components/MyEditor';
@@ -123,7 +124,7 @@ export default class Form extends React.Component{
 				dataIndex:"itemCategoryId2",
 				rules:[],
 				render:()=>{
-					return (<MySelect placeholder="请选择" options={this.state.allCategorys} renderOption={(data)=>(data.name)}/>);
+					return (<MyTreeSelect placeholder="请选择" nodes={this.state.allCategorys} renderNodes={(data)=>(data.name)}/>);
 				}
 			},
 			{

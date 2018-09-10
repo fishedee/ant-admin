@@ -1,30 +1,12 @@
 import React from 'react';
-import { Tree , Input } from 'antd';
+import { TreeSelect } from 'antd';
 import style from './index.less';
 import classname from 'classname';
 
-const DirectoryTree = Tree.DirectoryTree;
-const Search = Input.Search;
-const TreeNode = Tree.TreeNode;
+const TreeNode = TreeSelect.TreeNode;
 
-export default class MyTreeSelect extends React.Component{
-	state = {
-		filterInput:'',
-		expandedKeys:['_all']
-	}
-	onExpand = (expandedKeys)=>{
-		if( expandedKeys.indexOf('_all') == -1 ){
-			expandedKeys.push('_all');
-		}
-		this.state.expandedKeys = expandedKeys;
-		this.setState({});
-	}
-	onFilterChange = (event)=>{
-		this.state.filterInput = event.target.value;
-		this.setState({});
-	}
-	onSelect = (keys)=>{
-		let data = keys[0];
+export default class MyTreeList extends React.Component{
+	onChange = (data)=>{
 		if( data == '_all'){
 			data = undefined;
 		}else{
@@ -43,45 +25,19 @@ export default class MyTreeSelect extends React.Component{
 		}
 		if( root.id == '_all' ){
 			return (
-				<TreeNode title="全部" key={'_all'}>
+				<TreeNode title="全部" key={'_all'} value={'_all'}>
 					{childNodes}
 				</TreeNode>
 			);
 		}else{
 			if( childNodes.length == 0 ){
-				return (<TreeNode title={renderNode(root.data)} key={root.id} isLeaf={true}/>);
+				return (<TreeNode title={renderNode(root.data)} key={root.id} value={root.id} isLeaf={true}/>);
 			}else{
 				return (
-					<TreeNode title={renderNode(root.data)} key={root.id}>
+					<TreeNode title={renderNode(root.data)} key={root.id} value={root.id}>
 						{childNodes}
 					</TreeNode>
 				);
-			}
-		}
-	}
-	filterNode = (root,filter)=>{
-		let renderNode = this.props.renderNode || function(data){
-			return data.name;
-		}
-		name = renderNode(root.data);
-		if( name.indexOf(filter) != -1 ){
-			return root;
-		}
-		let newChildren = [];
-		for( let i in root.children ){
-			let singleChild = this.filterNode(root.children[i],filter);
-			if( singleChild != null ){
-				newChildren.push(singleChild);
-			}
-		}
-		if( newChildren.length == 0 
-			&& root.id != '_all' ){
-			return null;
-		}else{
-			return {
-				id:root.id,
-				children:newChildren,
-				data:root.data,
 			}
 		}
 	}
@@ -91,6 +47,9 @@ export default class MyTreeSelect extends React.Component{
 			childNode[i].children = this.buildNode(children,childNode[i].id);
 		}
 		return childNode;
+	}
+	filterTreeNode = (value,treeNode)=>{
+		return treeNode.props.title.indexOf(value) != -1;
 	}
 	renderTreeNode = ()=>{
 		const nodes = this.props.nodes;
@@ -116,49 +75,42 @@ export default class MyTreeSelect extends React.Component{
 			children:this.buildNode(children,'_all'),
 			data:{}
 		};
-		const filterInput = this.state.filterInput.trim();
-		if( filterInput != ''){
-			root = this.filterNode(root,filterInput);
-		}
 		return this.renderNode(root);
 	}
-	searchNode = null;
-	onClick = ()=>{
-		this.searchNode.focus();
-	}
 	render = ()=>{
+		let showSearch = this.props.showSearch;
+		let placeholder = this.props.placeholder;
 		let value = this.props.value;
 		let nodes = this.props.nodes;
 		if( !nodes['0'] ){
 			//options没有0值时，0和undefined等同
 			if( !value ){
-				value = '_all';
+				value = undefined;
 			}else{
 				value = value+'';
 			}
 		}else{
 			if( value == undefined ){
-				value = '_all';
+				value = undefined;
 			}else{
 				value = value+'';
 			}
 		}
+		console.log(value)
 		return (
-		<div style={this.props.style} className={classname(style.container,this.props.className)} onClick={this.onClick}>
-			<Search 
-				ref={(node)=>(this.searchNode=node)}
-				placeholder="搜索" 
-				value={this.state.filterInput} 
-				onChange={this.onFilterChange}/>
-			<DirectoryTree
-				className={style.root}
-				expandedKeys={this.state.expandedKeys}
-				onExpand={this.onExpand}
-				selectedKeys={[value]}
-				onSelect={this.onSelect}>
-				{this.renderTreeNode()}
-			</DirectoryTree>
-		</div>
+		<TreeSelect
+			placeholder={placeholder}
+			filterTreeNode={this.filterTreeNode}
+			treeDefaultExpandedKeys={['_all']}
+			onChange={this.onChange}
+			allowClear={true}
+			showSearch={showSearch}
+			dropdownStyle={{ maxHeight: 500, overflow: 'auto' }}
+			value={value}
+			onChange={this.onChange}
+		>
+			{this.renderTreeNode()}
+		</TreeSelect>
 		);
 	}
 }

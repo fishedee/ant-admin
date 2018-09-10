@@ -2,7 +2,7 @@ import React,{Fragment} from 'react';
 import { connect } from 'redva';
 import {Input,InputNumber,Button,Row,Col,Divider} from 'antd';
 import MySelect from '@/components/MySelect';
-import MyTableSelect from '@/components/MyTableSelect';
+import MyTableList from '@/components/MyTableList';
 import MyInputButton from '@/components/MyInputButton';
 import StandardForm from '@/components/StandardForm';
 import StandardTable from '@/components/StandardTable';
@@ -324,7 +324,7 @@ export default class Detail extends React.Component{
 		return (
 			<Row gutter={16}>
 				<Col span={8}>
-					<MyTableSelect
+					<MyTableList
 						ref={(node)=>{this.tableSelect=node}}
 						value={this.state.itemId}
 						onChange={this.onTableSelectChange}

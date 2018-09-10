@@ -1,7 +1,7 @@
 import React,{Fragment} from 'react';
 import { connect } from 'redva';
 import { Button , Input ,Divider,Popconfirm,Row,Col} from 'antd';
-import MyTreeSelect from '@/components/MyTreeSelect';
+import MyTreeList from '@/components/MyTreeList';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
 import qs from 'qs';
@@ -158,7 +158,7 @@ export default class Table extends React.Component{
 		return (
 			<Row gutter={16}>
 				<Col span={8}>
-					<MyTreeSelect
+					<MyTreeList
 						value={this.state.where.itemCategoryId}
 						onChange={this.onTreeChange}
 						nodes={this.state.allCategorys}

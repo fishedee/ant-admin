@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'redva';
 import {Row,Col,Button,Input,Popconfirm} from 'antd';
 import MySelect from '@/components/MySelect';
-import MyTreeSelect from '@/components/MyTreeSelect';
+import MyTreeList from '@/components/MyTreeList';
 import StandardForm from '@/components/StandardForm';
 
 @connect((state)=>{
@@ -120,7 +120,7 @@ export default class List extends React.Component{
 			<Row gutter={16}
 				style={{marginTop:'16px'}}>
 				<Col span={8}>
-					<MyTreeSelect 
+					<MyTreeList 
 						value={this.state.itemCategoryId}
 						onChange={this.onChange}
 						nodes={this.state.data} 
