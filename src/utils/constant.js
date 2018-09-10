@@ -11,9 +11,20 @@ const uploadImage = {
 		return response.data;
 	}
 };
+const uploadFile = {
+	name:'data',
+	action:'/upload/image',
+	onResponse:function(response){
+		if( response.code != 0){
+			throw new Error(response.msg);
+		}
+		return response.data;
+	}
+};
 export {
 	title,
 	copyright,
 	author,
-	uploadImage
+	uploadImage,
+	uploadFile,
 }

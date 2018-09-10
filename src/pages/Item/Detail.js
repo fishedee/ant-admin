@@ -5,6 +5,7 @@ import StandardForm from '@/components/StandardForm';
 import MySelect from '@/components/MySelect';
 import MyCheckbox from '@/components/MyCheckbox';
 import MyUploadImage from '@/components/MyUploadImage';
+//import MyEditor,{toHTML,fromHTML} from '@/components/MyEditor';
 import qs from 'qs';
 import cache from '@/utils/cache';
 
@@ -99,6 +100,14 @@ export default class Form extends React.Component{
 				rules:[{ required: true}],
 				render:()=>{
 					return (<MyUploadImage placeholder="请上传"/>);
+				}
+			},
+			{
+				title:"内容",
+				dataIndex:"content",
+				rules:[{ required: true}],
+				render:()=>{
+					return (<MyEditor placeholder="请上传"/>);
 				}
 			},
 			{

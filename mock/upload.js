@@ -49,7 +49,7 @@ app.post('/image',function(req,res){
 		res.json({
 			code:0,
 			msg:'',
-			data:'http://localhost:8080/upload/image/'+md5,
+			data:'http://fishedee.com:8081/upload/image/'+md5,
 		});
 		return;
 	});
