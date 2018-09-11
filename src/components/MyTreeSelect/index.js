@@ -96,7 +96,6 @@ export default class MyTreeList extends React.Component{
 				value = value+'';
 			}
 		}
-		console.log(value)
 		return (
 		<TreeSelect
 			placeholder={placeholder}
