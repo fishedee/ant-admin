@@ -11,7 +11,7 @@ export default class StandardModal extends React.Component{
 	render = ()=>{
 		return (
 			<Modal
-				title="表单"
+				title={this.props.title||"表单"}
 				visible={this.props.visible}
 				onCancel={this.props.onCancel}
 				maskClosable={false}
