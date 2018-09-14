@@ -81,18 +81,18 @@ export default class MyEditor extends React.Component{
 		const media = {
 			uploadFn:this.uploadFn,
 		}
-    if( value != this.state.content ){
-      this.state.content = value;
-      this.state.stateContent = fromHTML(value);
-    }
+	    if( value != this.state.content ){
+	      this.state.content = value;
+	      this.state.stateContent = fromHTML(value);
+	    }
 		return (
 		<BraftEditor
 			className={style.root}
 			media={media}
-      value={this.state.stateContent}
-      onChange={this.onChange}
-      onSave={this.save}
-      onBlur={this.save}
+			value={this.state.stateContent}
+			onChange={this.onChange}
+			onSave={this.save}
+			onBlur={this.save}
 		/>
 		);
 	} 

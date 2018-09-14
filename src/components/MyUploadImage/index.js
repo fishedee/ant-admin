@@ -83,10 +83,11 @@ export default class Avatar extends React.Component {
     }else{
       preview = null;
     }
+    const disabled = this.props.disabled;
     return (
       <div>
         {preview}
-        <Upload
+        {disabled?null:<Upload
           name={uploadImage.name}
           accept="image/*"
           listType="picture"
@@ -97,7 +98,7 @@ export default class Avatar extends React.Component {
           customRequest={this.customRequest}
         >
          {info}
-        </Upload>
+        </Upload>}
       </div>
     );
   }

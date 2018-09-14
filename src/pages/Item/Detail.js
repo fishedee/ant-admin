@@ -124,7 +124,7 @@ export default class Form extends React.Component{
 				dataIndex:"itemCategoryId2",
 				rules:[],
 				render:()=>{
-					return (<MyTreeSelect placeholder="请选择" nodes={this.state.allCategorys} renderNodes={(data)=>(data.name)}/>);
+					return (<MyTreeSelect placeholder="请选择" showSearch={true} nodes={this.state.allCategorys} renderNodes={(data)=>(data.name)}/>);
 				}
 			},
 			{

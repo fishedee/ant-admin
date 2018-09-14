@@ -25,16 +25,16 @@ export default class MyTreeList extends React.Component{
 		}
 		if( root.id == '_all' ){
 			return (
-				<TreeNode title="全部" key={'_all'} value={'_all'}>
+				<TreeNode title={'全部'} data={{}} key={'_all'} value={'_all'}>
 					{childNodes}
 				</TreeNode>
 			);
 		}else{
 			if( childNodes.length == 0 ){
-				return (<TreeNode title={renderNode(root.data)} key={root.id} value={root.id} isLeaf={true}/>);
+				return (<TreeNode title={renderNode(root.data)} data={root.data} key={root.id} value={root.id} isLeaf={true}/>);
 			}else{
 				return (
-					<TreeNode title={renderNode(root.data)} key={root.id} value={root.id}>
+					<TreeNode title={renderNode(root.data)} data={root.data} key={root.id} value={root.id}>
 						{childNodes}
 					</TreeNode>
 				);
@@ -47,9 +47,6 @@ export default class MyTreeList extends React.Component{
 			childNode[i].children = this.buildNode(children,childNode[i].id);
 		}
 		return childNode;
-	}
-	filterTreeNode = (value,treeNode)=>{
-		return treeNode.props.title.indexOf(value) != -1;
 	}
 	renderTreeNode = ()=>{
 		const nodes = this.props.nodes;
@@ -82,6 +79,12 @@ export default class MyTreeList extends React.Component{
 		let placeholder = this.props.placeholder;
 		let value = this.props.value;
 		let nodes = this.props.nodes;
+		let renderNode = this.props.renderNode || function(data){
+			return data.name;
+		}
+		let filterNode = this.props.filterNode || function(value,data){
+			return renderNode(data).indexOf(value) != -1;
+		}
 		if( !nodes['0'] ){
 			//options没有0值时，0和undefined等同
 			if( !value ){
@@ -99,7 +102,12 @@ export default class MyTreeList extends React.Component{
 		return (
 		<TreeSelect
 			placeholder={placeholder}
-			filterTreeNode={this.filterTreeNode}
+			filterTreeNode={(value,treeNode)=>{
+				if( treeNode.props.value == '_all'){
+					return false;
+				}
+				return filterNode(value,treeNode.props.data)}
+			}
 			treeDefaultExpandedKeys={['_all']}
 			onChange={this.onChange}
 			allowClear={true}

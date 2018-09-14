@@ -5,13 +5,16 @@ const Option = Select.Option;
 
 export default class MySelect extends React.Component{
 	render = ()=>{
-		let {value,style,options,renderOption,placeholder,...resetProps} = this.props;
+		let {value,style,options,renderOption,filterOption,placeholder,...resetProps} = this.props;
 		style = {
 			minWidth:'170px',
 			...style,
 		}
 		renderOption = renderOption || function(value,key){
 			return value;
+		}
+		filterOption = filterOption || function(input, option){
+			return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
 		}
 		if( !options['0']){
 			//options没有0值时，0和undefined等同
@@ -23,7 +26,7 @@ export default class MySelect extends React.Component{
 			placeholder={placeholder}
 			allowClear={true} 
 			style={style} 
-			filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+			filterOption={filterOption}
 			value={value}
 			{...resetProps}>
 			{Object.entries(options).map((data)=>{

@@ -63,9 +63,13 @@ export default class MyTreeList extends React.Component{
 		let renderNode = this.props.renderNode || function(data){
 			return data.name;
 		}
-		name = renderNode(root.data);
-		if( name.indexOf(filter) != -1 ){
-			return root;
+		if( root.id != '_all'){
+			let filterNodeHandler = this.props.filterNode || function(input,data){
+				return renderNode(data).indexOf(input) != -1;
+			}
+			if( filterNodeHandler(filter,root.data) ){
+				return root;
+			}
 		}
 		let newChildren = [];
 		for( let i in root.children ){
