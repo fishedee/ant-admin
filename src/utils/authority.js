@@ -29,7 +29,7 @@ export default function authority(roles){
 						return (<Redirect to={{
 							pathname:'/login',
 							search:qs.stringify({
-								redirect:this.props.location.pathname,
+								redirect:this.props.location.pathname+this.props.location.search,
 							})
 						}}/>);
 					}

@@ -97,7 +97,6 @@ class PrintPreview extends React.Component{
 	          activeKey={this.state.activeKey}
 	          onChange={this.onChange}
 	          tabPosition={'top'}
-	          className={style.tab}
 	        >
 	        	{this.props.pages.map((doc,index)=>{
 	        		return (

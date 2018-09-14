@@ -19,6 +19,7 @@ export default class LoginPage extends React.Component{
 		});
 		let query = qs.parse(this.props.location.search.substr(1));
 		if( query.redirect ){
+			this.props.history.push('/');
 			this.props.history.push(query.redirect);
 		}else{
 			this.props.history.push('/');

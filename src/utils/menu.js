@@ -23,6 +23,7 @@ export var adminMenu = [
 		icon:"laptop",
 		children:[
 			{name:"找不到页面",path:"/404"},
+			{name:"订单详情",path:"/order/detail?orderId=10001&hasBack=true"},
 		]
 	}
 ];
