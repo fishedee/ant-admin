@@ -47,7 +47,7 @@ export default class Detail extends React.Component{
 		this.state.itemId = itemId;
 		this.setState({});
 	}
-	filterTableSelect = (data,input)=>{
+	filterTableSelect = (input,data)=>{
 		if( data.name.indexOf(input) != -1 ){
 			return true;
 		}

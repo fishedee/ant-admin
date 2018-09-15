@@ -73,7 +73,7 @@ export default class MyTableList extends React.Component{
 		let list = [];
 		for( const i in rows ){
 			let single = rows[i];
-			let shouldExist = this.props.filterRow(single,this.state.filterInput);
+			let shouldExist = this.props.filterRow(this.state.filterInput,single);
 			if( shouldExist ){
 				list.push({
 					...single,
