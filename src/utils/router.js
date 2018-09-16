@@ -96,6 +96,11 @@ let router = [
 				]
 			},
 			{
+				name:"控制台",
+				path:"/dashboard",
+				component:"Dashboard/Sample",
+			},
+			{
 				name:"找不到页面",
 				path:"/404",
 				component:'Layout/NotFound',

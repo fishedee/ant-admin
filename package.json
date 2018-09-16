@@ -51,8 +51,10 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
+    "@antv/data-set": "^0.9.6",
     "antd": "^3.6.2",
     "art-template": "^4.13.0",
+    "bizcharts": "^3.2.2",
     "braft-editor": "^2.0.5",
     "classname": "^0.0.0",
     "html2canvas": "^1.0.0-alpha.12",
