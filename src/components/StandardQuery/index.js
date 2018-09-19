@@ -27,6 +27,7 @@ export default class StandardQuery extends React.Component{
 	renderForm = ()=>{
 		const columns = this.props.columns;
 		const { getFieldDecorator } = this.props.form;
+		const {style,className} = this.props;
 		let formList = [];
 		for( let i in columns ){
 			let singleColumn = columns[i];
@@ -49,7 +50,7 @@ export default class StandardQuery extends React.Component{
 			);
 		}
 		return (
-	      <Form onSubmit={this.handleSearch} layout="inline">
+	      <Form onSubmit={this.handleSearch} layout="inline" style={style} className={className}>
 	        {formList}
 	      </Form>
 	    );
