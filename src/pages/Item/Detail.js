@@ -100,7 +100,7 @@ export default class Form extends React.Component{
 				dataIndex:"image",
 				rules:[{ required: true}],
 				render:()=>{
-					return (<MyUploadImage placeholder="请上传"/>);
+					return (<MyUploadImage placeholder="请点击或拖动上传"/>);
 				}
 			},
 			{
@@ -108,7 +108,7 @@ export default class Form extends React.Component{
 				dataIndex:"content",
 				rules:[{ required: true}],
 				render:()=>{
-					return (<MyEditor placeholder="请上传"/>);
+					return (<MyEditor />);
 				}
 			},
 			{

@@ -5,6 +5,8 @@ import {uploadImage} from '@/utils/constant';
 import customRequest from './customRequest';
 import ImageCompressor from 'image-compressor.js';
 
+const Dragger = Upload.Dragger;
+
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
@@ -70,24 +72,23 @@ export default class Avatar extends React.Component {
   }
   render() {
     const value = this.props.value;
-    const placeholder = this.props.placeholder || '请点击上传';
-    var info = null;
-    if( this.state.state == 'normal' ){
-      info = <Button><Icon type="upload" />{placeholder}</Button>
-    }else{
-      info = <Button>{'上传中：'+this.state.progress+'%'}</Button>
-    }
+    const placeholder = this.props.placeholder || '请点击或拖动上传';
     var preview = null;
     if( value && value != ""){
       preview = <div><img className={style.root} src={value}/></div>;
     }else{
       preview = null;
     }
+    var info = null;
+    if( this.state.state == 'normal' ){
+      info = <div>{preview}<div><Icon type="upload" style={{marginRight:'10px'}}/>{placeholder}</div></div>
+    }else{
+      info = <div>{preview}<div>{'上传中：'+this.state.progress+'%'}</div></div>
+    }
     const disabled = this.props.disabled;
     return (
       <div>
-        {preview}
-        {disabled?null:<Upload
+        {disabled?null:<Dragger
           name={uploadImage.name}
           accept="image/*"
           listType="picture"
@@ -98,7 +99,7 @@ export default class Avatar extends React.Component {
           customRequest={this.customRequest}
         >
          {info}
-        </Upload>}
+        </Dragger>}
       </div>
     );
   }
