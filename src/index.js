@@ -17,7 +17,6 @@ if(typeof(__webpack_require__.e) === "undefined") {
 
 const modelRequire = require.context('./models/', true, /\.js$/);
 require.context('./pages/', true, /\.js$/);
-require.context('./components/', true, /\.js$/);
 
 const app = redva({
 	history: createHistory(),

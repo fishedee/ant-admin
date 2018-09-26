@@ -2,12 +2,12 @@ const path = require('path');
 const args = require('minimist')(process.argv.slice(2));
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const cleanWebpackPlugin = require('clean-webpack-plugin');
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const isDevelopment = (args.mode == 'development');
 
 const theme = {
 }
-module.exports = {
+let webpackConfig = {
 	entry:[
 		'./src/index.js',
 		'./public/favicon.ico'
@@ -91,18 +91,18 @@ module.exports = {
 		splitChunks: {
 			chunks: 'all',
 			minSize: 1,
-		    minChunks: 1,
-		    maxAsyncRequests: 5,
-		    maxInitialRequests: 3,
-		    automaticNameDelimiter: '-',
-		    name: true,
-		    cacheGroups: {
-		        vendors: {
-		        	name:'vendors',
-		            test: /[\\/]node_modules[\\/]/,
-		            priority: -10
-		        }
-		    }
+			minChunks: 1,
+			maxAsyncRequests: 5,
+			maxInitialRequests: 3,
+			automaticNameDelimiter: '-',
+			name: true,
+			cacheGroups: {
+				vendors: {
+					name:'vendors',
+					test: /[\\/]node_modules[\\/]/,
+					priority: -10
+				}
+			}
 		},
 		runtimeChunk:{
 			name:'webpack'
@@ -122,3 +122,9 @@ module.exports = {
 		}
 	}
 }
+
+if( !isDevelopment ){
+	webpackConfig.plugins.push(new BundleAnalyzerPlugin());
+} 
+
+module.exports = webpackConfig;
