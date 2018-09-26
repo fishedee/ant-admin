@@ -1,16 +1,12 @@
+let cache = {};
 export default {
 	set: (key,value)=>{
-		value = JSON.stringify(value);
-		window.localStorage.setItem(key, value);
+		cache[key] = value;
 	},
 	get:(key)=>{
-		let value = window.localStorage.getItem(key);
-		if( !value ){
-			return;
-		}
-		return JSON.parse(value);
+		return cache[key];
 	},
 	clear:()=>{
-		window.localStorage.clear();
+		cache = {};
 	}
 }

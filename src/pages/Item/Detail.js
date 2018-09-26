@@ -6,7 +6,7 @@ import MySelect from '@/components/MySelect';
 import MyTreeSelect from '@/components/MyTreeSelect';
 import MyCheckbox from '@/components/MyCheckbox';
 import MyUploadImage from '@/components/MyUploadImage';
-import MyEditor from '@/components/MyEditor';
+import MyEditor,{fromHtml,toHtml} from '@/components/MyEditor';
 import qs from 'qs';
 import cache from '@/utils/cache';
 
@@ -61,7 +61,10 @@ export default class Form extends React.Component{
 					itemId:this.state.itemId,
 				}
 			});
-			this.state.data = data;
+			this.state.data = {
+				...data,
+				content:fromHtml(data.content),
+			}
 			this.setState({});
 		}
 	}
@@ -73,12 +76,16 @@ export default class Form extends React.Component{
 				payload:{
 					itemId:this.state.itemId,
 					...this.state.data,
+					content:toHtml(this.state.data.content),
 				}
 			});
 		}else{
 			await this.props.dispatch({
 				type:'/item/add',
-				payload:this.state.data,
+				payload:{
+					...this.state.data,
+					content:toHtml(this.state.data.content),
+				}
 			});
 			this.state.data = {};
 			this.componentDidUpdate();
