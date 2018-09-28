@@ -2,16 +2,14 @@ const path = require('path');
 const args = require('minimist')(process.argv.slice(2));
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const cleanWebpackPlugin = require('clean-webpack-plugin');
+const copyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const isDevelopment = (args.mode == 'development');
 
 const theme = {
 }
 let webpackConfig = {
-	entry:[
-		'./src/index.js',
-		'./public/favicon.ico'
-	],
+	entry:'./src/index.js',
 
 	output:{
 		filename:'[name]-[hash].js',
@@ -67,13 +65,6 @@ let webpackConfig = {
 					{loader:'style-loader'},
 					{loader:'css-loader'}
 				]
-			},
-			{
-				test:/public\/.*$/,
-				loader:'file-loader',
-				options:{
-					name:"[name].[ext]"
-				}
 			}
 		]
 	},
@@ -85,6 +76,10 @@ let webpackConfig = {
 			title:'antd admin',
 			template:'./src/index.html',
 		}),
+		new copyWebpackPlugin([{
+			from:__dirname+'/public',
+			to:__dirname+'/dist',
+		}])
 	],
 
 	optimization:{
