@@ -43,19 +43,19 @@ export default class MyEditor extends React.Component{
 		if (!window.UE ) {
 			window.UEDITOR_HOME_URL = ueditor.path+'/';
 			await this.createScript(ueditor.path + '/ueditor.config.js');
-			await this.createScript(ueditor.path + '/ueditor.all.js')
+			await this.createScript(ueditor.path + '/ueditor.all.min.js')
 			this.initEditor();
 		}else{
 			this.initEditor();
 		}
 	}
 	initEditor = ()=>{
-		const {config, onChange, getRef} = this.props;
-		if( config ){
-			this.ueditor = window.UE.getEditor(this.state.ueditorId, config);
-		}else{
-			this.ueditor = window.UE.getEditor(this.state.ueditorId);
+		let {config, onChange, getRef} = this.props;
+		config = {
+			...config,
+			serverUrl:ueditor.serverUrl,
 		}
+		this.ueditor = window.UE.getEditor(this.state.ueditorId, config);
 		if( getRef ){
 			getRef(ueditor);
 		}

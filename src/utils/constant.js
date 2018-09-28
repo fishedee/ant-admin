@@ -14,14 +14,7 @@ const uploadImage = {
 };
 const ueditor = {
 	path:'/ueditor',
-	action:'/upload/image',
-	onResponse:function(response){
-		console.log('upload file');
-		if( response.code != 0){
-			throw new Error(response.msg);
-		}
-		return response.data;
-	}
+	serverUrl:'/ue',
 };
 export {
 	title,
