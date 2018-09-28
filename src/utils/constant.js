@@ -12,8 +12,8 @@ const uploadImage = {
 		return response.data;
 	}
 };
-const uploadFile = {
-	name:'data',
+const ueditor = {
+	path:'/ueditor',
 	action:'/upload/image',
 	onResponse:function(response){
 		console.log('upload file');
@@ -28,5 +28,5 @@ export {
 	copyright,
 	author,
 	uploadImage,
-	uploadFile,
+	ueditor,
 }
