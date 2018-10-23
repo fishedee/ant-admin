@@ -85,6 +85,8 @@ export default class StandardForm extends React.Component{
 	renderButton = ()=>{
 		if( this.props.onSubmit ){
 			let submitCol = this.props.submitCol;
+			let submitText = this.props.submitText || '保存';
+			let resetText = this.props.resetText || '重置';
 			if( !submitCol ){
 				submitCol = {
 					span:20,
@@ -100,8 +102,8 @@ export default class StandardForm extends React.Component{
 					key={"__submit"}>
 					<FormItem 
 						wrapperCol={submitCol}>
-						<Button type="primary" htmlType="submit" loading={this.state.submitLoading}>保存</Button>
-						<Button onClick={this.handleReset} style={{marginLeft:'10px'}}>重置</Button>
+						<Button type="primary" htmlType="submit" loading={this.state.submitLoading}>{submitText}</Button>
+						<Button onClick={this.handleReset} style={{marginLeft:'10px'}}>{resetText}</Button>
 					</FormItem>
 				</Col>
 			);

@@ -132,6 +132,7 @@ export default class List extends React.Component{
 						data={this.state.detail}
 						onChange={this.onDetailChange}
 						onSubmit={this.onSubmit}
+						submitText={this.state.detail.itemCategoryId?'保存':'添加'}
 					/>
 				</Col>
 			</Row>
