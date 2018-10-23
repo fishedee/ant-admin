@@ -59,7 +59,11 @@ app.post('/',function(req,res,next){
 				});
 				return 
 			}
-			request(source[i],function(error,response,body){
+			request({
+                method:'GET',
+                url:source[i],
+                encoding: null,
+            },function(error,response,body){
 				if( error ){
 					res.json({
 						state:'FAIL',
@@ -72,6 +76,7 @@ app.post('/',function(req,res,next){
 				fs.writeFileSync(dataDir+'/'+md5,body);
 				result.push({
 					state:"SUCCESS",
+                    source:source[i],
 					url:'http://localhost:8080/upload/image/'+md5,
 				});
 				next(i+1);
