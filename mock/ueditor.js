@@ -77,7 +77,7 @@ app.post('/',function(req,res,next){
 				result.push({
 					state:"SUCCESS",
                     source:source[i],
-					url:'http://localhost:8080/upload/image/'+md5,
+					url:'/upload/image/'+md5,
 				});
 				next(i+1);
 			})
