@@ -13,8 +13,9 @@ export default class MyEditor extends React.Component{
 			ueditorId:globalUeditorId+'',
 			content:'',
 		};
-		this.editor = null;
-		this.editorReady = false;
+		this.ueditor = null;
+		this.ueditorReady = false;
+		this.timer = null;
 		globalUeditorId++
 	}
 	createScript = (url)=> {
@@ -60,18 +61,23 @@ export default class MyEditor extends React.Component{
 			getRef(ueditor);
 		}
 		this.ueditor.ready(()=>{
-			this.editorReady = true;
+			this.ueditorReady = true;
 			this.ueditor.setHeight(400);
 			this.setState({});
-			this.ueditor.addListener('contentChange', () => {
+			this.timer = setInterval(()=>{
 				this.state.content = this.ueditor.getContent();
 				onChange(this.state.content);
-			});
+			},500);
 		});
 	}
 	componentWillUnmount = ()=>{
-		if( this.editor ){
-			this.editor.destroy();
+		if( this.ueditor ){
+			this.ueditor.destroy();
+			this.ueditor = null;
+		}
+		if( this.timer ){
+			clearInterval(this.timer);
+			this.timer = null;
 		}
 	}
 	render (){
@@ -80,7 +86,7 @@ export default class MyEditor extends React.Component{
 			value = '';
 		}
 		if( value != this.state.content &&
-			this.editorReady ){
+			this.ueditorReady ){
 			this.state.content = value;
 			setTimeout(()=>{
 				this.ueditor.setContent(value);
