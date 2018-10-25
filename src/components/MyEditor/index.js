@@ -65,8 +65,11 @@ export default class MyEditor extends React.Component{
 			this.ueditor.setHeight(400);
 			this.setState({});
 			this.timer = setInterval(()=>{
-				this.state.content = this.ueditor.getContent();
-				onChange(this.state.content);
+				var newContent = this.ueditor.getContent();
+				if( newContent != this.state.content ){
+					this.state.content = newContent;
+					onChange(this.state.content);
+				}
 			},500);
 		});
 	}
