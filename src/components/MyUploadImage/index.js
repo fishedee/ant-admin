@@ -88,7 +88,7 @@ export default class Avatar extends React.Component {
     const disabled = this.props.disabled;
     return (
       <div>
-        {disabled?null:<Dragger
+        {disabled?(<div>{preview}</div>):<Dragger
           name={uploadImage.name}
           accept="image/*"
           listType="picture"
