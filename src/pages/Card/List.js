@@ -7,6 +7,7 @@ import MyTimePicker from '@/components/MyTimePicker';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
 import StandardModal from '@/components/StandardModal';
+import Xlsx from '@/components/Xlsx';
 import Detail from './Detail';
 
 const {MyRangePicker,MyWeekPicker,MyMonthPicker} = MyDatePicker;
@@ -88,6 +89,50 @@ export default class Table extends React.Component{
 		});
 		await this.fetch();
 	}
+	excel = async ()=>{
+		let where = { ...this.state.where };
+		if( where.createTime ){
+			where.beginTime = where.createTime[0]+' 00:00:00',
+			where.endTime = where.createTime[1]+' 23:59:59',
+			where.createTime = undefined;
+		}
+		let limit = { 
+			pageIndex:0,
+			pageSize:1000,
+		};
+		let data = await this.props.dispatch({
+			type:'/card/search',
+			payload:{
+				...where,
+				...limit,
+			}
+		});
+		const columns = [
+	      {
+	        title: '银行卡ID',
+	        dataIndex: 'cardId',
+	      },
+	      {
+	        title: '名称',
+	        dataIndex: 'name',
+	      },
+	      {
+	        title: '类型',
+	        dataIndex: 'type',
+	        render: (val) =>typeOption[val],
+	      },
+	      {
+	        title: '创建时间',
+	        dataIndex: 'createTime',
+	      },
+	      {
+	        title: '更新时间',
+	        dataIndex: 'modifyTime',
+	      }
+	    ];
+		let xlsx = Xlsx.fromJson("银行卡列表",data.data,columns);
+		xlsx.exportFile("银行卡列表.xlsx");
+	}
 	closeModal = async (isOk)=>{
 		this.state.modalVisible = false;
 		this.setState({});
@@ -165,6 +210,7 @@ export default class Table extends React.Component{
 					onSubmit={this.onQuerySubmit}/>
 				<div style={{marginTop:'16px'}}>
 					<Button type="primary" onClick={this.add}>添加</Button>
+					<Button style={{marginLeft:'16px'}} onClick={this.excel}>导出excel</Button>
 				</div>
 				<StandardTable 
 					style={{marginTop:'16px'}}
