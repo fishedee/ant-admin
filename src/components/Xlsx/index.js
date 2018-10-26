@@ -41,7 +41,7 @@ function fromJson(sheetName,data,columns){
 			var column = columns[j];
 			var cellData = singleData[column.dataIndex];
 			if( column.render ){
-				cellData = column.render(cellData);
+				cellData = column.render(cellData,singleData);
 			}
 			dataRow.push(cellData);
 		}
