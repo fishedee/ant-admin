@@ -78,6 +78,18 @@ app.get('/search',function(req,res){
 				return false;
 			}
 		}
+		if( query.itemIds && query.itemIds.length != 0 ){
+			var itemIdMap = {};
+			for( var i in order.items  ){
+				var single = order.items[i];
+				itemIdMap[single.itemId] = true;
+			}
+			for( var i in query.itemIds ){
+				if( !itemIdMap[query.itemIds[i]] ){
+					return false
+				}
+			}
+		}
 		return true;
 	});
 	var subResult = result.slice(query.pageIndex,query.pageIndex+query.pageSize);

@@ -4,6 +4,7 @@ import { Button , Input , Divider,Popconfirm} from 'antd';
 import MyDatePicker from '@/components/MyDatePicker';
 import StandardQuery from '@/components/StandardQuery';
 import StandardTable from '@/components/StandardTable';
+import MySelect from '@/components/MySelect';
 import qs from 'qs';
 import cache from '@/utils/cache';
 
@@ -22,7 +23,8 @@ export default class List extends React.Component{
 				pageIndex:0,
 				pageSize:10,
 				count:0,
-			}
+			},
+			itemMap:{},
 		}
 	}
 	componentDidUpdate = ()=>{
@@ -45,6 +47,14 @@ export default class List extends React.Component{
 		this.fetch();
 	}
 	fetch = async ()=>{
+		let data = await this.props.dispatch({
+			type:'/item/getAll',
+		});
+		let itemMap = {};
+		for( let i in data.data ){
+			itemMap[data.data[i].itemId] = data.data[i];
+		}
+		this.state.itemMap = itemMap;
 		let where = { ...this.state.where };
 		if( where.createTime ){
 			where.beginTime = where.createTime[0]+' 00:00:00',
@@ -55,7 +65,7 @@ export default class List extends React.Component{
 			...this.state.limit , 
 			count:undefined
 		};
-		let data = await this.props.dispatch({
+		data = await this.props.dispatch({
 			type:'/order/search',
 			payload:{
 				...where,
@@ -109,6 +119,20 @@ export default class List extends React.Component{
 				}
 			},
 			{
+				title:"商品",
+				dataIndex:"itemIds",
+				render:()=>{
+					return (<MySelect 
+						mode="multiple"
+						placeholder="请输入" 
+						options={this.state.itemMap} 
+						showSearch={true} 
+						renderOption={(value)=>('['+value.itemId+']'+value.name)}
+						filterOption={(input, value)=>{return ((value.itemId+"").indexOf(input) == 0 )||(value.name.indexOf(input) != -1) }}
+						/>);
+				}
+			},
+			{
 				title:"时间",
 				dataIndex:"createTime",
 				render:()=>{
@@ -136,10 +160,15 @@ export default class List extends React.Component{
 	        dataIndex: 'address',
 	      },
 	      {
-	        title: '商品数量',
+	        title: '商品',
 	        dataIndex: 'items',
-	        render(val){
-	        	return val.length+'个';
+	        render:(val)=>{
+	        	var items = [];
+	        	for(var i in val ){
+	        		var single = val[i];
+	        		items.push(this.state.itemMap[single.itemId].name);
+	        	}
+	        	return items.join("，");
 	        }
 	      },
 	      {
