@@ -13,6 +13,7 @@ import cache from '@/utils/cache';
 import InputWrapper from '@/components/InputWrapper';
 import ItemDetail from './ItemDetail';
 import MyAutoComplete from '@/components/MyAutoComplete';
+import Big from 'big.js';
 
 @connect()
 export default class Detail extends React.Component{
@@ -63,19 +64,17 @@ export default class Detail extends React.Component{
 		}
 		this.setState({});
 	}
-	round = (num)=>{
-		return Math.round(parseFloat(num*100))/100
-	}
 	onChange = (data)=>{
-		let total = 0.0;
+		let total = new Big(0);
 		for( const i in data.items ){
 			let item = data.items[i];
-			item.price = item.price;
-			item.num = item.num;
-			item.amount = this.round(item.price * item.num);
-			total += item.amount;
+			let price = new Big(item.price);
+			let num = new Big(item.num);
+			let amount = price.times(num).round(2);
+			item.amount = amount.toString();
+			total = total.plus(amount);
 		}
-		data.total = total
+		data.total = total.toString();
 		this.state.data = data;
 		this.setState({});
 	}
