@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'redva';
 import {Input,InputNumber} from 'antd';
 import MySelect from '@/components/MySelect';
+import MyInputDecimal from '@/components/MyInputDecimal';
 import StandardForm from '@/components/StandardForm';
 
 @connect()
@@ -46,7 +47,7 @@ export default class Form extends React.Component{
 				dataIndex:"price",
 				rules:[{ required: true}],
 				render:()=>{
-					return (<InputNumber style={{width:'100%'}}  step={0.01} precision={2} ref={(node)=>{this.priceNode=node}} onKeyDown={this.onKeyDown}/>);
+					return (<MyInputDecimal style={{width:'100%'}}  precision={2} ref={(node)=>{this.priceNode=node}} onKeyDown={this.onKeyDown}/>);
 				}
 			},
 			{
@@ -54,7 +55,7 @@ export default class Form extends React.Component{
 				dataIndex:"num",
 				rules:[{ required: true}],
 				render:()=>{
-					return (<InputNumber style={{width:'100%'}} step={1} precision={0} ref={(node)=>{this.numNode=node}}/>);
+					return (<MyInputDecimal style={{width:'100%'}} precision={0} ref={(node)=>{this.numNode=node}}/>);
 				}
 			}
 		];

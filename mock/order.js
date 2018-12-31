@@ -16,18 +16,18 @@ var orders = [
 		items:[
 			{
 				itemId:10001,
-				price:1,
-				num:2,
-				amount:2
+				price:"1",
+				num:"2",
+				amount:"2"
 			},
 			{
 				itemId:10002,
-				price:2,
-				num:3,
-				amount:6
+				price:"2",
+				num:"3",
+				amount:"6"
 			}
 		],
-		total:8,
+		total:"8",
 		createTime:now(),
 		modifyTime:now()
 	},
@@ -40,18 +40,18 @@ var orders = [
 		items:[
 			{
 				itemId:10003,
-				price:1.1,
-				num:2,
-				amount:2.2
+				price:"1.1",
+				num:"2",
+				amount:"2.2"
 			},
 			{
 				itemId:10004,
-				price:2,
-				num:3,
-				amount:6
+				price:"2",
+				num:"3",
+				amount:"6"
 			}
 		],
-		total:8.2,
+		total:"8.2",
 		createTime:now(),
 		modifyTime:now()
 	},

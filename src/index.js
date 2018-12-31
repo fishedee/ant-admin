@@ -6,6 +6,7 @@ import createHistory from 'history/createHashHistory';
 import { LocaleProvider , Modal } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import getRouter from '@/utils/router';
+import '@/utils/decimal';
 import ErrorCatch from '@/components/ErrorCatch';
 
 //FIXME webpack __webpack_require__.e undefined (https://github.com/webpack/webpack/issues/7248)

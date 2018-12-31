@@ -21,7 +21,7 @@ export default class CheckIn extends React.Component {
     return (
       <div className={classname(styles.container,this.props.className)}>
         <Row type="flex" justify="space-around" align="middle" style={{height:"100%"}}>
-          <Col type="flex" align="middle" span="8" className={styles.center} >
+          <Col type="flex" align="middle" span={8} className={styles.center} >
             <div className={styles.header}>
               <Link to="/">
                 <span className={styles.title}>{this.props.title}</span>

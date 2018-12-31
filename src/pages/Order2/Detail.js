@@ -13,7 +13,7 @@ import cache from '@/utils/cache';
 import InputWrapper from '@/components/InputWrapper';
 import ItemDetail from './ItemDetail';
 import MyAutoComplete from '@/components/MyAutoComplete';
-import Big from 'big.js';
+import MyInputDecimal from '@/components/MyInputDecimal';
 
 @connect()
 export default class Detail extends React.Component{
@@ -65,16 +65,15 @@ export default class Detail extends React.Component{
 		this.setState({});
 	}
 	onChange = (data)=>{
-		let total = new Big(0);
+		let total = "0"
 		for( const i in data.items ){
 			let item = data.items[i];
-			let price = new Big(item.price);
-			let num = new Big(item.num);
-			let amount = price.times(num).round(2);
-			item.amount = amount.toString();
-			total = total.plus(amount);
+			let price = item.price;
+			let num = item.num;
+			item.amount = price.mulDecimal(num).roundDecimal(2);
+			total = total.addDecimal(item.amount);
 		}
-		data.total = total.toString();
+		data.total = total
 		this.state.data = data;
 		this.setState({});
 	}
@@ -316,7 +315,7 @@ export default class Detail extends React.Component{
 				wrapperCol:{span:20},
 				rules:[{ required: true}],
 				render:()=>{
-					return (<InputNumber style={{width:'100%'}} disabled={true} step={0.01} precision={2}/>);
+					return (<MyInputDecimal style={{width:'100%'}} disabled={true} precision={2}/>);
 				}
 			},
 		];

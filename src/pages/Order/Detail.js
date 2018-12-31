@@ -1,16 +1,16 @@
 import React,{Fragment} from 'react';
 import { connect } from 'redva';
-import {Input,InputNumber,Button} from 'antd';
+import {Input,Button} from 'antd';
 import MySelect from '@/components/MySelect';
 import MyInputButton from '@/components/MyInputButton';
 import StandardForm from '@/components/StandardForm';
 import StandardTable from '@/components/StandardTable';
 import StandardModal from '@/components/StandardModal';
+import MyInputDecimal from '@/components/MyInputDecimal';
 import CardList from '@/pages/Card2/Select';
 import qs from 'qs';
 import cache from '@/utils/cache';
 import InputWrapper from '@/components/InputWrapper';
-import Big from 'big.js';
 
 @connect()
 export default class Detail extends React.Component{
@@ -39,16 +39,15 @@ export default class Detail extends React.Component{
 		}
 	}
 	onChange = (data)=>{
-		let total = new Big(0);
+		let total = "0"
 		for( const i in data.items ){
 			let item = data.items[i];
-			let price = new Big(item.price);
-			let num = new Big(item.num);
-			let amount = price.times(num).round(2);
-			item.amount = amount.toString();
-			total = total.plus(amount);
+			let price = item.price;
+			let num = item.num;
+			item.amount = price.mulDecimal(num);
+			total = total.addDecimal(item.amount);
 		}
-		data.total = total.toString();
+		data.total = total;
 		this.state.data = data;
 		this.setState({});
 	}
@@ -72,8 +71,8 @@ export default class Detail extends React.Component{
 		},0);
 		this.state.data.items.push({
 			_key:maxKey+1,
-			price:0,
-			num:0,
+			price:"",
+			num:"",
 		});
 		this.onChange(this.state.data);
 	}
@@ -217,21 +216,21 @@ export default class Detail extends React.Component{
 				        title: '单价',
 				        dataIndex: 'price',
 				        render:()=>{
-				        	return (<InputNumber style={{width:'100%'}} step={0.01} precision={2}/>);
+				        	return (<MyInputDecimal style={{width:'100%'}} precision={2}/>);
 				        }
 				      },
 				      {
 				        title: '数量',
 				        dataIndex: 'num',
 				        render:()=>{
-				        	return (<InputNumber style={{width:'100%'}} step={1} precision={0}/>);
+				        	return (<MyInputDecimal style={{width:'100%'}}/>);
 				        }
 				      },
 				      {
 				        title: '总价',
 				        dataIndex: 'amount',
 				        render:()=>{
-				        	return (<InputNumber style={{width:'100%'}} step={0.01} precision={2} disabled={true}/>);
+				        	return (<MyInputDecimal style={{width:'100%'}} disabled={true}/>);
 				        }
 				      },
 				      {
@@ -260,7 +259,7 @@ export default class Detail extends React.Component{
 				wrapperCol:{span:22},
 				rules:[{ required: true}],
 				render:()=>{
-					return (<InputNumber style={{width:'100%'}} disabled={true} step={0.01} precision={2}/>);
+					return (<MyInputDecimal style={{width:'100%'}} disabled={true}/>);
 				}
 			},
 		];
