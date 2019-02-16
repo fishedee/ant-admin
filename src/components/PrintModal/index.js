@@ -169,9 +169,15 @@ export default class PrintModal extends React.Component{
 	}
 	printCurrent = ()=>{
 		this.node.printCurrent();
+		if( this.props.onPrint ){
+			this.props.onPrint('current');
+		}
 	}
 	printAll = ()=>{
 		this.node.printAll();
+		if( this.props.onPrint ){
+			this.props.onPrint('all');
+		}
 	}
 	render = ()=>{
 		var {width,visible,onClose,...resetProps} = this.props;
@@ -186,11 +192,11 @@ export default class PrintModal extends React.Component{
 				footer={null}
 				width={width}
 				footer = {[
-					<Button key="submit1" key="submit" type="primary" onClick={this.printCurrent}>
-		              本页打印
-		            </Button>,
-		            <Button key="submit2" type="primary" onClick={this.printAll}>
+					<Button key="submit2" type="primary" onClick={this.printAll}>
 		              全部打印
+		            </Button>,
+					<Button key="submit1" key="submit" onClick={this.printCurrent}>
+		              本页打印
 		            </Button>,
 					<Button key="back" onClick={this.onCancel}>取消</Button>,
 				]}

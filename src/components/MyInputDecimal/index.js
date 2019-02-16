@@ -6,7 +6,6 @@ export default class MyInputDecimal extends React.Component{
 	onChange = (e)=>{
 		try{
 			let newValue = this.format(e.target.value);
-			console.log(e.target.value,newValue);
 			this.props.onChange(newValue);
 		}catch(e){
 			console.log(e);
