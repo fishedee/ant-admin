@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Table, Alert } from 'antd';
 import styles from './index.less';
+import classname from 'classname';
 
 export default class StandardTable extends React.Component {
   handleSelectedRowChange = (rows)=>{
@@ -51,7 +52,7 @@ export default class StandardTable extends React.Component {
   }
 
   render() {
-    const { value, paginaction , loading, columns, rowKey ,style ,selectedRow,onSelectedRowChange} = this.props;
+    const { value, paginaction , loading, columns, rowKey ,style ,selectedRow,onSelectedRowChange,getContainerRef} = this.props;
 
     let paginationProps = false;
     if( paginaction ){
@@ -104,7 +105,7 @@ export default class StandardTable extends React.Component {
     }
 
     return (
-      <div className={styles.standardTable}>
+      <div className={classname(styles.standardTable,this.props.containerClassName)} ref={getContainerRef}>
         <Table
           style={style}
           className={this.props.className}

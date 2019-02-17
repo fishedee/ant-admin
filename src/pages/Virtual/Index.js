@@ -2,7 +2,7 @@ import React,{Fragment} from 'react';
 import { connect } from 'redva';
 import { Button , Input , Divider,Popconfirm} from 'antd';
 import StandardForm from '@/components/StandardForm';
-import MySelect from '@/components/MySelect';
+import MyTableList from '@/components/MyTableList';
 
 @connect((state)=>{
 	return {loading:state.loading.global};
@@ -12,10 +12,26 @@ export default class List extends React.Component{
 		super(props);
 		this.state = {
 			data:{},
-			nameInfo:{},
+			itemMap:{},
+			itemId:0,
 		}
 	}
-	componentDidUpdate = ()=>{
+	tableSelect = null
+	onTableSelectChange = (itemId)=>{
+		this.state.itemId = itemId;
+		this.setState({});
+	}
+	filterTableSelect = (input,data)=>{
+		if( data.name.indexOf(input) != -1 ){
+			return true;
+		}
+		if( (data.itemId+'').indexOf(input) != -1 ){
+			return true;
+		}
+		return false;
+	}
+	onTableSelectSelect = (itemId)=>{
+		alert(itemId);
 	}
 	componentDidMount = ()=>{
 		this.fetch();
@@ -29,33 +45,33 @@ export default class List extends React.Component{
 		var nameInfo = {};
 		for( var i = 0 ;i != nameCount;i++){
 			nameInfo[i] = {
-				key:i,
+				itemId:i,
 				name:'fish_'+i,
 			};
 		}
-		this.state.nameInfo = nameInfo;
+		this.state.itemMap = nameInfo;
 		this.setState({});
 	}
 	render = ()=>{
-		let columns = [
+		let selectedColumns = [
 			{
-				title:"商品",
-				dataIndex:"itemIds",
-				render:()=>{
-					return (<MySelect 
-						placeholder="请输入" 
-						options={this.state.nameInfo} 
-						showSearch={true} 
-						renderOption={(value)=>('['+value.key+']'+value.name)}
-						/>);
-				}
-			}
+				title: '商品ID',
+				dataIndex: 'itemId',
+			},
+			{
+				title: '名字',
+				dataIndex: 'name',
+			},
 		];
 		return (
-			<StandardForm 
-				columns={columns} 
-				data={this.state.data}
-				onChange={this.onChange}/>
+			<MyTableList
+				ref={(node)=>{this.tableSelect=node}}
+				value={this.state.itemId}
+				onChange={this.onTableSelectChange}
+				rows={this.state.itemMap}
+				renderRow={selectedColumns}
+				filterRow={this.filterTableSelect}
+				onSelect={this.onTableSelectSelect}/>
 		);
 	}
 }

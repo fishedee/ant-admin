@@ -10,8 +10,27 @@ export default class MyTableList extends React.Component{
 	state = {
 		filterInput:'',
 		list:[],
+		listMaxCount:20,
+		listHeight:0,
 	}
 	search = null;
+	tableNode = null;
+	componentDidMount = ()=>{
+		this.tableNode.addEventListener('scroll',()=>{
+			let scrollTop = this.tableNode.scrollTop;
+			let scrollHeight = this.tableNode.scrollHeight;
+			let clientHeight = this.tableNode.clientHeight;
+			if( scrollTop + clientHeight + 20 <= scrollHeight ){
+				return
+			}
+			if( scrollHeight == this.state.listHeight ){
+				return
+			}
+			this.state.listMaxCount += 20
+			this.state.listHeight = scrollHeight;
+			this.setState({});
+		})
+	}
 	focus = ()=>{
 		this.search.focus();
 	}
@@ -31,6 +50,9 @@ export default class MyTableList extends React.Component{
 		if( list.length != 0 ){
 			this.props.onChange(parseInt(list[0]['_tableSelectKey']));
 		}
+		this.state.listMaxCount = 20
+		this.state.listHeight = 0;
+		this.setState({});
 	}
 	onSelectedRowChange = (selectedRow)=>{
 		this.props.onChange(parseInt(selectedRow));
@@ -71,6 +93,7 @@ export default class MyTableList extends React.Component{
 	filterRows = ()=>{
 		const rows = this.props.rows;
 		let list = [];
+		let num = 0;
 		for( const i in rows ){
 			let single = rows[i];
 			let shouldExist = this.props.filterRow(this.state.filterInput,single);
@@ -79,6 +102,10 @@ export default class MyTableList extends React.Component{
 					...single,
 					'_tableSelectKey':parseInt(i),
 				});
+				if( num >= this.state.listMaxCount ){
+					break
+				}
+				num++;
 			}	
 		}
 		this.state.list = list;
@@ -98,7 +125,8 @@ export default class MyTableList extends React.Component{
 				onChange={this.onFilterChange}
 				onKeyDown={this.onKeyDown}/>
 			<StandardTable
-				className={style.root}
+				getContainerRef={(node)=>{this.tableNode=node}}
+				containerClassName={style.root}
 				value={this.state.list}
 				loading={false}
 				rowKey={'_tableSelectKey'}
