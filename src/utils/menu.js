@@ -26,6 +26,11 @@ export var adminMenu = [
 			{name:"控制台",path:"/dashboard"},
 			{name:"订单详情",path:"/order/detail?orderId=10001&hasBack=true"},
 		]
+	},
+	{
+		name:"长列表",
+		icon:"table",
+		path:"/virtual",
 	}
 ];
 

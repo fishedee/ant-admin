@@ -101,6 +101,11 @@ let router = [
 				component:"Dashboard/Sample",
 			},
 			{
+				name:"长列表",
+				path:"/virtual",
+				component:"Virtual/Index",
+			},
+			{
 				name:"找不到页面",
 				path:"/404",
 				component:'Layout/NotFound',
