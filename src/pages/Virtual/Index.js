@@ -44,9 +44,9 @@ export default class List extends React.Component{
 		var nameCount = 1000;
 		var nameInfo = {};
 		for( var i = 0 ;i != nameCount;i++){
-			nameInfo[i] = {
-				itemId:i,
-				name:'fish_'+i,
+			nameInfo[i+1] = {
+				itemId:i+1,
+				name:'fish_'+(i+1),
 			};
 		}
 		this.state.itemMap = nameInfo;

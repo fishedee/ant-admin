@@ -119,10 +119,17 @@ export default class StandardTable extends React.Component {
           pagination={paginationProps}
           onChange={this.handleTableChange}
           onRow={(record)=>{
-            return {
+            let data = {
               onClick:this.onRowClick.bind(this,record),
               onDoubleClick:this.onRowDoubleClick,
             };
+            if( this.props.onRow ){
+              data = {
+                ...data,
+                ...this.props.onRow(record),
+              } 
+            }
+            return data
           }}
         />
       </div>

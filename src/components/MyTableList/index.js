@@ -10,24 +10,16 @@ export default class MyTableList extends React.Component{
 	state = {
 		filterInput:'',
 		list:[],
+		visibleList:[],
 		listMaxCount:20,
 		listHeight:0,
+		scrollTop:0,
 	}
 	search = null;
 	tableNode = null;
 	componentDidMount = ()=>{
 		this.tableNode.addEventListener('scroll',()=>{
-			let scrollTop = this.tableNode.scrollTop;
-			let scrollHeight = this.tableNode.scrollHeight;
-			let clientHeight = this.tableNode.clientHeight;
-			if( scrollTop + clientHeight + 20 <= scrollHeight ){
-				return
-			}
-			if( scrollHeight == this.state.listHeight ){
-				return
-			}
-			this.state.listMaxCount += 20
-			this.state.listHeight = scrollHeight;
+			this.state.scrollTop = this.tableNode.scrollTop;
 			this.setState({});
 		})
 	}
@@ -58,6 +50,9 @@ export default class MyTableList extends React.Component{
 		this.props.onChange(parseInt(selectedRow));
 	}
 	onKeyDown = (event)=>{
+		const totalHeight = 600
+		const headHeight = 38
+		const itemHeight = 38
 		const list = this.state.list;
 		let selectedRowIndex = list.findIndex((single)=>{
 			return single['_tableSelectKey'] == this.props.value;
@@ -72,11 +67,19 @@ export default class MyTableList extends React.Component{
 			selectedRowIndex > 0 ){
 			//up
 			selectedRowIndex --;
+			let scrollTop = selectedRowIndex*itemHeight+headHeight;
+			if( this.state.scrollTop > scrollTop ){
+				this.tableNode.scrollTop = scrollTop
+			}
 			this.props.onChange(parseInt(list[selectedRowIndex]['_tableSelectKey']));
 		}else if (event.keyCode == 40 &&
 			selectedRowIndex < this.state.list.length - 1 ){
 			//down
 			selectedRowIndex ++;
+			let scrollTop = (selectedRowIndex+1)*itemHeight+headHeight-totalHeight;
+			if( this.state.scrollTop < scrollTop ){
+				this.tableNode.scrollTop = scrollTop
+			}
 			this.props.onChange(parseInt(list[selectedRowIndex]['_tableSelectKey']));
 		}
 	}
@@ -90,10 +93,39 @@ export default class MyTableList extends React.Component{
 		}
 		this.props.onSelect(parseInt(this.props.value));
 	}
+	setVisibleList = ()=>{
+		const data = this.state.list;
+		const totalHeight = 600
+		const headHeight = 38
+		const itemHeight = 38
+		const visibleCount = Math.ceil(totalHeight / itemHeight)+2;
+		let firstIndex = 0;
+		if( this.state.scrollTop < headHeight ){
+			firstIndex = 0;
+		}else{
+			firstIndex = Math.floor((this.state.scrollTop - headHeight) / itemHeight);
+			if( firstIndex - 1 >= 0 ){
+				firstIndex = firstIndex - 1;
+			}
+		}
+		const endIndex = firstIndex + visibleCount;
+		const visibleData = data.slice(firstIndex,endIndex);
+		for( let i in visibleData ){
+			let single = visibleData[i];
+			let _style = {};
+			if( i == 0 && firstIndex != 0 ){
+				_style.height = (firstIndex*itemHeight+headHeight)+'px'
+			}
+			if( i == visibleData.length - 1 && endIndex != visibleData.length - 1){
+				_style.height = (data.length - endIndex)*itemHeight+'px'
+			}
+			single._style = _style
+		}
+		this.state.visibleList = visibleData
+	}
 	filterRows = ()=>{
 		const rows = this.props.rows;
 		let list = [];
-		let num = 0;
 		for( const i in rows ){
 			let single = rows[i];
 			let shouldExist = this.props.filterRow(this.state.filterInput,single);
@@ -102,13 +134,10 @@ export default class MyTableList extends React.Component{
 					...single,
 					'_tableSelectKey':parseInt(i),
 				});
-				if( num >= this.state.listMaxCount ){
-					break
-				}
-				num++;
 			}	
 		}
 		this.state.list = list;
+		this.setVisibleList();
 	}
 	searchNode = null;
 	onClick = ()=>{
@@ -127,13 +156,18 @@ export default class MyTableList extends React.Component{
 			<StandardTable
 				getContainerRef={(node)=>{this.tableNode=node}}
 				containerClassName={style.root}
-				value={this.state.list}
+				value={this.state.visibleList}
 				loading={false}
 				rowKey={'_tableSelectKey'}
 				columns={this.props.renderRow}
 				selectedRow={this.props.value}
 				onSelectedRowChange={this.onSelectedRowChange}
-				onRowDoubleClick={this.onRowDoubleClick}/>
+				onRowDoubleClick={this.onRowDoubleClick}
+				onRow={(data)=>{
+					return {
+						style:data._style
+					}
+				}}/>
 		</div>
 		);
 	}
