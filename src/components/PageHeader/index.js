@@ -1,16 +1,58 @@
 import React from 'react';
-import style from './index.less';
-import { Icon } from 'antd';
+import styles from './index.less';
+import { Icon ,Badge,Dropdown,List, Avatar } from 'antd';
 
 export default class PageHeader extends React.Component{
+  getDropdownMenu = ()=>{
+    let notifyList = this.props.notice || [];
+    let items = notifyList.map((item,i) => (
+      <List.Item key={i} className={styles.item} onClick={item.onClick}>
+        <List.Item.Meta
+          className={styles.meta}
+          avatar={<Avatar shape="square" icon={item.icon}/>}
+          title={
+            <div className={styles.title}>
+              {item.title}
+            </div>
+          }
+          description={
+            <div>
+              <div className={styles.description} title={item.description}>
+                {item.description}
+              </div>
+            </div>
+          }
+        />
+      </List.Item>
+    ));
+    if( items.length == 0 ){
+      items = null;
+    }
+    return (<div><List
+      className={styles.list}
+      locale={{emptyText:"暂无提醒消息"}}>
+      {items}
+    </List></div>);
+  }
 	render(){
-		return (<div className={style.root}>
-			<div className={style.header}>
-				{this.props.hasBack?<div className={style.back} onClick={this.props.onBack}><Icon type="left"/>返回</div>:null}
-				<h1 className={style.title}>{this.props.title}</h1>
-				<div className={style.reload} onClick={this.props.onReload}><Icon type="reload"/></div>
+    let menu = this.getDropdownMenu();
+    let notifyList = this.props.notice || [];
+		return (<div className={styles.root}>
+			<div className={styles.header}>
+				{this.props.hasBack?<div className={styles.back} onClick={this.props.onBack}><Icon type="left"/>返回</div>:null}
+				<h1 className={styles.title}>{this.props.title}</h1>
+				<Dropdown 
+					trigger={['click']}
+					overlay={menu} 
+          overlayClassName={styles.container}
+					placement="bottomRight">
+					<div className={styles.notify}>
+						<Badge dot={notifyList.length!=0?true:false}><Icon type="bell"/></Badge>
+					</div>
+				</Dropdown>
+				<div className={styles.reload} onClick={this.props.onReload}><Icon type="reload"/></div>
 			</div>
-			<div className={style.content}>{this.props.children}</div>
+			<div className={styles.content}>{this.props.children}</div>
 		</div>);
 	}
 }

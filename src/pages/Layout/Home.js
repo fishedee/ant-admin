@@ -47,6 +47,16 @@ export default class Home extends React.Component{
 				{name:"退出",onClick:this.logout}
 			]
 		}
+		const notice = [
+			{
+				icon:"user",
+				title:"销售订单需要调整库存",
+				description:"调整库存",
+				onClick:()=>{
+					alert("3");
+				}
+			}
+		];
 		const query = qs.parse(this.props.location.search.substr(1));
 		const name = getRouterName(this.props.location.pathname);
 		const role = this.props.login.role;
@@ -65,6 +75,7 @@ export default class Home extends React.Component{
 				login={login}>
 				<PageHeader 
 					title={name} 
+					notice={notice}
 					hasBack={!!query.hasBack} 
 					onBack={this.onBack}
 					onReload={this.onReload}>
