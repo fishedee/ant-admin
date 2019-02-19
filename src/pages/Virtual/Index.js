@@ -16,6 +16,7 @@ export default class List extends React.Component{
 			itemMap:{},
 			itemId:0,
 			itemId2:201,
+			itemId3:[],
 		}
 	}
 	tableSelect = null
@@ -25,6 +26,10 @@ export default class List extends React.Component{
 	}
 	onSelectChange = (itemId)=>{
 		this.state.itemId2 = itemId;
+		this.setState({});
+	}
+	onSelectChange2 = (itemId)=>{
+		this.state.itemId3 = itemId;
 		this.setState({});
 	}
 	filterTableSelect = (input,data)=>{
@@ -71,13 +76,24 @@ export default class List extends React.Component{
 		];
 		return (
 		<div>
-			<MySelect
-				value={this.state.itemId2}
-				onChange={this.onSelectChange}
-				options={this.state.itemMap}
-				renderOption={(data)=>(data.name)}
-				showSearch={true}
-			/>
+			<div style={{marginTop:"16px"}}>
+				<MySelect
+					value={this.state.itemId2}
+					onChange={this.onSelectChange}
+					options={this.state.itemMap}
+					renderOption={(data)=>(data.name)}
+				/>
+			</div>
+			<div style={{marginTop:"16px"}}>
+				<MySelect
+					value={this.state.itemId3}
+					onChange={this.onSelectChange2}
+					options={this.state.itemMap}
+					renderOption={(data)=>(data.name)}
+					showSearch={true}
+					mode={"multiple"}
+				/>
+			</div>
 			<MyTableList
 				ref={(node)=>{this.tableSelect=node}}
 				value={this.state.itemId}
