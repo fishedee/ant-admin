@@ -3,6 +3,7 @@ import { connect } from 'redva';
 import { Button , Input , Divider,Popconfirm} from 'antd';
 import StandardForm from '@/components/StandardForm';
 import MyTableList from '@/components/MyTableList';
+import MySelect from '@/components/MyVirtualSelect';
 
 @connect((state)=>{
 	return {loading:state.loading.global};
@@ -14,11 +15,16 @@ export default class List extends React.Component{
 			data:{},
 			itemMap:{},
 			itemId:0,
+			itemId2:201,
 		}
 	}
 	tableSelect = null
 	onTableSelectChange = (itemId)=>{
 		this.state.itemId = itemId;
+		this.setState({});
+	}
+	onSelectChange = (itemId)=>{
+		this.state.itemId2 = itemId;
 		this.setState({});
 	}
 	filterTableSelect = (input,data)=>{
@@ -64,6 +70,14 @@ export default class List extends React.Component{
 			},
 		];
 		return (
+		<div>
+			<MySelect
+				value={this.state.itemId2}
+				onChange={this.onSelectChange}
+				options={this.state.itemMap}
+				renderOption={(data)=>(data.name)}
+				showSearch={true}
+			/>
 			<MyTableList
 				ref={(node)=>{this.tableSelect=node}}
 				value={this.state.itemId}
@@ -72,6 +86,7 @@ export default class List extends React.Component{
 				renderRow={selectedColumns}
 				filterRow={this.filterTableSelect}
 				onSelect={this.onTableSelectSelect}/>
+		</div>
 		);
 	}
 }
