@@ -3,7 +3,7 @@ import { connect } from 'redva';
 import { Button , Input , Divider,Popconfirm} from 'antd';
 import StandardForm from '@/components/StandardForm';
 import MyTableList from '@/components/MyTableList';
-import MySelect from '@/components/MyVirtualSelect';
+import MySelect from '@/components/MySelect';
 
 @connect((state)=>{
 	return {loading:state.loading.global};
