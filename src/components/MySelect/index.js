@@ -113,6 +113,10 @@ export default class MySelect extends React.Component{
 			}
 		}
 	}
+	onBlur = ()=>{
+		this.state.searchInput = "";
+		this.setState({});
+	}
 	focus = ()=>{
 		if( this.selectNode ){
 			this.selectNode.focus();
@@ -190,6 +194,7 @@ export default class MySelect extends React.Component{
 			ref={(node)=>(this.selectNode=node)}
 			onSearch={this.onSearch}
 			onChange={this.onChange}
+			onBlur={this.onBlur}
 			dropdownRender={this.dropdownRender}
 			onDropdownVisibleChange={this.onDropdownVisibleChange}
 			autoClearSearchValue={true}

@@ -15,7 +15,7 @@ export default class List extends React.Component{
 			data:{},
 			itemMap:{},
 			itemId:0,
-			itemId2:201,
+			itemId2:0,
 			itemId3:[],
 		}
 	}
@@ -82,6 +82,7 @@ export default class List extends React.Component{
 					onChange={this.onSelectChange}
 					options={this.state.itemMap}
 					renderOption={(data)=>(data.name)}
+					showSearch={true}
 				/>
 			</div>
 			<div style={{marginTop:"16px"}}>
