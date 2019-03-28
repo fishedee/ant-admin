@@ -43,7 +43,10 @@ class WrapperSelect extends React.Component{
 		const totalHeight = 250; 
 		const visibleCount = Math.ceil(totalHeight / itemHeight)+2;
 		let firstIndex = Math.floor(this.state.scrollTop / itemHeight);
-		const endIndex = firstIndex + visibleCount;
+		let endIndex = firstIndex + visibleCount;
+		if( endIndex >= items.length ){
+			endIndex = items.length;
+		}
 		const marginTop = (firstIndex*itemHeight)+'px'
 		const marginBottom = (items.length - endIndex)*itemHeight+'px'
 
