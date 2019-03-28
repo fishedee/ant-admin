@@ -108,7 +108,10 @@ export default class MyTableList extends React.Component{
 				firstIndex = firstIndex - 1;
 			}
 		}
-		const endIndex = firstIndex + visibleCount;
+		let endIndex = firstIndex + visibleCount;
+		if( endIndex >= data.length ){
+			endIndex = data.length;
+		}
 		const visibleData = data.slice(firstIndex,endIndex);
 		for( let i in visibleData ){
 			let single = visibleData[i];
@@ -116,8 +119,8 @@ export default class MyTableList extends React.Component{
 			if( i == 0 && firstIndex != 0 ){
 				_style.height = (firstIndex*itemHeight+headHeight)+'px'
 			}
-			if( i == visibleData.length - 1 && endIndex != visibleData.length - 1){
-				_style.height = (data.length - endIndex)*itemHeight+'px'
+			if( i == visibleData.length - 1 && endIndex != data.length){
+				_style.height = (data.length - endIndex + 1 )*itemHeight+'px'
 			}
 			single._style = _style
 		}
