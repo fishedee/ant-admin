@@ -42,7 +42,7 @@ export default class MyInputDecimal extends React.Component{
 			...this.props,
 			onChange:this.onChange,
 			value:this.format(this.props.value),
-			autocomplete:"off",
+			autoComplete:"off",
 		}
 		return (<Input {...props} ref={this.getRef}/>);
 	}
