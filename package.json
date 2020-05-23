@@ -7,7 +7,7 @@
     "doc": "doc"
   },
   "scripts": {
-    "prod": "webpack --mode production",
+    "prod": "webpack --mode production && qshell qupload2 --src-dir=dist --bucket=yinghaostatic --rescan-local --overwrite",
     "dev": "webpack --mode development",
     "start": "webpack-dev-server --mode development --hot",
     "mock": "node-dev mock/index.js",

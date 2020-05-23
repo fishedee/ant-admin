@@ -119,7 +119,12 @@ let webpackConfig = {
 }
 
 if( !isDevelopment ){
+	webpackConfig.output.publicPath = "http://yinghaostatic.fishedee.com"
+}
+/*
+if( !isDevelopment ){
 	webpackConfig.plugins.push(new BundleAnalyzerPlugin());
 } 
+*/
 
 module.exports = webpackConfig;
